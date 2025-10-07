@@ -1,0 +1,47 @@
+/* Logo Style */
+@use "../global" as *;
+.logo {
+	--logo-height: #{rem(32)};
+	height: var(--logo-height);
+	&__img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		&--dark {
+			display: none;
+		}
+	}
+}
+
+/* Text Logo Style */
+.logo-text {
+	font-family: inherit;
+	font-weight: 700;
+	font-size: 2rem; /* Made bigger */
+	color: #FFD700; /* Yellow color to match the original logo */
+	text-decoration: none;
+	line-height: 1;
+	letter-spacing: 1px;
+	display: inline-block;
+	transition: all 0.3s ease;
+	text-shadow: 
+		2px 2px 0px #000000, /* Dark shadow like original */
+		4px 4px 0px rgba(0, 0, 0, 0.3); /* Additional depth shadow */
+	
+	&:hover {
+		transform: translateY(-3px); /* Pop up effect */
+		text-shadow: 
+			2px 5px 0px #000000, /* Enhanced shadow on hover */
+			4px 8px 0px rgba(0, 0, 0, 0.4);
+		text-decoration: none;
+	}
+}
+
+[data-bs-theme="dark"] {
+	.logo__img--dark {
+		display: inline-block;
+	}
+	.logo__img--light {
+		display: none;
+	}
+}

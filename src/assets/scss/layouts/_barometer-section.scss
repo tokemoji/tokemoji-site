@@ -1,0 +1,786 @@
+/* Tokemoji Market Dashboard / Barometer Section */
+@use "../global" as *;
+
+
+#barometer {
+	.how-to-buy-section-1 {
+		position: relative;
+		isolation: isolate;
+		@include screen(md) {
+			background-image: url(../img/shape/how-to-buy-bg-1.png);
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+			background-position: center;
+		}
+	}
+}
+
+/* Sort Buttons */
+.sort-buttons {
+	.sort-btn {
+		font-size: 0.7rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		font-weight: 600;
+		transition: all 0.2s ease;
+		
+		&.active {
+			background-color: var(--bs-primary);
+			border-color: var(--bs-primary);
+			color: white;
+		}
+		
+		&:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+	}
+}
+
+/* Token List Styles */
+.token-list {
+	.token-row {
+		transition: all 0.3s ease;
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.02);
+			transform: translateX(2px);
+		}
+		
+		&:last-child {
+			border-bottom: none !important;
+		}
+		
+		.token-rank {
+			font-size: 1.1rem;
+			flex-shrink: 0;
+		}
+		
+		.token-emoji {
+			font-size: 1.6rem;
+			line-height: 1;
+			flex-shrink: 0;
+		}
+		
+		.token-ticker {
+			font-size: 1.2rem;
+			line-height: 1.2;
+			flex-shrink: 0;
+		}
+		
+		.token-price {
+			font-size: 1.1rem;
+			flex-shrink: 0;
+		}
+		
+		.token-change {
+			font-size: 1.1rem;
+			line-height: 1.2;
+			flex-shrink: 0;
+		}
+		
+		.token-marketcap {
+			font-size: 1rem;
+			flex-shrink: 0;
+		}
+		
+		.buy-btn {
+			font-size: 0.7rem;
+			padding: 0.2rem 0.5rem;
+			border-radius: 0.25rem;
+			font-weight: 600;
+			transition: all 0.2s ease;
+			flex-shrink: 0;
+			
+			&:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+		}
+		
+		.chart-btn {
+			font-size: 0.7rem;
+			padding: 0.2rem 0.5rem;
+			border-radius: 0.25rem;
+			font-weight: 600;
+			transition: all 0.2s ease;
+			flex-shrink: 0;
+			
+			&:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			}
+		}
+		
+		.token-chart {
+			background: rgba(0, 0, 0, 0.03);
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+			
+			canvas {
+				border-radius: 4px;
+				background: white;
+			}
+		}
+	}
+}
+
+/* Market Dominance Styles */
+.dominance-gif {
+	.dominance-gif-img {
+		width: 120px;
+		height: 120px;
+		object-fit: contain;
+	}
+}
+
+.dominance-ticker {
+	span {
+		font-size: 1.5rem;
+		line-height: 1;
+		font-weight: bold;
+	}
+}
+
+.dominance-percentage {
+	span {
+		font-size: 1.8rem;
+		line-height: 1;
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+		font-weight: bold;
+	}
+}
+
+.dominance-bar {
+	.progress {
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+		
+		.progress-bar {
+			transition: width 0.5s ease;
+			background: linear-gradient(90deg, #ffc107 0%, #ff8c00 100%);
+			box-shadow: 0 1px 2px rgba(255, 193, 7, 0.3);
+		}
+	}
+}
+
+/* Gauge Styles */
+.gauge-label {
+	.gauge-gif {
+	.gauge-gif-img {
+		width: 100px;
+		height: 100px;
+		object-fit: contain;
+	}
+	}
+	
+	.gauge-text-label {
+		font-size: 1.4rem;
+		line-height: 1;
+		font-weight: bold;
+	}
+}
+
+.gauge-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	
+	.gauge {
+		width: 160px;
+		height: 90px;
+		transition: all 0.5s ease;
+		display: block;
+		margin: 0 auto;
+		
+		path {
+			transition: stroke-dashoffset 0.5s ease;
+		}
+	}
+}
+
+.gauge-result {
+	font-size: 0.8rem;
+	font-weight: 600;
+	text-align: center;
+	margin-top: 0.5rem;
+	color: var(--bs-text-muted);
+	line-height: 1.2;
+	
+	.gauge-ticker {
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 700;
+		color: var(--bs-text-heading);
+	}
+	
+	.gauge-dominance {
+		display: block;
+		font-size: 0.7rem;
+		font-weight: 500;
+		color: var(--bs-text-muted);
+	}
+	
+	.gauge-percentage {
+		display: block;
+		font-size: 0.8rem;
+		font-weight: 700;
+		color: var(--bs-primary);
+	}
+}
+
+/* News Feed Styles */
+.news-feed-single {
+	.news-item-single {
+		transition: all 0.5s ease;
+		
+		.news-emoji {
+			span {
+				font-size: 2rem;
+				line-height: 1;
+			}
+		}
+		
+		.news-title {
+			font-size: 1.3rem;
+			line-height: 1.3;
+			font-weight: 700;
+		}
+		
+		.news-timestamp {
+			font-size: 0.9rem;
+		}
+	}
+}
+
+/* Additional Widgets Styles */
+.top-gainers-carousel, .top-losers-carousel {
+	.carousel-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+		position: relative;
+		overflow: hidden;
+		height: 60px;
+		
+		.side-gif {
+			width: 35px;
+			height: 35px;
+			object-fit: contain;
+			opacity: 0.7;
+			transition: all 0.5s ease;
+		}
+		
+		.center-gif {
+			width: 50px;
+			height: 50px;
+			object-fit: contain;
+			opacity: 1;
+			transition: all 0.5s ease;
+			z-index: 2;
+		}
+	}
+}
+
+.adoption-gif {
+	.adoption-gif-img {
+		width: 60px;
+		height: 60px;
+		object-fit: contain;
+	}
+}
+
+.top-gainer-ticker, .top-loser-ticker {
+	span {
+		font-size: 1rem;
+		line-height: 1;
+	}
+}
+
+.top-gainer-change, .top-loser-change {
+	span {
+		font-size: 1.1rem;
+		line-height: 1;
+	}
+}
+
+.adoption-percentage {
+	span {
+		font-size: 1.4rem;
+		line-height: 1;
+		text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.adoption-bar {
+	.progress {
+		border-radius: 4px;
+		overflow: hidden;
+		box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+		
+		.progress-bar {
+			transition: width 0.5s ease;
+			box-shadow: 0 1px 2px rgba(255, 193, 7, 0.3);
+		}
+	}
+}
+
+/* Responsive Design */
+@include screen(lg) {
+	.token-list {
+		.token-row {
+			.token-emoji {
+				font-size: 1rem;
+			}
+			
+			.token-ticker {
+				font-size: 0.85rem;
+			}
+			
+			.token-price {
+				font-size: 0.75rem;
+			}
+			
+			.token-change {
+				font-size: 0.75rem;
+			}
+			
+			.token-marketcap {
+				font-size: 0.7rem;
+			}
+			
+			.buy-btn {
+				font-size: 0.65rem;
+				padding: 0.15rem 0.4rem;
+			}
+		}
+	}
+	
+	.dominance-percentage {
+		span {
+			font-size: 1.1rem;
+		}
+	}
+	
+	.dominance-gif {
+		.dominance-gif-img {
+			width: 100px;
+			height: 100px;
+		}
+	}
+	
+	.gauge-container {
+		.gauge {
+			width: 100px;
+			height: 50px;
+		}
+	}
+	
+	.gauge-label {
+		.gauge-gif {
+			.gauge-gif-img {
+				width: 80px;
+				height: 80px;
+			}
+		}
+		
+		.gauge-text-label {
+			font-size: 1.2rem;
+		}
+	}
+	
+	.gauge-container {
+		.gauge {
+			width: 140px;
+			height: 70px;
+		}
+	}
+}
+
+@include screen(md) {
+	.sort-buttons {
+		.sort-btn {
+			font-size: 0.6rem;
+			padding: 0.2rem 0.4rem;
+		}
+	}
+	
+	.token-list {
+		.token-row {
+			flex-wrap: wrap;
+			gap: 0.2rem;
+			
+			.token-rank,
+			.token-emoji,
+			.token-ticker,
+			.token-price,
+			.token-change,
+			.token-marketcap {
+				flex-shrink: 1;
+				min-width: auto;
+			}
+			
+			.buy-btn {
+				margin-left: auto;
+			}
+		}
+	}
+	
+	.dominance-percentage {
+		span {
+			font-size: 1rem;
+		}
+	}
+	
+	.dominance-ticker {
+		span {
+			font-size: 0.9rem;
+		}
+	}
+	
+	.gauge-container {
+		.gauge {
+			width: 60px;
+			height: 30px;
+		}
+	}
+	
+	.news-feed-single {
+		.news-item-single {
+			.news-title {
+				font-size: 1.1rem;
+			}
+		}
+	}
+}
+
+// Extra small screens (below 576px)
+@media (max-width: 575.98px) {
+	.token-list {
+		.token-row {
+			flex-wrap: wrap;
+			gap: 0.25rem;
+			padding: 0.5rem 0;
+			
+			.token-rank {
+				font-size: 1rem;
+			}
+			
+			.token-emoji {
+				font-size: 1.2rem;
+			}
+			
+			.token-ticker {
+				font-size: 0.9rem;
+			}
+			
+			.token-price {
+				font-size: 0.8rem;
+			}
+			
+			.token-change {
+				font-size: 0.8rem;
+			}
+			
+			.token-marketcap {
+				font-size: 0.75rem;
+			}
+			
+			.buy-btn, .chart-btn {
+				font-size: 0.6rem;
+				padding: 0.15rem 0.4rem;
+				margin-top: 0.25rem;
+			}
+		}
+	}
+	
+	.dominance-gif {
+		.dominance-gif-img {
+			width: 70px;
+			height: 70px;
+		}
+	}
+	
+	.dominance-ticker {
+		span {
+			font-size: 0.9rem;
+		}
+	}
+	
+	.dominance-percentage {
+		span {
+			font-size: 1rem;
+		}
+	}
+	
+	.gauge-label {
+		.gauge-gif {
+			.gauge-gif-img {
+				width: 35px;
+				height: 35px;
+			}
+		}
+		
+		.gauge-text-label {
+			font-size: 0.8rem;
+		}
+	}
+	
+	.gauge-container {
+		.gauge {
+			width: 60px;
+			height: 35px;
+		}
+	}
+	
+	.gauge-result {
+		font-size: 0.7rem;
+		margin-top: 0.25rem;
+		
+		.gauge-ticker {
+			font-size: 0.8rem;
+		}
+		
+		.gauge-dominance {
+			font-size: 0.6rem;
+		}
+		
+		.gauge-percentage {
+			font-size: 0.7rem;
+		}
+	}
+	
+	.top-gainers-carousel, .top-losers-carousel {
+		.carousel-container {
+			height: 45px;
+			
+			.side-gif {
+				width: 30px;
+				height: 30px;
+			}
+			
+			.center-gif {
+				width: 35px;
+				height: 35px;
+			}
+		}
+	}
+	
+	.adoption-gif {
+		.adoption-gif-img {
+			width: 45px;
+			height: 45px;
+		}
+	}
+}
+
+@include screen(sm) {
+	.token-list {
+		.token-row {
+			.token-emoji {
+				font-size: 0.9rem;
+			}
+			
+			.token-ticker {
+				font-size: 0.8rem;
+			}
+			
+			.token-price {
+				font-size: 0.7rem;
+			}
+			
+			.token-change {
+				font-size: 0.7rem;
+			}
+			
+			.token-marketcap {
+				font-size: 0.65rem;
+			}
+			
+			.buy-btn {
+				font-size: 0.6rem;
+				padding: 0.15rem 0.4rem;
+			}
+		}
+	}
+	
+	.dominance-percentage {
+		span {
+			font-size: 0.9rem;
+		}
+	}
+	
+	.dominance-gif {
+		.dominance-gif-img {
+			width: 80px;
+			height: 80px;
+		}
+	}
+	
+	.dominance-ticker {
+		span {
+			font-size: 0.8rem;
+		}
+	}
+	
+	.gauge-container {
+		.gauge {
+			width: 100px;
+			height: 50px;
+		}
+	}
+	
+	.gauge-label {
+		.gauge-gif {
+			.gauge-gif-img {
+				width: 60px;
+				height: 60px;
+			}
+		}
+		
+		.gauge-text-label {
+			font-size: 1rem;
+		}
+	}
+	
+	// Additional widgets responsive styles
+	.top-gainers-carousel, .top-losers-carousel {
+		.carousel-container {
+			height: 50px;
+			
+			.side-gif {
+				width: 30px;
+				height: 30px;
+			}
+			
+			.center-gif {
+				width: 40px;
+				height: 40px;
+			}
+		}
+	}
+	
+	.adoption-gif {
+		.adoption-gif-img {
+			width: 50px;
+			height: 50px;
+		}
+	}
+	
+	.top-gainer-ticker, .top-loser-ticker {
+		span {
+			font-size: 0.9rem;
+		}
+	}
+	
+	.top-gainer-change, .top-loser-change {
+		span {
+			font-size: 1rem;
+		}
+	}
+	
+	.adoption-percentage {
+		span {
+			font-size: 1.2rem;
+		}
+	}
+	
+	.news-feed-single {
+		.news-item-single {
+			.news-title {
+				font-size: 1rem;
+			}
+			
+			.news-timestamp {
+				font-size: 0.8rem;
+			}
+		}
+	}
+}
+
+/* Animation Enhancements */
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.05);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.token-row:hover .token-emoji {
+	animation: pulse 0.6s ease-in-out;
+}
+
+.news-item:hover .news-emoji {
+	animation: pulse 0.4s ease-in-out;
+}
+
+/* Loading States */
+.token-list.loading,
+.news-feed.loading {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+/* Success/Error States */
+.token-change.text-success {
+	color: #28a745 !important;
+}
+
+.token-change.text-danger {
+	color: #dc3545 !important;
+}
+
+/* Custom Scrollbar for Webkit browsers */
+.news-feed {
+	scrollbar-width: thin;
+	scrollbar-color: #888 #f1f1f1;
+}
+
+/* Fix for responsive font sizes - override the lg breakpoint */
+@media (min-width: 992px) {
+	.token-list .token-row .token-emoji {
+		font-size: 1.6rem !important;
+	}
+	
+	.token-list .token-row .token-ticker {
+		font-size: 1.2rem !important;
+	}
+	
+	.token-list .token-row .token-price {
+		font-size: 1.1rem !important;
+	}
+	
+	.token-list .token-row .token-change {
+		font-size: 1.1rem !important;
+	}
+	
+	.token-list .token-row .token-marketcap {
+		font-size: 1rem !important;
+	}
+}
+
+// Ticker container responsive adjustments
+.ticker-container {
+	// Mobile adjustments
+	@media (max-width: 767.98px) {
+		margin-top: -20px !important; // Reduce overlap on mobile
+		padding-bottom: 10px !important; // Reduce bottom padding
+	}
+	
+	// Extra small screens
+	@media (max-width: 575.98px) {
+		margin-top: 0px !important; // No overlap on very small screens
+		padding-bottom: 5px !important;
+	}
+}
