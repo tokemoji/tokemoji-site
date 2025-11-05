@@ -77,19 +77,12 @@ layout: "single-page"
 			<div class="container">
 				<div class="row justify-content-center">
 					<div class="col-lg-10 col-xl-9 text-center">
-						<span
-							class="d-inline-block mb-4 text-secondary fs-24 text-stroke gsap-text-animation"
-							data-split-type="words"
-							data-delay="0.5"
-						>
-							EMOTIONS TOKENIZED
-						</span>
 						<h1
 							class="hero-1__title mb-10 text-light text-stroke-md text-shadow-md gsap-text-animation"
 							data-split-type="chars"
 							data-delay="0.75"
 						>
-							TOKEMOJI
+							EMOTIONS TOKENIZED
 						</h1>
 						<div
 							class="d-flex justify-content-center align-items-center flex-wrap gap-4"
@@ -117,12 +110,25 @@ layout: "single-page"
 								<span class="d-inline-block ff-1">Live Dashboard</span>
 							</a>
 						</div>
-						<img
-							src="{{root}}assets/img/hero-img-1.png"
-							alt="image"
+						<video
 							class="img-fluid mt-10 gsap-fade-in"
 							data-delay="1.25"
-						/>
+							autoplay
+							loop
+							muted
+							playsinline
+						>
+							<source src="{{root}}assets/img/hero-img-1.webm" type="video/webm">
+						</video>
+						<!-- iPhone WebP Fallback - Hidden by default, shown by JS on iOS -->
+						<!-- TEST MODE: Currently enabled for all devices to test WebP images -->
+						<img
+							id="hero-webp-fallback"
+							class="img-fluid mt-10 gsap-fade-in"
+							data-delay="1.25"
+							alt="Hero Animation"
+							style="display: none;"
+						>
 					</div>
 				</div>
 			</div>
@@ -230,29 +236,6 @@ layout: "single-page"
 		<div id="about-section" class="section-space-y overflow-hidden">
 			<div class="container">
 				<div class="row g-4 align-items-center">
-					<div class="col-md-5">
-						<div
-							class="position-relative z-1 gsap-fade-in"
-							data-scroll-trigger="true"
-							data-delay="0.5"
-						>
-							<img
-								src="{{root}}assets/img/about-img-1.webm"
-								alt="image"
-								class="img-fluid"
-							/>
-							<img
-								src="{{root}}assets/img/shape/about-img-1-bg.png"
-								alt="image"
-								class="position-absolute start-50 top-50 translate-middle z-n1 pointer-none"
-							/>
-							<img
-								src="{{root}}assets/img/shape/about-element-4.png"
-								alt="image"
-								class="img-fluid position-absolute start-0 top-0 translate-middle pointer-none z-n1"
-							/>
-						</div>
-					</div>
 					<div class="col-md-7">
 						<div
 							class="position-relative bg-secondary px-6 py-8 px-xl-10 py-xl-12 px-xxl-15 py-xxl-18 rounded-5 border border-2x border-dark shadow-sharp-md z-1 gsap-fade-in"
@@ -262,31 +245,40 @@ layout: "single-page"
 							<h2 class="text-light text-stroke text-shadow">ABOUT TOKEMOJI</h2>
 							<div class="mb-8">
 								<div class="p-5 border border-2x border-dark rounded-3 shadow-sharp bg-light">
-									<p class="mb-4 fs-24 text-heading">
-										Humanity runs on feelings — now the blockchain runs on them too.
+									<p class="mb-4 fs-28 text-heading fw-bold text-emphasis">
+										<strong>Tokemoji — Emotions Tokenized</strong>
+									</p>
+									<p class="mb-4 fs-18 text-heading">
+										The world doesn't run on logic.<br>
+										It runs on feelings.
+									</p>
+									<p class="mb-4 fs-18 text-heading">
+										Markets react to fear.<br>
+										Media sells outrage.<br>
+										Politics exploits hope.
+									</p>
+									<p class="mb-4 fs-18 text-heading">
+										But charts pretend it's all numbers.
 									</p>
 									<p class="mb-4 fs-20 text-heading">
-										Tokemoji is the first global barometer of emotion, alive and moving on-chain.
+										Tokemoji turns emotions into a new asset class.<br>
+										For the first time, the invisible has price, movement, and market momentum.
 									</p>
 									<p class="mb-4 fs-18 text-heading">
-										🌍 When the world shakes between Good 😇 and Evil 😈, Tokemoji turns that ancient clash into visible, tradeable energy.<br><br>
-										💹 When markets swing between Greed 🤑 and Fear 😱, Tokemoji captures the pulse of investors in real time.<br><br>
-										💔 When love and hate, joy and sadness collide — emotion finally has weight and price.
-									</p>
-									<p class="mb-4 fs-20 text-heading fw-bold">
-										Every emoji is more than a symbol — it's the heartbeat of our collective mood.
+										😇 Good vs 😈 Evil — the timeless conflict, now on-chain.<br>
+										🤑 Greed vs 😱 Fear — the investor heartbeat, tokenized in real time.<br>
+										❤️ Love, 🤬 Hate, 😂 LOL — emotions that truly drive the internet.
 									</p>
 									<p class="mb-4 fs-18 text-heading">
-										You don't just hold coins.<br>
-										You hold LOVE ❤️ when hope pumps.<br>
-										You hold FEAR 😱 when chaos hits.<br>
-										You hold GOOD 😇 when light fights back.
+										Every emoji is more than a symbol.<br>
+										It's a <strong class="text-emphasis">share in our collective mood</strong> —<br>
+										you can hold it, trade it, and watch the world's feelings gain or lose value.
 									</p>
-									<p class="mb-4 fs-20 text-heading fw-bold">
-										Tokemoji isn't just another token drop.
+									<p class="mb-4 fs-28 text-heading fw-bold text-emphasis">
+										<strong>Tokemoji is the birth of a new asset class — tokenized human emotion.</strong>
 									</p>
-									<p class="mb-0 fs-24 text-heading fw-bold">
-										It's the birth of a new asset class — tokenized emotions.
+									<p class="mb-0 fs-24 text-heading fw-bold text-emphasis">
+										<strong>Tokemoji — Trade the Feeling.</strong>
 									</p>
 								</div>
 							</div>
@@ -362,11 +354,108 @@ layout: "single-page"
 							/>
 						</div>
 					</div>
+					<div class="col-md-5">
+						<div
+							class="position-relative z-1 gsap-fade-in"
+							data-scroll-trigger="true"
+							data-delay="0.5"
+						>
+							<video
+								class="img-fluid"
+								autoplay
+								loop
+								muted
+								playsinline
+							>
+								<source src="{{root}}assets/img/about-img-1.webm" type="video/webm">
+								<img src="{{root}}assets/img/about-img-1.webp" alt="About Animation" class="img-fluid">
+							</video>
+							<img
+								src="{{root}}assets/img/shape/about-img-1-bg.png"
+								alt="image"
+								class="position-absolute start-50 top-50 translate-middle z-n1 pointer-none"
+							/>
+							<img
+								src="{{root}}assets/img/shape/about-element-4.png"
+								alt="image"
+								class="img-fluid position-absolute start-0 top-0 translate-middle pointer-none z-n1"
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<!-- About Section End -->
 
+		<!-- WebM Emoji Test Section -->
+		<div class="section-space-y">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<h2 class="mb-4 text-center text-light">WebM Emoji Test Section</h2>
+						<div class="row">
+							<div class="col-md-3 mb-3">
+								<h5>Test PNG (should work)</h5>
+								<img src="{{root}}assets/img/about-img-1.png" alt="Test PNG" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Love WebM (img tag)</h5>
+								<img src="{{root}}assets/img/emojis/love.webm" alt="Love" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Love WebM (video tag)</h5>
+								<video src="{{root}}assets/img/emojis/love.webm" autoplay loop muted playsinline style="width: 100px; height: 100px;"></video>
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Mad</h5>
+								<img src="{{root}}assets/img/emojis/mad.webm" alt="Mad" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>OMG</h5>
+								<img src="{{root}}assets/img/emojis/omg.webm" alt="OMG" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Happy</h5>
+								<img src="{{root}}assets/img/emojis/happy.webm" alt="Happy" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Sad</h5>
+								<img src="{{root}}assets/img/emojis/sad.webm" alt="Sad" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>LOL</h5>
+								<img src="{{root}}assets/img/emojis/lol.webm" alt="LOL" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Evil</h5>
+								<img src="{{root}}assets/img/emojis/evil.webm" alt="Evil" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Good</h5>
+								<img src="{{root}}assets/img/emojis/good.webm" alt="Good" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Fear</h5>
+								<img src="{{root}}assets/img/emojis/fear.webm" alt="Fear" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Greed</h5>
+								<img src="{{root}}assets/img/emojis/greed.webm" alt="Greed" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Like</h5>
+								<img src="{{root}}assets/img/emojis/like.webm" alt="Like" style="width: 100px; height: 100px;">
+							</div>
+							<div class="col-md-3 mb-3">
+								<h5>Hate</h5>
+								<img src="{{root}}assets/img/emojis/hate.webm" alt="Hate" style="width: 100px; height: 100px;">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- WebM Emoji Test Section End -->
 
 		<!-- Tokemoji Market Dashboard / Emotion Barometer -->
 		<div id="barometer" class="section-space-top">
@@ -391,7 +480,7 @@ layout: "single-page"
 								</div>
 							</div>
 							<div class="container">
-								<div class="row g-4">
+										<div class="row g-4">
 									<!-- Left Column: Token List -->
 									<div class="col-lg-6">
 										<div class="border border-dark shadow-sharp rounded-5 bg-light gsap-fade-in"
@@ -429,14 +518,16 @@ layout: "single-page"
 													</div>
 													<div class="p-4 text-center">
 														<div class="dominance-gif mb-2">
-															<img src="{{root}}assets/img/updated Emojis/Love/love.webm" alt="Dominance" class="dominance-gif-img" id="dominance-gif">
-														</div>
+														<video autoplay loop muted playsinline class="dominance-gif-img" id="dominance-gif">
+															<source src="{{root}}assets/img/emojis/love.webm" type="video/webm">
+														</video>
+													</div>
 														<div class="dominance-ticker mb-2">
 															<span class="fs-5 fw-bold text-heading" id="dominance-ticker">MOON</span>
-														</div>
+												</div>
 														<div class="dominance-percentage mb-3">
 															<span class="fs-4 fw-bold text-warning" id="dominance-percentage">15.6%</span>
-														</div>
+											</div>
 														<div class="dominance-bar">
 															<div class="progress" style="height: 15px;">
 																<div class="progress-bar bg-warning" role="progressbar" 
@@ -458,10 +549,12 @@ layout: "single-page"
 														<div class="d-flex align-items-center justify-content-center">
 															<div class="gauge-label text-center me-2">
 																<div class="gauge-gif mb-1">
-																	<img src="{{root}}assets/img/updated Emojis/Greed/greed.webm" alt="Greed" class="gauge-gif-img">
-																</div>
+																	<video autoplay loop muted playsinline class="gauge-gif-img">
+																		<source src="{{root}}assets/img/emojis/greed.webm" type="video/webm">
+																	</video>
+													</div>
 																<span class="gauge-text-label fw-bold">GREED</span>
-															</div>
+													</div>
 															<div class="gauge-container flex-grow-1">
 																<svg class="gauge" width="160" height="90" viewBox="0 0 160 90">
 																	<path d="M 30 70 A 50 50 0 0 1 130 70" stroke="#333" stroke-width="16" fill="none"/>
@@ -472,29 +565,33 @@ layout: "single-page"
 																	<span class="gauge-ticker">GREED</span>
 																	<span class="gauge-dominance">Dominance</span>
 																	<span class="gauge-percentage">78%</span>
-																</div>
-															</div>
+												</div>
+											</div>
 															<div class="gauge-label text-center ms-2">
 																<div class="gauge-gif mb-1">
-																	<img src="{{root}}assets/img/updated Emojis/Fear/fear.webm" alt="Fear" class="gauge-gif-img">
-																</div>
+																	<video autoplay loop muted playsinline class="gauge-gif-img">
+																		<source src="{{root}}assets/img/emojis/fear.webm" type="video/webm">
+																	</video>
+										</div>
 																<span class="gauge-text-label fw-bold">FEAR</span>
-															</div>
+									</div>
 														</div>
 													</div>
 												</div>
 												
 												<!-- Good vs Evil Gauge -->
 												<div class="border border-dark shadow-sharp rounded-5 bg-light gsap-fade-in mb-2"
-													data-scroll-trigger="true"
+											data-scroll-trigger="true"
 													data-y="25"
 													data-delay="0.75">
 													<div class="p-2">
 														<div class="d-flex align-items-center justify-content-center">
 															<div class="gauge-label text-center me-2">
 																<div class="gauge-gif mb-1">
-																	<img src="{{root}}assets/img/updated Emojis/Good/good.webm" alt="Good" class="gauge-gif-img">
-																</div>
+																	<video autoplay loop muted playsinline class="gauge-gif-img">
+																		<source src="{{root}}assets/img/emojis/good.webm" type="video/webm">
+																	</video>
+									</div>
 																<span class="gauge-text-label fw-bold">GOOD</span>
 															</div>
 															<div class="gauge-container flex-grow-1">
@@ -511,7 +608,9 @@ layout: "single-page"
 															</div>
 															<div class="gauge-label text-center ms-2">
 																<div class="gauge-gif mb-1">
-																	<img src="{{root}}assets/img/updated Emojis/Evil/evil.webm" alt="Evil" class="gauge-gif-img">
+																	<video autoplay loop muted playsinline class="gauge-gif-img">
+																		<source src="{{root}}assets/img/emojis/evil.webm" type="video/webm">
+																	</video>
 																</div>
 																<span class="gauge-text-label fw-bold">EVIL</span>
 															</div>
@@ -528,10 +627,12 @@ layout: "single-page"
 														<div class="d-flex align-items-center justify-content-center">
 															<div class="gauge-label text-center me-2">
 																<div class="gauge-gif mb-1">
-																	<img src="{{root}}assets/img/updated Emojis/Love/love.webm" alt="Love" class="gauge-gif-img">
-																</div>
+																	<video autoplay loop muted playsinline class="gauge-gif-img">
+																		<source src="{{root}}assets/img/emojis/love.webm" type="video/webm">
+																	</video>
+													</div>
 																<span class="gauge-text-label fw-bold">LOVE</span>
-															</div>
+													</div>
 															<div class="gauge-container flex-grow-1">
 																<svg class="gauge" width="160" height="90" viewBox="0 0 160 90">
 																	<path d="M 30 70 A 50 50 0 0 1 130 70" stroke="#333" stroke-width="16" fill="none"/>
@@ -542,11 +643,13 @@ layout: "single-page"
 																	<span class="gauge-ticker">LOVE</span>
 																	<span class="gauge-dominance">Dominance</span>
 																	<span class="gauge-percentage">72%</span>
-																</div>
-															</div>
+												</div>
+											</div>
 															<div class="gauge-label text-center ms-2">
 																<div class="gauge-gif mb-1">
-																	<img src="{{root}}assets/img/updated Emojis/Mad/mad.webm" alt="Hate" class="gauge-gif-img">
+																	<video autoplay loop muted playsinline class="gauge-gif-img">
+																		<source src="{{root}}assets/img/emojis/mad.webm" type="video/webm">
+																	</video>
 																</div>
 																<span class="gauge-text-label fw-bold">HATE</span>
 															</div>
@@ -558,7 +661,7 @@ layout: "single-page"
 										
 										<!-- News Feed - Hidden -->
 										<div class="border border-dark shadow-sharp rounded-5 bg-light gsap-fade-in mb-3 d-none"
-											data-scroll-trigger="true"
+													data-scroll-trigger="true"
 											data-y="25"
 											data-delay="1">
 											<div class="border-bottom border-dark px-4 pt-4 pb-3">
@@ -585,9 +688,15 @@ layout: "single-page"
 													<div class="p-3 text-center">
 														<div class="top-gainers-carousel mb-2">
 															<div class="carousel-container">
-																<img src="{{root}}assets/img/updated Emojis/LOL/lol.webm" alt="Gainer Left" class="top-gainer-gif-img side-gif" id="top-gainer-gif-left">
-																<img src="{{root}}assets/img/updated Emojis/Hate/hate.webm" alt="Gainer Center" class="top-gainer-gif-img center-gif" id="top-gainer-gif-center">
-																<img src="{{root}}assets/img/updated Emojis/Love/love.webm" alt="Gainer Right" class="top-gainer-gif-img side-gif" id="top-gainer-gif-right">
+																<video autoplay loop muted playsinline class="top-gainer-gif-img side-gif" id="top-gainer-gif-left">
+																	<source src="{{root}}assets/img/emojis/lol.webm" type="video/webm">
+																</video>
+																<video autoplay loop muted playsinline class="top-gainer-gif-img center-gif" id="top-gainer-gif-center">
+																	<source src="{{root}}assets/img/emojis/hate.webm" type="video/webm">
+																</video>
+																<video autoplay loop muted playsinline class="top-gainer-gif-img side-gif" id="top-gainer-gif-right">
+																	<source src="{{root}}assets/img/emojis/love.webm" type="video/webm">
+																</video>
 															</div>
 														</div>
 														<div class="top-gainer-ticker mb-1">
@@ -612,9 +721,15 @@ layout: "single-page"
 													<div class="p-3 text-center">
 														<div class="top-losers-carousel mb-2">
 															<div class="carousel-container">
-																<img src="{{root}}assets/img/updated Emojis/Mad/mad.webm" alt="Loser Left" class="top-loser-gif-img side-gif" id="top-loser-gif-left">
-																<img src="{{root}}assets/img/updated Emojis/Sad/sad.webm" alt="Loser Center" class="top-loser-gif-img center-gif" id="top-loser-gif-center">
-																<img src="{{root}}assets/img/updated Emojis/Fear/fear.webm" alt="Loser Right" class="top-loser-gif-img side-gif" id="top-loser-gif-right">
+																<video autoplay loop muted playsinline class="top-loser-gif-img side-gif" id="top-loser-gif-left">
+																	<source src="{{root}}assets/img/emojis/mad.webm" type="video/webm">
+																</video>
+																<video autoplay loop muted playsinline class="top-loser-gif-img center-gif" id="top-loser-gif-center">
+																	<source src="{{root}}assets/img/emojis/sad.webm" type="video/webm">
+																</video>
+																<video autoplay loop muted playsinline class="top-loser-gif-img side-gif" id="top-loser-gif-right">
+																	<source src="{{root}}assets/img/emojis/fear.webm" type="video/webm">
+																</video>
 															</div>
 														</div>
 														<div class="top-loser-ticker mb-1">
@@ -638,7 +753,10 @@ layout: "single-page"
 													</div>
 													<div class="p-3 text-center">
 														<div class="adoption-gif mb-2">
-															<img src="{{root}}assets/img/updated Emojis/Love/love.webm" alt="Global Adoption" class="adoption-gif-img" id="adoption-gif">
+															<video autoplay loop muted playsinline class="adoption-gif-img" id="adoption-gif">
+																<source src="{{root}}assets/img/emojis/love.webm" type="video/webm">
+																<img src="{{root}}assets/img/emojis/love.webp" alt="Global Adoption" class="adoption-gif-img">
+															</video>
 														</div>
 														<div class="adoption-percentage mb-2">
 															<span class="fw-bold text-warning" id="adoption-percentage">2.4%</span>
@@ -678,12 +796,12 @@ layout: "single-page"
 											id="ticker-news-list"
 										>
 											<!-- Content will be populated by JavaScript -->
-										</ul>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+														</ul>
+													</div>
+													</div>
+												</div>
+											</div>
+										</div>
 					<!-- Bottom Ticker - Promo Information (Left Direction) -->
 					<div class="ticker-3 py-2 bg-dark border-top border-bottom border-2x border-dark">
 						<div class="container-fluid p-0">
@@ -739,20 +857,20 @@ layout: "single-page"
 										<span class="text-muted small">Updates every 5s</span>
 										<div class="spinner-border spinner-border-sm text-primary" role="status" id="alt-market-spinner" style="display: none;">
 											<span class="visually-hidden">Loading...</span>
-										</div>
-									</div>
+							</div>
 								</div>
 							</div>
+								</div>
 							<div class="p-4">
 								<div id="alt-token-list" class="token-list">
 									<!-- Alt tokens will be populated by JavaScript -->
 								</div>
 							</div>
+								</div>
+								</div>
+							</div>
+							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 		<!-- Alt Market End -->
 
 		<!-- Tokenomics  -->
@@ -763,15 +881,15 @@ layout: "single-page"
 						<div class="col-12">
 							<h2
 								class="mb-0 text-center text-light text-stroke-md text-shadow-md fs-6vw gsap-text-animation"
-								data-scroll-trigger="true"
+									data-scroll-trigger="true"
 								data-split-type="words"
-							>
+								>
 								TOKENOMICS
-							</h2>
-						</div>
-					</div>
-				</div>
-			</div>
+									</h2>
+								</div>
+							</div>
+								</div>
+							</div>
 			
 			<!-- Tokenomics Content - Exact Copy from About Section -->
 			<div class="container">
@@ -779,75 +897,71 @@ layout: "single-page"
 					<div class="col-md-7">
 						<div
 							class="position-relative bg-secondary px-6 py-8 px-xl-10 py-xl-12 px-xxl-15 py-xxl-18 rounded-5 border border-2x border-dark shadow-sharp-md z-1 gsap-fade-in"
-							data-scroll-trigger="true"
+									data-scroll-trigger="true"
 							data-delay="0.75"
 						>
 							<h2 class="text-light text-stroke text-shadow mb-6">💰 SUPPLY & DISTRIBUTION 💰</h2>
 							
-							<!-- Supply Info Field -->
-							<div class="mb-4 p-4 border border-2x border-dark rounded-3 shadow-sharp bg-light">
-								<div class="d-flex justify-content-between align-items-center mb-3">
-									<span class="text-dark fw-bold fs-18">📊 Supply per token:</span>
-									<span class="text-dark fw-bold fs-18">1,000,000,000</span>
-								</div>
-								<!-- Contract Copy Field -->
-								<div class="border-top border-dark pt-3">
-									<label class="form-label text-dark fw-bold mb-2">📋 Copy Contract Address:</label>
-									<div class="d-flex gap-2 mb-2">
-										<select class="form-select border border-2x border-dark shadow-sharp" id="contract-select">
-											<option value="">Select Emoji Token</option>
-											<option value="AWaFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😀 HAPPY Token</option>
-											<option value="BWbFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😢 SAD Token</option>
-											<option value="CWcFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😡 ANGER Token</option>
-											<option value="DWdFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😍 LOVE Token</option>
-											<option value="EWeFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😨 FEAR Token</option>
-											<option value="FWfFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😈 GREED Token</option>
-											<option value="GWgFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😇 GOOD Token</option>
-											<option value="HWhFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😈 EVIL Token</option>
-											<option value="IWiFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">🔥 HOT Token</option>
-											<option value="JWjFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">🌙 MOON Token</option>
-											<option value="KWkFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😂 LOL Token</option>
-											<option value="LWlFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">👑 CROWN Token</option>
-											<option value="MWmFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">🤔 DOUBT Token</option>
-										</select>
-										<button type="button" class="btn btn-light border border-2x border-dark shadow-sharp" id="copy-contract-btn">
-											<iconify-icon icon="ri:file-copy-line"></iconify-icon>
-										</button>
-									</div>
-									<div class="d-flex gap-2">
-										<input type="text" class="form-control border border-2x border-dark shadow-sharp" id="contract-address" placeholder="Contract address will appear here" readonly>
-										<button type="button" class="btn btn-secondary border border-2x border-dark shadow-sharp text-heading fw-bold" id="solscan-btn" style="display: none;">
-											<iconify-icon icon="ri:external-link-line"></iconify-icon>
-										</button>
-									</div>
-								</div>
-							</div>
-							
-							<!-- Fair Launch Field -->
-							<div class="mb-4 p-4 border border-2x border-dark rounded-3 shadow-sharp bg-light">
-								<h5 class="text-dark mb-2 fs-5 fw-bold">🚀 Fair Launch – 90% Community & Public Float</h5>
-								<p class="text-dark fs-16 mb-0 fw-bold">Most tokens go directly to the market via Pump.fun – everyone starts equal.</p>
-							</div>
-							
-							<!-- Growth Fund Field -->
-							<div class="mb-4 p-4 border border-2x border-dark rounded-3 shadow-sharp bg-light">
-								<h5 class="text-dark mb-3 fs-5 fw-bold">🌱 Growth & Ecosystem Fund – 10% (Team only 4%)</h5>
-								<ul class="text-dark fs-16 mb-0 ps-3 fw-bold">
-									<li>👥 • Team & Core Contributors – 4%</li>
-									<li>📢 • Marketing & Community – 3%</li>
-									<li>⚙️ • Development & Tools – 3%</li>
-								</ul>
-							</div>
-							
-							<!-- Callout Field -->
-							<div class="p-4 border border-2x border-dark rounded-3 shadow-sharp bg-light text-center">
-								<p class="mb-0 fs-16 text-dark fw-bold">
-									✨ No extra emissions • 🔍 Transparent wallets • 🗺️ Community-first roadmap
+							<!-- Single White Field with New Content -->
+							<div class="mb-4 p-5 border border-2x border-dark rounded-3 shadow-sharp bg-light">
+								<p class="mb-4 fs-18 text-heading">
+									✅ <strong class="text-emphasis">93% Community</strong><br>
+									Fair launch via Pump.fun — almost the entire supply goes straight to the market.<br>
+									No insiders. No pre-sale. Everyone starts equal.
 								</p>
+								
+								<p class="mb-4 fs-18 text-heading">
+									🚀 <strong class="text-emphasis">4% HYPE Fund</strong><br>
+									Marketing, influencer pushes, streams & viral stunts.<br>
+									More hype → more attention → more emotion pumped.
+								</p>
+								
+								<p class="mb-4 fs-18 text-heading">
+									🧠 <strong class="text-emphasis">3% Team</strong><br>
+									Only what's needed to keep building — no greed here.
+								</p>
+								
+								<hr class="border-dark border-2x my-4">
+								
+								<p class="mb-0 fs-16 text-heading text-center fw-bold">
+									No extra emissions • Transparent wallets • Community-first ✅
+								</p>
+							</div>
+							
+							<!-- Contract Copy Field - Moved to End -->
+							<div class="p-4 border border-2x border-dark rounded-3 shadow-sharp bg-light">
+								<label class="form-label text-dark fw-bold mb-2">📋 Copy Contract Address:</label>
+								<div class="d-flex gap-2 mb-2">
+									<select class="form-select border border-2x border-dark shadow-sharp" id="contract-select">
+										<option value="">Select Emoji Token</option>
+										<option value="AWaFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😀 HAPPY Token</option>
+										<option value="BWbFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😢 SAD Token</option>
+										<option value="CWcFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😡 ANGER Token</option>
+										<option value="DWdFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😍 LOVE Token</option>
+										<option value="EWeFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😨 FEAR Token</option>
+										<option value="FWfFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😈 GREED Token</option>
+										<option value="GWgFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😇 GOOD Token</option>
+										<option value="HWhFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😈 EVIL Token</option>
+										<option value="IWiFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">🔥 HOT Token</option>
+										<option value="JWjFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">🌙 MOON Token</option>
+										<option value="KWkFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">😂 LOL Token</option>
+										<option value="LWlFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">👑 CROWN Token</option>
+										<option value="MWmFMT9s9PYCK7muQ2eoidoKYYKkdet9kXynrw46pump">🤔 DOUBT Token</option>
+									</select>
+									<button type="button" class="btn btn-light border border-2x border-dark shadow-sharp" id="copy-contract-btn">
+										<iconify-icon icon="ri:file-copy-line"></iconify-icon>
+									</button>
+								</div>
+								<div class="d-flex gap-2">
+									<input type="text" class="form-control border border-2x border-dark shadow-sharp" id="contract-address" placeholder="Contract address will appear here" readonly>
+									<button type="button" class="btn btn-secondary border border-2x border-dark shadow-sharp text-heading fw-bold" id="solscan-btn" style="display: none;">
+										<iconify-icon icon="ri:external-link-line"></iconify-icon>
+									</button>
+								</div>
 							</div>
 							<img
 								src="{{root}}assets/img/shape/about-element-1.png"
-								alt="image"
+									alt="image"
 								class="img-fluid d-none d-xl-block position-absolute start-0 top-0 translate-middle-y pointer-none"
 							/>
 							<img
@@ -860,6 +974,18 @@ layout: "single-page"
 								alt="image"
 								class="img-fluid d-none d-xxl-block position-absolute start-100 top-100 translate-middle pointer-none"
 							/>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div
+							class="position-relative z-1 gsap-fade-in text-center"
+							data-scroll-trigger="true"
+							data-delay="0.5"
+						>
+							<!-- Tokenomics Animation -->
+							<div class="mb-4">
+								<img src="{{root}}assets/img/tokenomics.gif" alt="Tokenomics Animation" class="img-fluid tokenomics-gif" style="filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));">
+							</div>
 						</div>
 					</div>
 				</div>

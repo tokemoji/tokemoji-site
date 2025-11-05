@@ -43,7 +43,7 @@ const route = {
 		bsPath: "node_modules/bootstrap/scss/**/*.*",
 		bsDest: "src/assets/scss/bootstrap/scss/",
 		bs: "src/assets/scss/bootstrap/*.*",
-		img: "src/assets/img/**/*.{jpg,png,gif,svg,webp,mp4}",
+		img: "src/assets/img/**/*.{jpg,png,gif,svg,webp,mp4,webm}",
 		fonts: "src/assets/fonts/**/*.*",
 		fontStyle: "src/assets/scss/fonts/*.*",
 	},

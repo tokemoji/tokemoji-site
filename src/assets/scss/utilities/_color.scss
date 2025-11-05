@@ -27,6 +27,11 @@
 .text-heading {
 	color: var(--bs-heading-color) !important;
 }
+.text-emphasis {
+	font-weight: 700 !important;
+	color: var(--bs-heading-color) !important;
+	letter-spacing: -0.01em;
+}
 .hover\:text-heading:hover {
 	color: var(--bs-heading-color) !important;
 }

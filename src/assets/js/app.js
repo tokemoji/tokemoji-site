@@ -1,5 +1,356 @@
 "use strict";
+
+// iOS Detection and WebM Fallback
+function isIOS() {
+	const userAgent = navigator.userAgent;
+	const platform = navigator.platform;
+	
+	// More precise iOS detection - only for actual iOS devices
+	const isIOSDevice = /iPad|iPhone|iPod/.test(userAgent);
+	const isIPadPro = platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+	
+	// Don't include mobile Safari detection as it's too broad
+	const result = isIOSDevice || isIPadPro;
+	
+	console.log('iOS Detection:', {
+		userAgent: userAgent,
+		platform: platform,
+		touchPoints: navigator.maxTouchPoints,
+		isIOSDevice: isIOSDevice,
+		isIPadPro: isIPadPro,
+		result: result
+	});
+	
+	return result;
+}
+
+// Helper function to get correct emoji path based on iOS detection
+function getEmojiPath(webmPath) {
+	if (isIOS()) {
+		return webmPath.replace('.webm', '.webp');
+	}
+	return webmPath;
+}
+
+function replaceWebMWithWebP() {
+	if (!isIOS()) return;
+	
+	console.log('iOS detected - replacing WebM with WebP fallbacks');
+	console.log('iOS replacement starting at:', new Date().toISOString());
+	
+	// Simple function to convert WebM to WebP
+	function webmToWebp(src) {
+		return src.replace('.webm', '.webp');
+	}
+	
+	
+	// Replace video elements with WebM sources (EXCEPT hero video - handled by cycling function)
+	const videos = document.querySelectorAll('video');
+	videos.forEach(video => {
+		// Skip hero video - it's handled by the cycling function
+		const sources = video.querySelectorAll('source[type="video/webm"]');
+		if (sources.length > 0) {
+			const webmSrc = sources[0].src;
+			// Skip if this is the hero video
+			if (webmSrc.includes('hero-img-1.webm')) {
+				console.log('🎬 Skipping hero video - will be handled by cycling function');
+				return;
+			}
+			
+			const webpSrc = webmToWebp(webmSrc);
+			
+			// Create img element to replace video
+			const img = document.createElement('img');
+			img.src = webpSrc;
+			img.alt = video.alt || 'Image';
+			img.className = video.className;
+			img.style.cssText = video.style.cssText;
+			
+			// Copy id attribute
+			if (video.id) {
+				img.id = video.id;
+			}
+			
+			// Copy data attributes
+			Array.from(video.attributes).forEach(attr => {
+				if (attr.name.startsWith('data-')) {
+					img.setAttribute(attr.name, attr.value);
+				}
+			});
+			
+			// Replace video with img
+			video.parentNode.replaceChild(img, video);
+			console.log('Replaced video:', webmSrc, '->', webpSrc);
+		}
+	});
+	
+	// Replace picture elements with WebM sources
+	const pictures = document.querySelectorAll('picture');
+	pictures.forEach(picture => {
+		const sources = picture.querySelectorAll('source[type="video/webm"]');
+		if (sources.length > 0) {
+			const webmSrc = sources[0].srcset;
+			const webpSrc = webmToWebp(webmSrc);
+			
+			// Remove the WebM source to prevent video playback
+			sources.forEach(source => source.remove());
+			
+			// Update the img src directly
+			const img = picture.querySelector('img');
+			if (img) {
+				img.src = webpSrc;
+				img.style.pointerEvents = 'none';
+				img.style.userSelect = 'none';
+				img.style.objectFit = 'contain';
+				console.log('Replaced picture:', webmSrc, '->', webpSrc);
+			}
+		}
+	});
+	
+	// Replace any direct WebM references in img or video elements
+	const allElements = document.querySelectorAll('img[src*=".webm"], video[src*=".webm"]');
+	allElements.forEach(element => {
+		const webmSrc = element.src;
+		const webpSrc = webmToWebp(webmSrc);
+		
+		if (element.tagName === 'VIDEO') {
+			// Replace video with img
+			const img = document.createElement('img');
+			img.src = webpSrc;
+			img.alt = element.alt || 'Image';
+			img.className = element.className;
+			img.style.cssText = element.style.cssText;
+			img.style.pointerEvents = 'none';
+			img.style.userSelect = 'none';
+			img.style.objectFit = 'contain';
+			
+			// Copy id attribute
+			if (element.id) {
+				img.id = element.id;
+			}
+			
+			// Copy data attributes
+			Array.from(element.attributes).forEach(attr => {
+				if (attr.name.startsWith('data-')) {
+					img.setAttribute(attr.name, attr.value);
+				}
+			});
+			
+			element.parentNode.replaceChild(img, element);
+		} else {
+			// Update img src
+			element.src = webpSrc;
+			element.style.pointerEvents = 'none';
+			element.style.userSelect = 'none';
+			element.style.objectFit = 'contain';
+		}
+		
+		console.log('Replaced element:', webmSrc, '->', webpSrc);
+	});
+}
+
+// Hero WebP Cycling for iPhone
+// TEST MODE: Temporarily enabled for all devices to test WebP images
+function initHeroWebPCycling() {
+	// TEST MODE: Commented out iOS check to test on all devices
+	// if (!isIOS()) return;
+	
+	console.log('🎬 Initializing Hero WebP cycling (TEST MODE - all devices)');
+	
+	// Find the hero video by looking for the source element
+	const heroVideoSource = document.querySelector('source[src*="hero-img-1.webm"]');
+	const heroVideo = heroVideoSource ? heroVideoSource.closest('video') : null;
+	const heroFallback = document.getElementById('hero-webp-fallback');
+	
+	if (!heroFallback) {
+		console.log('❌ Hero WebP fallback element not found');
+		return;
+	}
+	
+	console.log('🎬 Hero video found:', !!heroVideo);
+	console.log('🎬 Hero fallback found:', !!heroFallback);
+	
+	// Immediately hide the video to prevent any overlap
+	if (heroVideo) {
+		heroVideo.style.display = 'none';
+		console.log('🎬 Hero video immediately hidden');
+	}
+	
+	// Ensure fallback is visible
+	heroFallback.style.display = 'block';
+	console.log('🎬 Hero fallback shown');
+	
+	// Hero WebP files to cycle through (available files: 1, 2, 4, 5)
+	const heroImages = [
+		'assets/img/hero-img-1.webp',
+		'assets/img/hero-img-2.webp', 
+		'assets/img/hero-img-4.webp',
+		'assets/img/hero-img-5.webp'
+	];
+	
+	let currentIndex = 0;
+	
+	function cycleHeroImage() {
+		// Change to next image
+		currentIndex = (currentIndex + 1) % heroImages.length;
+		const nextImageSrc = heroImages[currentIndex];
+		
+		console.log(`🎬 Hero cycling to: ${nextImageSrc} (${currentIndex + 1}/${heroImages.length})`);
+		
+		// Create new image to preload
+		const newImg = new Image();
+		newImg.onload = function() {
+			// Fade out current image
+			heroFallback.style.opacity = '0';
+			heroFallback.style.transition = 'opacity 0.3s ease-in-out';
+			
+			setTimeout(() => {
+				// Change to new image
+				heroFallback.src = nextImageSrc;
+				
+				// Fade in new image
+				heroFallback.style.opacity = '1';
+				
+				console.log(`✅ Hero image loaded: ${nextImageSrc}`);
+			}, 300);
+		};
+		
+		newImg.onerror = function() {
+			console.error(`❌ Failed to load hero image: ${nextImageSrc}`);
+			// Try next image after a short delay
+			setTimeout(cycleHeroImage, 1000);
+		};
+		
+		// Start loading the new image
+		newImg.src = nextImageSrc;
+	}
+	
+	function showNextImage() {
+		// This function shows the next image without incrementing currentIndex first
+		const nextImageSrc = heroImages[currentIndex];
+		
+		console.log(`🎬 Hero showing: ${nextImageSrc} (${currentIndex + 1}/${heroImages.length})`);
+		
+		// Create new image to preload
+		const newImg = new Image();
+		newImg.onload = function() {
+			// Fade out current image
+			heroFallback.style.opacity = '0';
+			heroFallback.style.transition = 'opacity 0.3s ease-in-out';
+			
+			setTimeout(() => {
+				// Change to new image
+				heroFallback.src = nextImageSrc;
+				
+				// Fade in new image
+				heroFallback.style.opacity = '1';
+				
+				console.log(`✅ Hero image loaded: ${nextImageSrc}`);
+			}, 300);
+		};
+		
+		newImg.onerror = function() {
+			console.error(`❌ Failed to load hero image: ${nextImageSrc}`);
+			// Try next image after a short delay
+			setTimeout(showNextImage, 1000);
+		};
+		
+		// Start loading the new image
+		newImg.src = nextImageSrc;
+	}
+	
+	// Start cycling after a short delay
+	setTimeout(() => {
+		// Show first image (index 0)
+		showNextImage();
+		
+		console.log('🎬 Hero WebP cycling started with', heroImages.length, 'images');
+		
+		// Start the cycling loop (change every 2.25 seconds)
+		// First cycle will happen after 2.25 seconds, showing image at index 1
+		setInterval(cycleHeroImage, 2250);
+	}, 1000);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
+	// Debug: Log browser info
+	console.log('Browser Info:', {
+		userAgent: navigator.userAgent,
+		platform: navigator.platform,
+		isIOS: isIOS()
+	});
+	
+	// Apply iOS fallbacks immediately
+	replaceWebMWithWebP();
+	
+	// Also run after a short delay to catch any dynamically loaded content
+	setTimeout(replaceWebMWithWebP, 100);
+	
+	// Initialize hero WebP cycling for iPhone
+	setTimeout(initHeroWebPCycling, 500);
+	
+	// Add fallback for broken images - works on all browsers
+	setTimeout(() => {
+		// Handle broken images in video elements
+		const videos = document.querySelectorAll('video');
+		console.log('Found', videos.length, 'video elements');
+		
+		videos.forEach((video, index) => {
+			const sources = video.querySelectorAll('source');
+			console.log(`Video ${index}:`, {
+				sources: sources.length,
+				src: sources[0]?.src,
+				readyState: video.readyState,
+				networkState: video.networkState
+			});
+			
+			video.addEventListener('error', function(e) {
+				console.log('Video failed to load:', e, 'trying WebP fallback');
+				if (sources.length > 0) {
+					const webmSrc = sources[0].src;
+					const webpSrc = webmSrc.replace('.webm', '.webp');
+					
+					// Replace video with img
+					const img = document.createElement('img');
+					img.src = webpSrc;
+					img.alt = video.alt || 'Image';
+					img.className = video.className;
+					img.style.cssText = video.style.cssText;
+					
+					// Copy data attributes
+					Array.from(video.attributes).forEach(attr => {
+						if (attr.name.startsWith('data-')) {
+							img.setAttribute(attr.name, attr.value);
+						}
+					});
+					
+					video.parentNode.replaceChild(img, video);
+					console.log('Video fallback triggered:', webmSrc, '->', webpSrc);
+				}
+			});
+			
+			video.addEventListener('loadstart', function() {
+				console.log('Video load started:', sources[0]?.src);
+			});
+			
+			video.addEventListener('canplay', function() {
+				console.log('Video can play:', sources[0]?.src);
+			});
+		});
+		
+		// Handle broken images in img elements
+		const images = document.querySelectorAll('img[src*=".webm"]');
+		images.forEach(img => {
+			img.addEventListener('error', function() {
+				const currentSrc = this.src;
+				if (currentSrc.includes('.webm')) {
+					this.src = currentSrc.replace('.webm', '.webp');
+					console.log('Image fallback triggered:', currentSrc, '->', this.src);
+				}
+			});
+		});
+	}, 1000);
+	
 	gsap.registerPlugin(ScrollTrigger, SplitText, ScrollSmoother, Flip);
 	const body = document.querySelector("body");
 	/**
@@ -602,27 +953,24 @@ window.addEventListener("load", () => {
  */
 
 // Mock data for Tokemoji tokens (moved outside DOMContentLoaded for global access)
-// Only include tokens that have emoji graphics available
+// Only include tokens that have emoji graphics available - reduced to 12 specific tokens
 const tokemojiData = [
 		{ emoji: "❤️", ticker: "LOVE", price: "$0.0042", change: "+12.5%", marketCap: "$2.1M", changeType: "positive", hasGraphic: true },
-		{ emoji: "🤬", ticker: "MAD", price: "$0.0038", change: "-8.2%", marketCap: "$1.9M", changeType: "negative", hasGraphic: true },
+		{ emoji: "😂", ticker: "LOL", price: "$0.0047", change: "+18.9%", marketCap: "$2.4M", changeType: "positive", hasGraphic: true },
+		{ emoji: "😇", ticker: "GOOD", price: "$0.0041", change: "+9.8%", marketCap: "$2.1M", changeType: "positive", hasGraphic: true },
+		{ emoji: "😈", ticker: "EVIL", price: "$0.0032", change: "-3.1%", marketCap: "$1.6M", changeType: "negative", hasGraphic: true },
+		{ emoji: "🤑", ticker: "GREED", price: "$0.0067", change: "+31.2%", marketCap: "$3.4M", changeType: "positive", hasGraphic: true },
+		{ emoji: "😱", ticker: "FEAR", price: "$0.0023", change: "-12.7%", marketCap: "$1.2M", changeType: "negative", hasGraphic: true },
+		{ emoji: "😤", ticker: "MAD", price: "$0.0038", change: "-8.2%", marketCap: "$1.9M", changeType: "negative", hasGraphic: true },
+		{ emoji: "🤬", ticker: "HATE", price: "$0.0021", change: "-9.5%", marketCap: "$1.1M", changeType: "negative", hasGraphic: true },
 		{ emoji: "🤯", ticker: "OMG", price: "$0.0055", change: "+25.3%", marketCap: "$2.8M", changeType: "positive", hasGraphic: true },
 		{ emoji: "😁", ticker: "HAPPY", price: "$0.0029", change: "+5.7%", marketCap: "$1.5M", changeType: "positive", hasGraphic: true },
 		{ emoji: "😔", ticker: "SAD", price: "$0.0018", change: "-15.4%", marketCap: "$0.9M", changeType: "negative", hasGraphic: true },
-		{ emoji: "😂", ticker: "LOL", price: "$0.0047", change: "+18.9%", marketCap: "$2.4M", changeType: "positive", hasGraphic: true },
-		{ emoji: "😈", ticker: "EVIL", price: "$0.0032", change: "-3.1%", marketCap: "$1.6M", changeType: "negative", hasGraphic: true },
-		{ emoji: "😇", ticker: "GOOD", price: "$0.0041", change: "+9.8%", marketCap: "$2.1M", changeType: "positive", hasGraphic: true },
-		{ emoji: "😱", ticker: "FEAR", price: "$0.0023", change: "-12.7%", marketCap: "$1.2M", changeType: "negative", hasGraphic: true },
-		{ emoji: "🤑", ticker: "GREED", price: "$0.0067", change: "+31.2%", marketCap: "$3.4M", changeType: "positive", hasGraphic: true },
-		{ emoji: "👍", ticker: "LIKE", price: "$0.0035", change: "+7.3%", marketCap: "$1.8M", changeType: "positive", hasGraphic: true },
-		{ emoji: "🔥", ticker: "HOT", price: "$0.0059", change: "+22.1%", marketCap: "$3.0M", changeType: "positive", hasGraphic: true },
-		{ emoji: "😡", ticker: "HATE", price: "$0.0021", change: "-9.5%", marketCap: "$1.1M", changeType: "negative", hasGraphic: true },
-		{ emoji: "🤔", ticker: "DOUBT", price: "$0.0027", change: "-1.8%", marketCap: "$1.4M", changeType: "negative", hasGraphic: true },
-		{ emoji: "🚀", ticker: "MOON", price: "$0.0078", change: "+45.6%", marketCap: "$3.9M", changeType: "positive", hasGraphic: true }
+		{ emoji: "👍", ticker: "LIKE", price: "$0.0035", change: "+7.3%", marketCap: "$1.8M", changeType: "positive", hasGraphic: true }
 	];
 
 // Filter to only show tokens with graphics
-const tokemojiDataWithGraphics = tokemojiDataWithGraphics.filter(token => token.hasGraphic);
+const tokemojiDataWithGraphics = tokemojiData.filter(token => token.hasGraphic);
 
 // Mock news data (moved outside DOMContentLoaded for global access)
 const newsData = [
@@ -636,13 +984,43 @@ const newsData = [
 		{ title: "Market cap milestone: Tokemoji ecosystem hits $25M", timestamp: "8h ago", emoji: "🎉" }
 	];
 
+// Helper function to convert img element to video element for WebM files (global)
+function convertImgToVideo(imgElement, webmPath) {
+	if (!imgElement || !webmPath) {
+		console.log('convertImgToVideo: Missing element or path', imgElement, webmPath);
+		return;
+	}
+	
+	console.log('Converting IMG to VIDEO:', imgElement.id, 'with path:', webmPath);
+	
+	// Create video element
+	const videoEl = document.createElement('video');
+	videoEl.src = getEmojiPath(webmPath);
+	videoEl.autoplay = true;
+	videoEl.loop = true;
+	videoEl.muted = true;
+	videoEl.className = imgElement.className;
+	videoEl.style.width = imgElement.style.width || '100%';
+	videoEl.style.height = imgElement.style.height || '100%';
+	
+	// Replace img with video element
+	imgElement.parentNode.replaceChild(videoEl, imgElement);
+	console.log('Successfully converted IMG to VIDEO');
+	return videoEl;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 	// Initialize dashboard
 	function initTokemojiDashboard() {
 		populateTokenList();
 		populateNewsFeed();
 		updateMarketDominance();
-		updateGauges();
+		
+		// Delay gauge updates to ensure they happen after iOS replacement
+		setTimeout(() => {
+			updateGauges();
+		}, 200);
+		
 		initializeCarouselData();
 		updateTopGainers();
 		updateTopLosers();
@@ -690,10 +1068,35 @@ document.addEventListener("DOMContentLoaded", function () {
 				break;
 		}
 
+		// Map token tickers to WebM paths
+		const tokenWebMMap = {
+			'LOVE': 'assets/img/emojis/love.webm',
+			'LOL': 'assets/img/emojis/lol.webm',
+			'GOOD': 'assets/img/emojis/good.webm',
+			'EVIL': 'assets/img/emojis/evil.webm',
+			'GREED': 'assets/img/emojis/greed.webm',
+			'FEAR': 'assets/img/emojis/fear.webm',
+			'MAD': 'assets/img/emojis/mad.webm',
+			'HATE': 'assets/img/emojis/hate.webm',
+			'OMG': 'assets/img/emojis/omg.webm',
+			'HAPPY': 'assets/img/emojis/happy.webm',
+			'SAD': 'assets/img/emojis/sad.webm',
+			'LIKE': 'assets/img/emojis/like.webm'
+		};
+
 		tokenList.innerHTML = sortedTokens.map((token, index) => `
 			<div class="token-row d-flex align-items-center py-1 border-bottom border-light" data-token="${token.ticker}">
 				<span class="token-rank me-2 fw-bold text-muted" style="min-width: 20px; flex-shrink: 0;">${index + 1}</span>
-				<span class="token-emoji me-2" style="flex-shrink: 0;">${token.emoji}</span>
+				<div class="token-emoji me-2" style="flex-shrink: 0; width: 36px; height: 36px;">
+					${isIOS() ? 
+						`<img src="${getEmojiPath(tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm')}" 
+							  style="width: 100%; height: 100%; object-fit: contain;">` :
+						`<video src="${tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm'}" 
+							   autoplay loop muted playsinline
+							   style="width: 100%; height: 100%; object-fit: contain;">
+						</video>`
+					}
+				</div>
 				<span class="token-ticker fw-bold text-heading me-2" style="min-width: 60px; flex-shrink: 0;">${token.ticker}</span>
 				<span class="token-price text-muted me-2" style="min-width: 70px; flex-shrink: 0;">${token.price}</span>
 				<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold me-2" style="min-width: 60px; flex-shrink: 0;">${token.change}</span>
@@ -739,7 +1142,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Update market dominance (shows #1 coin)
 	function updateMarketDominance() {
 		// Sort by market cap to get #1 coin
-		const sortedTokens = [...tokemojiData].sort((a, b) => {
+		const sortedTokens = [...tokemojiDataWithGraphics].sort((a, b) => {
 			const aCap = parseFloat(a.marketCap.replace('$', '').replace('M', ''));
 			const bCap = parseFloat(b.marketCap.replace('$', '').replace('M', ''));
 			return bCap - aCap;
@@ -759,28 +1162,71 @@ document.addEventListener("DOMContentLoaded", function () {
 		const dominancePercentageEl = document.getElementById('dominance-percentage');
 		const dominanceBarEl = document.getElementById('dominance-bar');
 		
-		// Map token tickers to WebM paths (updated Emojis folder)
+		// Map token tickers to WebM paths (emojis folder)
 		const tokenWebMMap = {
-			'LOVE': 'assets/img/updated Emojis/Love/love.webm',
-			'MAD': 'assets/img/updated Emojis/Mad/mad.webm',
-			'OMG': 'assets/img/updated Emojis/OMG/omg.webm',
-			'HAPPY': 'assets/img/updated Emojis/Happy/happy.webm',
-			'SAD': 'assets/img/updated Emojis/Sad/sad.webm',
-			'LOL': 'assets/img/updated Emojis/LOL/lol.webm',
-			'EVIL': 'assets/img/updated Emojis/Evil/evil.webm',
-			'GOOD': 'assets/img/updated Emojis/Good/good.webm',
-			'FEAR': 'assets/img/updated Emojis/Fear/fear.webm',
-			'GREED': 'assets/img/updated Emojis/Greed/greed.webm',
-			'LIKE': 'assets/img/updated Emojis/Like/like.webm',
-			'HOT': 'assets/img/updated Emojis/Hate/hate.webm', // Using hate for HOT
-			'HATE': 'assets/img/updated Emojis/Hate/hate.webm',
-			'DOUBT': 'assets/img/updated Emojis/Fear/fear.webm', // Using fear for DOUBT
-			'MOON': 'assets/img/updated Emojis/Love/love.webm' // Using love for MOON
+			'LOVE': 'assets/img/emojis/love.webm',
+			'LOL': 'assets/img/emojis/lol.webm',
+			'GOOD': 'assets/img/emojis/good.webm',
+			'EVIL': 'assets/img/emojis/evil.webm',
+			'GREED': 'assets/img/emojis/greed.webm',
+			'FEAR': 'assets/img/emojis/fear.webm',
+			'MAD': 'assets/img/emojis/mad.webm',
+			'HATE': 'assets/img/emojis/hate.webm',
+			'OMG': 'assets/img/emojis/omg.webm',
+			'HAPPY': 'assets/img/emojis/happy.webm',
+			'SAD': 'assets/img/emojis/sad.webm',
+			'LIKE': 'assets/img/emojis/like.webm'
 		};
 		
+		console.log('Top token:', topToken);
+		console.log('TokenWebMMap:', tokenWebMMap);
+		console.log('DOM elements found:', {
+			dominanceGifEl: !!dominanceGifEl,
+			dominanceTickerEl: !!dominanceTickerEl,
+			dominancePercentageEl: !!dominancePercentageEl,
+			dominanceBarEl: !!dominanceBarEl
+		});
+		
 		if (dominanceGifEl) {
-			const webmPath = tokenWebMMap[topToken.ticker] || 'assets/img/updated Emojis/Crown/love.webm';
-			dominanceGifEl.src = webmPath;
+			const webmPath = tokenWebMMap[topToken.ticker] || 'assets/img/emojis/love.webm';
+			console.log('🎯 DOMINANCE WIDGET DEBUG:', {
+				topTokenTicker: topToken.ticker,
+				webmPath: webmPath,
+				elementType: dominanceGifEl.tagName,
+				hasMapping: !!tokenWebMMap[topToken.ticker],
+				finalPath: getEmojiPath(webmPath),
+				currentSrc: dominanceGifEl.src || dominanceGifEl.querySelector('source')?.src || 'none',
+				isIOS: isIOS()
+			});
+			console.warn('🎯 DOMINANCE WIDGET DEBUG:', {
+				topTokenTicker: topToken.ticker,
+				webmPath: webmPath,
+				elementType: dominanceGifEl.tagName,
+				hasMapping: !!tokenWebMMap[topToken.ticker],
+				finalPath: getEmojiPath(webmPath),
+				currentSrc: dominanceGifEl.src || dominanceGifEl.querySelector('source')?.src || 'none',
+				isIOS: isIOS()
+			});
+			
+			if (dominanceGifEl.tagName === 'VIDEO') {
+				// Update source element for video and reload
+				const source = dominanceGifEl.querySelector('source');
+				if (source) {
+					source.src = getEmojiPath(webmPath);
+					dominanceGifEl.load(); // Reload the video
+					console.log('✅ Updated DOMINANCE VIDEO source to:', getEmojiPath(webmPath));
+					console.warn('✅ Updated DOMINANCE VIDEO source to:', getEmojiPath(webmPath));
+				} else {
+					dominanceGifEl.src = getEmojiPath(webmPath);
+					dominanceGifEl.load(); // Reload the video
+					console.log('Updated DOMINANCE VIDEO src to:', getEmojiPath(webmPath));
+				}
+			} else {
+				// Update src for img element
+				dominanceGifEl.src = getEmojiPath(webmPath);
+				console.log('✅ Updated DOMINANCE IMG src to:', getEmojiPath(webmPath));
+				console.warn('✅ Updated DOMINANCE IMG src to:', getEmojiPath(webmPath));
+			}
 		}
 		if (dominanceTickerEl) dominanceTickerEl.textContent = topToken.ticker;
 		if (dominancePercentageEl) dominancePercentageEl.textContent = dominancePercentage + '%';
@@ -865,18 +1311,165 @@ document.addEventListener("DOMContentLoaded", function () {
 			const dominancePercent = Math.max(greedRatio, 100 - greedRatio);
 			greedFearResult.querySelector('.gauge-ticker').textContent = dominantEmotion;
 			greedFearResult.querySelector('.gauge-percentage').textContent = `${dominancePercent.toFixed(0)}%`;
+			
+			// Update gauge emojis - find all gauge-gif-img elements in this gauge
+			const gaugeContainer = greedFearResult.closest('.border');
+			console.log('🔍 GREED/FEAR GAUGE DEBUG - Container found:', !!gaugeContainer);
+			console.warn('🔍 GREED/FEAR GAUGE DEBUG - Container found:', !!gaugeContainer);
+			if (gaugeContainer) {
+				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
+				console.log('🔍 GREED/FEAR GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
+				console.warn('🔍 GREED/FEAR GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
+				gaugeEmojis.forEach((emoji, index) => {
+					console.log(`🔍 GREED/FEAR GAUGE DEBUG - Emoji ${index}:`, {
+						tagName: emoji.tagName,
+						className: emoji.className,
+						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
+						hasSource: !!emoji.querySelector('source')
+					});
+					console.warn(`🔍 GREED/FEAR GAUGE DEBUG - Emoji ${index}:`, {
+						tagName: emoji.tagName,
+						className: emoji.className,
+						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
+						hasSource: !!emoji.querySelector('source')
+					});
+				});
+				gaugeEmojis.forEach((emoji, index) => {
+					// First emoji is GREED, second is FEAR
+					const webmPath = index === 0 ? 'assets/img/emojis/greed.webm' : 'assets/img/emojis/fear.webm';
+					const finalPath = getEmojiPath(webmPath);
+					
+					
+					if (emoji.tagName === 'VIDEO') {
+						// Update existing video element
+						const source = emoji.querySelector('source');
+						if (source) {
+							source.src = finalPath;
+							emoji.load();
+						} else {
+							emoji.src = finalPath;
+							emoji.load();
+						}
+						console.log(`✅ GREED/FEAR Updated gauge video ${index}:`, webmPath, '->', finalPath);
+						console.warn(`✅ GREED/FEAR Updated gauge video ${index}:`, webmPath, '->', finalPath);
+					} else if (emoji.tagName === 'IMG') {
+						// Update img src directly
+						emoji.src = finalPath;
+						console.log(`✅ GREED/FEAR Updated gauge img ${index}:`, webmPath, '->', finalPath);
+						console.warn(`✅ GREED/FEAR Updated gauge img ${index}:`, webmPath, '->', finalPath);
+					}
+				});
+			}
 		}
 		if (goodEvilResult) {
 			const dominantEmotion = goodRatio > 50 ? 'GOOD' : 'EVIL';
 			const dominancePercent = Math.max(goodRatio, 100 - goodRatio);
 			goodEvilResult.querySelector('.gauge-ticker').textContent = dominantEmotion;
 			goodEvilResult.querySelector('.gauge-percentage').textContent = `${dominancePercent.toFixed(0)}%`;
+			
+			// Update gauge emojis - find all gauge-gif-img elements in this gauge
+			const gaugeContainer = goodEvilResult.closest('.border');
+			console.log('🔍 GOOD/EVIL GAUGE DEBUG - Container found:', !!gaugeContainer);
+			console.warn('🔍 GOOD/EVIL GAUGE DEBUG - Container found:', !!gaugeContainer);
+			if (gaugeContainer) {
+				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
+				console.log('🔍 GOOD/EVIL GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
+				console.warn('🔍 GOOD/EVIL GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
+				gaugeEmojis.forEach((emoji, index) => {
+					console.log(`🔍 GOOD/EVIL GAUGE DEBUG - Emoji ${index}:`, {
+						tagName: emoji.tagName,
+						className: emoji.className,
+						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
+						hasSource: !!emoji.querySelector('source')
+					});
+					console.warn(`🔍 GOOD/EVIL GAUGE DEBUG - Emoji ${index}:`, {
+						tagName: emoji.tagName,
+						className: emoji.className,
+						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
+						hasSource: !!emoji.querySelector('source')
+					});
+				});
+				gaugeEmojis.forEach((emoji, index) => {
+					// First emoji is GOOD, second is EVIL
+					const webmPath = index === 0 ? 'assets/img/emojis/good.webm' : 'assets/img/emojis/evil.webm';
+					const finalPath = getEmojiPath(webmPath);
+					
+					
+					if (emoji.tagName === 'VIDEO') {
+						// Update existing video element
+						const source = emoji.querySelector('source');
+						if (source) {
+							source.src = finalPath;
+							emoji.load();
+						} else {
+							emoji.src = finalPath;
+							emoji.load();
+						}
+						console.log(`✅ GOOD/EVIL Updated gauge video ${index}:`, webmPath, '->', finalPath);
+						console.warn(`✅ GOOD/EVIL Updated gauge video ${index}:`, webmPath, '->', finalPath);
+					} else if (emoji.tagName === 'IMG') {
+						// Update img src directly
+						emoji.src = finalPath;
+						console.log(`✅ GOOD/EVIL Updated gauge img ${index}:`, webmPath, '->', finalPath);
+						console.warn(`✅ GOOD/EVIL Updated gauge img ${index}:`, webmPath, '->', finalPath);
+					}
+				});
+			}
 		}
 		if (loveHateResult) {
 			const dominantEmotion = loveRatio > 50 ? 'LOVE' : 'HATE';
 			const dominancePercent = Math.max(loveRatio, 100 - loveRatio);
 			loveHateResult.querySelector('.gauge-ticker').textContent = dominantEmotion;
 			loveHateResult.querySelector('.gauge-percentage').textContent = `${dominancePercent.toFixed(0)}%`;
+			
+			// Update gauge emojis - find all gauge-gif-img elements in this gauge
+			const gaugeContainer = loveHateResult.closest('.border');
+			console.log('🔍 LOVE/HATE GAUGE DEBUG - Container found:', !!gaugeContainer);
+			console.warn('🔍 LOVE/HATE GAUGE DEBUG - Container found:', !!gaugeContainer);
+			if (gaugeContainer) {
+				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
+				console.log('🔍 LOVE/HATE GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
+				console.warn('🔍 LOVE/HATE GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
+				gaugeEmojis.forEach((emoji, index) => {
+					console.log(`🔍 LOVE/HATE GAUGE DEBUG - Emoji ${index}:`, {
+						tagName: emoji.tagName,
+						className: emoji.className,
+						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
+						hasSource: !!emoji.querySelector('source')
+					});
+					console.warn(`🔍 LOVE/HATE GAUGE DEBUG - Emoji ${index}:`, {
+						tagName: emoji.tagName,
+						className: emoji.className,
+						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
+						hasSource: !!emoji.querySelector('source')
+					});
+				});
+				gaugeEmojis.forEach((emoji, index) => {
+					// First emoji is LOVE, second is HATE
+					const webmPath = index === 0 ? 'assets/img/emojis/love.webm' : 'assets/img/emojis/hate.webm';
+					const finalPath = getEmojiPath(webmPath);
+					
+					
+					if (emoji.tagName === 'VIDEO') {
+						// Update existing video element
+						const source = emoji.querySelector('source');
+						if (source) {
+							source.src = finalPath;
+							emoji.load();
+						} else {
+							emoji.src = finalPath;
+							emoji.load();
+						}
+						console.log(`✅ LOVE/HATE Updated gauge video ${index}:`, webmPath, '->', finalPath);
+						console.warn(`✅ LOVE/HATE Updated gauge video ${index}:`, webmPath, '->', finalPath);
+					} else if (emoji.tagName === 'IMG') {
+						// Update img src directly
+						emoji.src = finalPath;
+						console.log(`✅ LOVE/HATE Updated gauge img ${index}:`, webmPath, '->', finalPath);
+						console.warn(`✅ LOVE/HATE Updated gauge img ${index}:`, webmPath, '->', finalPath);
+					}
+				});
+			}
 		}
 	}
 
@@ -1198,6 +1791,14 @@ function initializeCarouselData() {
 	const gainers = tokemojiDataWithGraphics.filter(token => token.changeType === 'positive');
 	const losers = tokemojiDataWithGraphics.filter(token => token.changeType === 'negative');
 	
+	console.log('Carousel data initialization:', {
+		totalTokens: tokemojiDataWithGraphics.length,
+		gainers: gainers.length,
+		losers: losers.length,
+		gainersData: gainers.map(g => g.ticker),
+		losersData: losers.map(l => l.ticker)
+	});
+	
 	// Sort and store all gainers
 	gainersCarouselData = gainers.sort((a, b) => {
 		const aChange = parseFloat(a.change.replace('%', '').replace('+', ''));
@@ -1217,23 +1818,23 @@ function initializeCarouselData() {
 function updateTopGainers() {
 	if (gainersCarouselData.length === 0) return;
 	
+	console.log('🔄 CAROUSEL UPDATE - Top Gainers, current index:', gainersCurrentIndex, 'at:', new Date().toISOString());
+	console.warn('🔄 CAROUSEL UPDATE - Top Gainers, current index:', gainersCurrentIndex, 'at:', new Date().toISOString());
+	
 	// Map token tickers to WebM paths
 	const tokenWebMMap = {
-		'LOVE': 'assets/img/updated Emojis/Love/love.webm',
-		'MAD': 'assets/img/updated Emojis/Anger/mad.webm',
-		'OMG': 'assets/img/updated Emojis/OMG/omg.webm',
-		'HAPPY': 'assets/img/updated Emojis/Happy/happy.webm',
-		'SAD': 'assets/img/updated Emojis/SAD/sad.webm',
-		'LOL': 'assets/img/updated Emojis/LOL/lol.webm',
-		'EVIL': 'assets/img/updated Emojis/Evil/evil.webm',
-		'GOOD': 'assets/img/updated Emojis/Good/good.webm',
-		'FEAR': 'assets/img/updated Emojis/Fear/fear.webm',
-		'GREED': 'assets/img/updated Emojis/Greed/greed.webm',
-		'LIKE': 'assets/img/updated Emojis/Like/like.webm',
-		'HOT': 'assets/img/updated Emojis/HOT/hate.webm',
-		'HATE': 'assets/img/updated Emojis/Anger/mad.webm',
-		'DOUBT': 'assets/img/updated Emojis/Doubt/fear.webm',
-		'MOON': 'assets/img/updated Emojis/Crown/love.webm'
+		'LOVE': 'assets/img/emojis/love.webm',
+		'LOL': 'assets/img/emojis/lol.webm',
+		'GOOD': 'assets/img/emojis/good.webm',
+		'EVIL': 'assets/img/emojis/evil.webm',
+		'GREED': 'assets/img/emojis/greed.webm',
+		'FEAR': 'assets/img/emojis/fear.webm',
+		'MAD': 'assets/img/emojis/mad.webm',
+		'HATE': 'assets/img/emojis/hate.webm',
+		'OMG': 'assets/img/emojis/omg.webm',
+		'HAPPY': 'assets/img/emojis/happy.webm',
+		'SAD': 'assets/img/emojis/sad.webm',
+		'LIKE': 'assets/img/emojis/like.webm'
 	};
 	
 	// Get current set of 3 tokens (with wrapping)
@@ -1243,22 +1844,120 @@ function updateTopGainers() {
 		gainersCarouselData[(gainersCurrentIndex + 1) % gainersCarouselData.length]
 	];
 	
-	// Update GIFs
+	// Update GIFs with video elements
 	const leftGif = document.getElementById('top-gainer-gif-left');
 	const centerGif = document.getElementById('top-gainer-gif-center');
 	const rightGif = document.getElementById('top-gainer-gif-right');
 	
+	console.log('🎯 CAROUSEL ELEMENTS - Top Gainers elements found:', {
+		leftGif: !!leftGif,
+		centerGif: !!centerGif,
+		rightGif: !!rightGif,
+		currentSet: currentSet.map(c => c ? c.ticker : 'null'),
+		isIOS: isIOS(),
+		leftGifTag: leftGif ? leftGif.tagName : 'null',
+		centerGifTag: centerGif ? centerGif.tagName : 'null',
+		rightGifTag: rightGif ? rightGif.tagName : 'null'
+	});
+	console.warn('🎯 CAROUSEL ELEMENTS - Top Gainers elements found:', {
+		leftGif: !!leftGif,
+		centerGif: !!centerGif,
+		rightGif: !!rightGif,
+		currentSet: currentSet.map(c => c ? c.ticker : 'null'),
+		isIOS: isIOS(),
+		leftGifTag: leftGif ? leftGif.tagName : 'null',
+		centerGifTag: centerGif ? centerGif.tagName : 'null',
+		rightGifTag: rightGif ? rightGif.tagName : 'null'
+	});
+	
 	if (leftGif && currentSet[0]) {
-		const webmPath = tokenWebMMap[currentSet[0].ticker] || 'assets/img/updated Emojis/HOT/hate.webm';
-		leftGif.src = webmPath;
+		const webmPath = tokenWebMMap[currentSet[0].ticker] || 'assets/img/emojis/hate.webm';
+		console.log('🔍 LEFT GAINER DEBUG:', {
+			ticker: currentSet[0].ticker,
+			elementType: leftGif.tagName,
+			webmPath: webmPath,
+			hasMapping: !!tokenWebMMap[currentSet[0].ticker],
+			finalPath: getEmojiPath(webmPath),
+			currentSrc: leftGif.src || leftGif.querySelector('source')?.src || 'none',
+			isIOS: isIOS()
+		});
+		console.warn('🔍 LEFT GAINER DEBUG:', {
+			ticker: currentSet[0].ticker,
+			elementType: leftGif.tagName,
+			webmPath: webmPath,
+			hasMapping: !!tokenWebMMap[currentSet[0].ticker],
+			finalPath: getEmojiPath(webmPath),
+			currentSrc: leftGif.src || leftGif.querySelector('source')?.src || 'none',
+			isIOS: isIOS()
+		});
+		
+		if (leftGif.tagName === 'VIDEO') {
+			// Update source element for video and reload
+			const source = leftGif.querySelector('source');
+			if (source) {
+				source.src = getEmojiPath(webmPath);
+				leftGif.load(); // Reload the video
+				console.log('✅ Updated VIDEO source to:', getEmojiPath(webmPath));
+				console.warn('✅ Updated VIDEO source to:', getEmojiPath(webmPath));
+			} else {
+				leftGif.src = getEmojiPath(webmPath);
+				leftGif.load(); // Reload the video
+				console.log('Updated VIDEO src to:', getEmojiPath(webmPath));
+			}
+		} else {
+			// Update src for img element
+			leftGif.src = getEmojiPath(webmPath);
+			console.log('✅ Updated IMG src to:', getEmojiPath(webmPath));
+			console.warn('✅ Updated IMG src to:', getEmojiPath(webmPath));
+		}
 	}
 	if (centerGif && currentSet[1]) {
-		const webmPath = tokenWebMMap[currentSet[1].ticker] || 'assets/img/updated Emojis/HOT/hate.webm';
-		centerGif.src = webmPath;
+		const webmPath = tokenWebMMap[currentSet[1].ticker] || 'assets/img/emojis/hate.webm';
+		console.log('Center gainer debug:', {
+			ticker: currentSet[1].ticker,
+			elementType: centerGif.tagName,
+			webmPath: webmPath,
+			hasMapping: !!tokenWebMMap[currentSet[1].ticker]
+		});
+		
+		if (centerGif.tagName === 'VIDEO') {
+			// Update source element for video and reload
+			const source = centerGif.querySelector('source');
+			if (source) {
+				source.src = getEmojiPath(webmPath);
+				centerGif.load(); // Reload the video
+			} else {
+				centerGif.src = getEmojiPath(webmPath);
+				centerGif.load(); // Reload the video
+			}
+		} else {
+			// Update src for img element
+			centerGif.src = getEmojiPath(webmPath);
+		}
 	}
 	if (rightGif && currentSet[2]) {
-		const webmPath = tokenWebMMap[currentSet[2].ticker] || 'assets/img/updated Emojis/HOT/hate.webm';
-		rightGif.src = webmPath;
+		const webmPath = tokenWebMMap[currentSet[2].ticker] || 'assets/img/emojis/hate.webm';
+		console.log('Right gainer debug:', {
+			ticker: currentSet[2].ticker,
+			elementType: rightGif.tagName,
+			webmPath: webmPath,
+			hasMapping: !!tokenWebMMap[currentSet[2].ticker]
+		});
+		
+		if (rightGif.tagName === 'VIDEO') {
+			// Update source element for video and reload
+			const source = rightGif.querySelector('source');
+			if (source) {
+				source.src = getEmojiPath(webmPath);
+				rightGif.load(); // Reload the video
+			} else {
+				rightGif.src = getEmojiPath(webmPath);
+				rightGif.load(); // Reload the video
+			}
+		} else {
+			// Update src for img element
+			rightGif.src = getEmojiPath(webmPath);
+		}
 	}
 	
 	// Update ticker and change for the center (current) token
@@ -1276,23 +1975,22 @@ function updateTopGainers() {
 function updateTopLosers() {
 	if (losersCarouselData.length === 0) return;
 	
+	console.log('Updating Top Losers, current index:', losersCurrentIndex);
+	
 	// Map token tickers to WebM paths
 	const tokenWebMMap = {
-		'LOVE': 'assets/img/updated Emojis/Love/love.webm',
-		'MAD': 'assets/img/updated Emojis/Anger/mad.webm',
-		'OMG': 'assets/img/updated Emojis/OMG/omg.webm',
-		'HAPPY': 'assets/img/updated Emojis/Happy/happy.webm',
-		'SAD': 'assets/img/updated Emojis/SAD/sad.webm',
-		'LOL': 'assets/img/updated Emojis/LOL/lol.webm',
-		'EVIL': 'assets/img/updated Emojis/Evil/evil.webm',
-		'GOOD': 'assets/img/updated Emojis/Good/good.webm',
-		'FEAR': 'assets/img/updated Emojis/Fear/fear.webm',
-		'GREED': 'assets/img/updated Emojis/Greed/greed.webm',
-		'LIKE': 'assets/img/updated Emojis/Like/like.webm',
-		'HOT': 'assets/img/updated Emojis/HOT/hate.webm',
-		'HATE': 'assets/img/updated Emojis/Anger/mad.webm',
-		'DOUBT': 'assets/img/updated Emojis/Doubt/fear.webm',
-		'MOON': 'assets/img/updated Emojis/Crown/love.webm'
+		'LOVE': 'assets/img/emojis/love.webm',
+		'LOL': 'assets/img/emojis/lol.webm',
+		'GOOD': 'assets/img/emojis/good.webm',
+		'EVIL': 'assets/img/emojis/evil.webm',
+		'GREED': 'assets/img/emojis/greed.webm',
+		'FEAR': 'assets/img/emojis/fear.webm',
+		'MAD': 'assets/img/emojis/mad.webm',
+		'HATE': 'assets/img/emojis/hate.webm',
+		'OMG': 'assets/img/emojis/omg.webm',
+		'HAPPY': 'assets/img/emojis/happy.webm',
+		'SAD': 'assets/img/emojis/sad.webm',
+		'LIKE': 'assets/img/emojis/like.webm'
 	};
 	
 	// Get current set of 3 tokens (with wrapping)
@@ -1302,22 +2000,74 @@ function updateTopLosers() {
 		losersCarouselData[(losersCurrentIndex + 1) % losersCarouselData.length]
 	];
 	
-	// Update GIFs
+	// Update GIFs with video elements
 	const leftGif = document.getElementById('top-loser-gif-left');
 	const centerGif = document.getElementById('top-loser-gif-center');
 	const rightGif = document.getElementById('top-loser-gif-right');
 	
+	console.log('Top Losers elements found:', {
+		leftGif: !!leftGif,
+		centerGif: !!centerGif,
+		rightGif: !!rightGif,
+		currentSet: currentSet.map(c => c ? c.ticker : 'null')
+	});
+	
 	if (leftGif && currentSet[0]) {
-		const webmPath = tokenWebMMap[currentSet[0].ticker] || 'assets/img/updated Emojis/SAD/sad.webm';
-		leftGif.src = webmPath;
+		const webmPath = tokenWebMMap[currentSet[0].ticker] || 'assets/img/emojis/sad.webm';
+		console.log('Left loser:', currentSet[0].ticker, 'element type:', leftGif.tagName, 'path:', webmPath);
+		
+		if (leftGif.tagName === 'VIDEO') {
+			// Update source element for video and reload
+			const source = leftGif.querySelector('source');
+			if (source) {
+				source.src = getEmojiPath(webmPath);
+				leftGif.load(); // Reload the video
+			} else {
+				leftGif.src = getEmojiPath(webmPath);
+				leftGif.load(); // Reload the video
+			}
+		} else {
+			// Update src for img element
+			leftGif.src = getEmojiPath(webmPath);
+		}
 	}
 	if (centerGif && currentSet[1]) {
-		const webmPath = tokenWebMMap[currentSet[1].ticker] || 'assets/img/updated Emojis/SAD/sad.webm';
-		centerGif.src = webmPath;
+		const webmPath = tokenWebMMap[currentSet[1].ticker] || 'assets/img/emojis/sad.webm';
+		console.log('Center loser:', currentSet[1].ticker, 'element type:', centerGif.tagName, 'path:', webmPath);
+		
+		if (centerGif.tagName === 'VIDEO') {
+			// Update source element for video and reload
+			const source = centerGif.querySelector('source');
+			if (source) {
+				source.src = getEmojiPath(webmPath);
+				centerGif.load(); // Reload the video
+			} else {
+				centerGif.src = getEmojiPath(webmPath);
+				centerGif.load(); // Reload the video
+			}
+		} else {
+			// Update src for img element
+			centerGif.src = getEmojiPath(webmPath);
+		}
 	}
 	if (rightGif && currentSet[2]) {
-		const webmPath = tokenWebMMap[currentSet[2].ticker] || 'assets/img/updated Emojis/SAD/sad.webm';
-		rightGif.src = webmPath;
+		const webmPath = tokenWebMMap[currentSet[2].ticker] || 'assets/img/emojis/sad.webm';
+		console.log('Right loser:', currentSet[2].ticker, 'element type:', rightGif.tagName, 'path:', webmPath);
+		
+		if (rightGif.tagName === 'VIDEO') {
+			// Update source element for video and reload
+			const source = rightGif.querySelector('source');
+			if (source) {
+				source.src = getEmojiPath(webmPath);
+				rightGif.load(); // Reload the video
+			} else {
+				rightGif.src = getEmojiPath(webmPath);
+				rightGif.load(); // Reload the video
+			}
+		} else {
+			// Update src for img element
+			rightGif.src = getEmojiPath(webmPath);
+		}
 	}
 	
 	// Update ticker and change for the center (current) token
