@@ -1,4 +1,12 @@
 import fetch from 'node-fetch';
+import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+config({ path: join(__dirname, '..', '..', '.env') });
 
 const MORALIS_API_KEY = process.env.MORALIS_API_KEY;
 const MORALIS_BASE_URL = 'https://solana-gateway.moralis.io';
@@ -56,7 +64,7 @@ class MoralisClient {
 
   async fetchBatch(mintAddresses, attempt = 1) {
     try {
-      const url = `${MORALIS_BASE_URL}/token/mainnet/multi/price`;
+      const url = `${MORALIS_BASE_URL}/token/mainnet/price`;
 
       const response = await fetch(url, {
         method: 'POST',
@@ -67,7 +75,7 @@ class MoralisClient {
         },
         body: JSON.stringify({
           tokens: mintAddresses.map(address => ({
-            tokenAddress: address
+            token_address: address
           }))
         })
       });

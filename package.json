@@ -15,8 +15,9 @@
 	"author": "bplugins",
 	"license": "ISC",
 	"dependencies": {
-		"bootstrap": "^5.3.6",
 		"@supabase/supabase-js": "^2.39.0",
+		"bootstrap": "^5.3.6",
+		"dotenv": "^17.2.3",
 		"node-fetch": "^3.3.2"
 	},
 	"devDependencies": {

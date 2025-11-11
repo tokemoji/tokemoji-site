@@ -4,7 +4,8 @@
       "symbol": "GREED",
       "name": "Greed Token",
       "emoji_type": "GREED",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_1",
+      "mint_address": "vRseBFqTy9QLmmo5qGiwo74AVpdqqMTnxPqWoWMpump",
+      "test_token_name": "VERSE",
       "icon_path": "assets/img/emojis/greed.webm",
       "display_color": "#ffc107",
       "display_order": 1
@@ -13,7 +14,8 @@
       "symbol": "FEAR",
       "name": "Fear Token",
       "emoji_type": "FEAR",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_2",
+      "mint_address": "ArUyEVWGCzZMtAxcPmNH8nDFZ4kMjxrMbpsQf3NEpump",
+      "test_token_name": "BAYC",
       "icon_path": "assets/img/emojis/fear.webm",
       "display_color": "#dc3545",
       "display_order": 2
@@ -22,7 +24,8 @@
       "symbol": "LOVE",
       "name": "Love Token",
       "emoji_type": "LOVE",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_3",
+      "mint_address": "ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY",
+      "test_token_name": "MOODENG",
       "icon_path": "assets/img/emojis/love.webm",
       "display_color": "#e91e63",
       "display_order": 3
@@ -31,7 +34,8 @@
       "symbol": "HATE",
       "name": "Hate Token",
       "emoji_type": "HATE",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_4",
+      "mint_address": "FeR8VBqNRSUD5NtXAj2n3j1dAHkZHfyDktKuLXD4pump",
+      "test_token_name": "Jelly",
       "icon_path": "assets/img/emojis/hate.webm",
       "display_color": "#8b0000",
       "display_order": 4
@@ -40,7 +44,8 @@
       "symbol": "GOOD",
       "name": "Good Token",
       "emoji_type": "GOOD",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_5",
+      "mint_address": "DtR4D9FtVoTX2569gaL837ZgrB6wNjj6tkmnX9Rdk9B2",
+      "test_token_name": "AURA",
       "icon_path": "assets/img/emojis/good.webm",
       "display_color": "#28a745",
       "display_order": 5
@@ -49,7 +54,8 @@
       "symbol": "EVIL",
       "name": "Evil Token",
       "emoji_type": "EVIL",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_6",
+      "mint_address": "GqXX9MfkURBZ5cFym9HDzqTL7uZkjtCSqLkUSe2xpump",
+      "test_token_name": "MARSMI",
       "icon_path": "assets/img/emojis/evil.webm",
       "display_color": "#6f42c1",
       "display_order": 6
@@ -58,7 +64,8 @@
       "symbol": "HAPPY",
       "name": "Happy Token",
       "emoji_type": "HAPPY",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_7",
+      "mint_address": "9PR7nCP9DpcUotnDPVLUBUZKu5WAYkwrCUx9wDnSpump",
+      "test_token_name": "Comedian",
       "icon_path": "assets/img/emojis/happy.webm",
       "display_color": "#ffd700",
       "display_order": 7
@@ -67,7 +74,8 @@
       "symbol": "SAD",
       "name": "Sad Token",
       "emoji_type": "SAD",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_8",
+      "mint_address": "c5UUH9RTDiSpq6HKS6bp4NdU9PNJpXRXuiw6ShBTBhgH2",
+      "test_token_name": "Troll",
       "icon_path": "assets/img/emojis/sad.webm",
       "display_color": "#4682b4",
       "display_order": 8
@@ -76,7 +84,8 @@
       "symbol": "LOL",
       "name": "LOL Token",
       "emoji_type": "LOL",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_9",
+      "mint_address": "J1Wpmugrooj1yMyQKrdZ2vwRXG5rhfx3vTnYE39gpump",
+      "test_token_name": "Would",
       "icon_path": "assets/img/emojis/lol.webm",
       "display_color": "#ff6347",
       "display_order": 9
@@ -85,7 +94,8 @@
       "symbol": "OMG",
       "name": "OMG Token",
       "emoji_type": "OMG",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_10",
+      "mint_address": "CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump",
+      "test_token_name": "GOAT",
       "icon_path": "assets/img/emojis/omg.webm",
       "display_color": "#ff8c00",
       "display_order": 10
@@ -94,7 +104,8 @@
       "symbol": "MAD",
       "name": "Mad Token",
       "emoji_type": "MAD",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_11",
+      "mint_address": "CreiuhfwdWCN5mJbMJtA9bBpYQrQF2tCBuZwSPWfpump",
+      "test_token_name": "PYTHIA",
       "icon_path": "assets/img/emojis/mad.webm",
       "display_color": "#b22222",
       "display_order": 11
@@ -103,7 +114,8 @@
       "symbol": "LIKE",
       "name": "Like Token",
       "emoji_type": "LIKE",
-      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_12",
+      "mint_address": "Dfh5DzRgSvvCFDoYc2ciTkMrbDfRKybA4SoFbPmApump",
+      "test_token_name": "PIPPIN",
       "icon_path": "assets/img/emojis/like.webm",
       "display_color": "#1e90ff",
       "display_order": 12

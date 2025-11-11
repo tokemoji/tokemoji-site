@@ -45,47 +45,59 @@ async function initializeTokens() {
       if (existing) {
         console.log(`[Init] Updating existing token: ${token.symbol}`);
 
+        const updateData = {
+          symbol: token.symbol,
+          name: token.name,
+          emoji_type: token.emoji_type,
+          display_color: token.display_color,
+          display_order: token.display_order,
+          icon_path: token.icon_path,
+          is_active: true
+        };
+
+        if (token.test_token_name) {
+          updateData.name = `${token.name} (${token.test_token_name})`;
+        }
+
         const { error: updateError } = await supabase
           .from('tokens')
-          .update({
-            symbol: token.symbol,
-            name: token.name,
-            emoji_type: token.emoji_type,
-            display_color: token.display_color,
-            display_order: token.display_order,
-            icon_path: token.icon_path,
-            is_active: true
-          })
+          .update(updateData)
           .eq('id', existing.id);
 
         if (updateError) {
           console.error(`[Init] Error updating token ${token.symbol}:`, updateError);
         } else {
-          console.log(`[Init] ✓ Updated ${token.symbol}`);
+          console.log(`[Init] ✓ Updated ${token.symbol}${token.test_token_name ? ' (Test: ' + token.test_token_name + ')' : ''}`);
         }
       } else {
         console.log(`[Init] Inserting new token: ${token.symbol}`);
 
+        const insertData = {
+          symbol: token.symbol,
+          name: token.name,
+          emoji_type: token.emoji_type,
+          mint_address: token.mint_address,
+          decimals: token.decimals || 9,
+          total_supply: token.total_supply || 1000000000,
+          display_color: token.display_color,
+          display_order: token.display_order,
+          icon_path: token.icon_path,
+          is_active: true,
+          launch_date: new Date().toISOString()
+        };
+
+        if (token.test_token_name) {
+          insertData.name = `${token.name} (${token.test_token_name})`;
+        }
+
         const { error: insertError } = await supabase
           .from('tokens')
-          .insert({
-            symbol: token.symbol,
-            name: token.name,
-            emoji_type: token.emoji_type,
-            mint_address: token.mint_address,
-            decimals: token.decimals || 9,
-            total_supply: token.total_supply || 1000000000,
-            display_color: token.display_color,
-            display_order: token.display_order,
-            icon_path: token.icon_path,
-            is_active: true,
-            launch_date: new Date().toISOString()
-          });
+          .insert(insertData);
 
         if (insertError) {
           console.error(`[Init] Error inserting token ${token.symbol}:`, insertError);
         } else {
-          console.log(`[Init] ✓ Inserted ${token.symbol}`);
+          console.log(`[Init] ✓ Inserted ${token.symbol}${token.test_token_name ? ' (Test: ' + token.test_token_name + ')' : ''}`);
         }
       }
     }

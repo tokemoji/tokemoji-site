@@ -1,7 +1,7 @@
 import moralisClient from '../utils/moralis-client.js';
 import supabase from '../utils/supabase-client.js';
 
-const POLLING_INTERVAL = parseInt(process.env.POLLING_INTERVAL_MS || '3000');
+const POLLING_INTERVAL = parseInt(process.env.POLLING_INTERVAL_MS || '30000');
 const PRICE_CHANGE_THRESHOLD = parseFloat(process.env.PRICE_CHANGE_THRESHOLD || '0.001');
 
 class TokemojiPoller {
