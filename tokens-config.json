@@ -1,0 +1,112 @@
+{
+  "tokens": [
+    {
+      "symbol": "GREED",
+      "name": "Greed Token",
+      "emoji_type": "GREED",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_1",
+      "icon_path": "assets/img/emojis/greed.webm",
+      "display_color": "#ffc107",
+      "display_order": 1
+    },
+    {
+      "symbol": "FEAR",
+      "name": "Fear Token",
+      "emoji_type": "FEAR",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_2",
+      "icon_path": "assets/img/emojis/fear.webm",
+      "display_color": "#dc3545",
+      "display_order": 2
+    },
+    {
+      "symbol": "LOVE",
+      "name": "Love Token",
+      "emoji_type": "LOVE",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_3",
+      "icon_path": "assets/img/emojis/love.webm",
+      "display_color": "#e91e63",
+      "display_order": 3
+    },
+    {
+      "symbol": "HATE",
+      "name": "Hate Token",
+      "emoji_type": "HATE",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_4",
+      "icon_path": "assets/img/emojis/hate.webm",
+      "display_color": "#8b0000",
+      "display_order": 4
+    },
+    {
+      "symbol": "GOOD",
+      "name": "Good Token",
+      "emoji_type": "GOOD",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_5",
+      "icon_path": "assets/img/emojis/good.webm",
+      "display_color": "#28a745",
+      "display_order": 5
+    },
+    {
+      "symbol": "EVIL",
+      "name": "Evil Token",
+      "emoji_type": "EVIL",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_6",
+      "icon_path": "assets/img/emojis/evil.webm",
+      "display_color": "#6f42c1",
+      "display_order": 6
+    },
+    {
+      "symbol": "HAPPY",
+      "name": "Happy Token",
+      "emoji_type": "HAPPY",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_7",
+      "icon_path": "assets/img/emojis/happy.webm",
+      "display_color": "#ffd700",
+      "display_order": 7
+    },
+    {
+      "symbol": "SAD",
+      "name": "Sad Token",
+      "emoji_type": "SAD",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_8",
+      "icon_path": "assets/img/emojis/sad.webm",
+      "display_color": "#4682b4",
+      "display_order": 8
+    },
+    {
+      "symbol": "LOL",
+      "name": "LOL Token",
+      "emoji_type": "LOL",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_9",
+      "icon_path": "assets/img/emojis/lol.webm",
+      "display_color": "#ff6347",
+      "display_order": 9
+    },
+    {
+      "symbol": "OMG",
+      "name": "OMG Token",
+      "emoji_type": "OMG",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_10",
+      "icon_path": "assets/img/emojis/omg.webm",
+      "display_color": "#ff8c00",
+      "display_order": 10
+    },
+    {
+      "symbol": "MAD",
+      "name": "Mad Token",
+      "emoji_type": "MAD",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_11",
+      "icon_path": "assets/img/emojis/mad.webm",
+      "display_color": "#b22222",
+      "display_order": 11
+    },
+    {
+      "symbol": "LIKE",
+      "name": "Like Token",
+      "emoji_type": "LIKE",
+      "mint_address": "REPLACE_WITH_ACTUAL_MINT_ADDRESS_12",
+      "icon_path": "assets/img/emojis/like.webm",
+      "display_color": "#1e90ff",
+      "display_order": 12
+    }
+  ]
+}

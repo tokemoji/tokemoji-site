@@ -7,12 +7,17 @@
 	"type": "module",
 	"scripts": {
 		"start": "gulp",
-		"build": "gulp build"
+		"build": "gulp build",
+		"poller": "node backend/services/tokemoji-poller.js",
+		"aggregator": "node backend/services/tokemoji-aggregator.js",
+		"init-tokens": "node backend/init-tokens.js"
 	},
 	"author": "bplugins",
 	"license": "ISC",
 	"dependencies": {
-		"bootstrap": "^5.3.6"
+		"bootstrap": "^5.3.6",
+		"@supabase/supabase-js": "^2.39.0",
+		"node-fetch": "^3.3.2"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.9",
