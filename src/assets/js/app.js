@@ -1164,33 +1164,60 @@ document.addEventListener("DOMContentLoaded", function () {
 		};
 
 		tokenList.innerHTML = sortedTokens.map((token, index) => {
-			const flashClass = token.priceMovement === 'up' ? 'price-flash-up' :
-							   token.priceMovement === 'down' ? 'price-flash-down' : '';
+			const priceFormatted = token.priceRaw
+				? `$${formatAPIPrice(token.priceRaw)}`
+				: token.price;
+
+			const marketCapFormatted = token.marketCap;
+
+			const change24h = parseFloat(token.change.replace('%', '').replace('+', ''));
+			const changeClass = change24h >= 0 ? 'text-success' : 'text-danger';
+			const changeIcon = change24h >= 0 ? '↑' : '↓';
+			const changeFormatted = `${changeIcon}${token.change}`;
+
+			const videoSrc = tokenWebMMap[token.ticker] || 'assets/img/emojis/happy.webm';
+			const bgColor = '#ffc107';
 
 			return `
-			<div class="token-row d-flex align-items-center py-1 border-bottom border-light ${flashClass}" data-token="${token.ticker}">
-				<span class="token-rank me-2 fw-bold text-muted" style="min-width: 20px; flex-shrink: 0;">${index + 1}</span>
-				<div class="token-emoji me-2" style="flex-shrink: 0; width: 36px; height: 36px;">
-					${isIOS() ? 
-						`<img src="${getEmojiPath(tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm')}" 
-							  style="width: 100%; height: 100%; object-fit: contain;">` :
-						`<video src="${tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm'}" 
-							   autoplay loop muted playsinline
-							   style="width: 100%; height: 100%; object-fit: contain;">
-						</video>`
-					}
+				<div class="token-item mb-3 p-4 border border-3 border-dark rounded-5 bg-white shadow-sharp"
+					 data-token-id="${token.ticker}"
+					 data-change="${change24h}"
+					 data-market-cap="${token.marketCap}">
+				  <div class="d-flex align-items-center gap-3">
+					<div class="token-rank fw-bold fs-4" style="min-width: 40px;">
+					  ${index + 1}
+					</div>
+					<div class="token-emoji" style="width: 60px; height: 60px; background: ${bgColor}30; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+					  <video autoplay loop muted playsinline style="width: 50px; height: 50px;">
+						<source src="${videoSrc}" type="video/webm">
+					  </video>
+					</div>
+					<div class="token-info" style="min-width: 120px;">
+					  <div class="token-symbol fw-bold fs-5 text-uppercase">${token.ticker}</div>
+					  <div class="token-name small text-muted">${token.emoji} Token</div>
+					</div>
+					<div class="token-price fw-bold fs-6 text-end" style="min-width: 100px;">
+					  ${priceFormatted}
+					</div>
+					<div class="token-change ${changeClass} fw-bold fs-6 text-end" style="min-width: 80px;">
+					  ${changeFormatted}
+					</div>
+					<div class="token-market-cap text-end fw-bold fs-6" style="min-width: 90px;">
+					  ${marketCapFormatted}
+					</div>
+					<div class="token-actions ms-auto d-flex gap-2">
+					  <button class="btn btn-primary fw-bold px-4 py-2 rounded-4 border border-2 border-dark shadow-sharp"
+							  style="min-width: 80px;">
+						BUY
+					  </button>
+					  <button class="btn btn-warning fw-bold px-4 py-2 rounded-4 border border-2 border-dark shadow-sharp text-dark"
+							  style="min-width: 90px;">
+						CHART
+					  </button>
+					</div>
+				  </div>
 				</div>
-				<span class="token-ticker fw-bold text-heading me-2" style="min-width: 60px; flex-shrink: 0;">${token.ticker}</span>
-				<span class="token-price text-muted me-2" style="min-width: 70px; flex-shrink: 0;">${token.price}</span>
-				<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold me-2" style="min-width: 60px; flex-shrink: 0;">${token.change}</span>
-				<span class="token-marketcap text-muted me-2" style="min-width: 50px; flex-shrink: 0;">${token.marketCap}</span>
-				<button class="btn btn-sm btn-primary buy-btn me-1" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;">BUY</button>
-				<button class="btn btn-sm btn-outline-secondary chart-btn" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;" data-token="${token.ticker}">CHART</button>
-				<div class="token-chart" id="chart-${token.ticker}" style="display: none; width: 100%; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px;">
-					<canvas id="chart-canvas-${token.ticker}" width="300" height="100"></canvas>
-				</div>
-			</div>
-		`;
+			`;
 		}).join('');
 		
 		// Setup chart buttons after populating
