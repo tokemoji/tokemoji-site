@@ -1178,46 +1178,35 @@ document.addEventListener("DOMContentLoaded", function () {
 			const videoSrc = tokenWebMMap[token.ticker] || 'assets/img/emojis/happy.webm';
 			const bgColor = '#ffc107';
 
-			return `
-				<div class="token-item mb-3 p-4 border border-3 border-dark rounded-5 bg-white shadow-sharp"
-					 data-token-id="${token.ticker}"
-					 data-change="${change24h}"
-					 data-market-cap="${token.marketCap}">
-				  <div class="d-flex align-items-center gap-3">
-					<div class="token-rank fw-bold fs-4" style="min-width: 40px;">
-					  ${index + 1}
+			const flashClass = token.priceMovement === 'up' ? 'price-flash-up' :
+						   token.priceMovement === 'down' ? 'price-flash-down' : '';
+
+		return `
+			<div class="token-card mb-2 p-3 border border-2 border-dark rounded-4 bg-white shadow-sm ${flashClass}" data-token="${token.ticker}">
+				<div class="d-flex align-items-center gap-2">
+					<span class="token-rank me-1 fw-bold text-muted" style="min-width: 25px; font-size: 0.9rem;">${index + 1}</span>
+					<div class="token-emoji me-2" style="width: 40px; height: 40px; flex-shrink: 0;">
+						${isIOS() ?
+							`<img src="${getEmojiPath(tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm')}"
+								  style="width: 100%; height: 100%; object-fit: contain;">` :
+							`<video src="${tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm'}"
+								   autoplay loop muted playsinline
+								   style="width: 100%; height: 100%; object-fit: contain;">
+							</video>`
+						}
 					</div>
-					<div class="token-emoji" style="width: 60px; height: 60px; background: ${bgColor}30; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-					  <video autoplay loop muted playsinline style="width: 50px; height: 50px;">
-						<source src="${videoSrc}" type="video/webm">
-					  </video>
+					<div class="token-info me-2" style="min-width: 70px;">
+						<div class="token-ticker fw-bold text-heading" style="font-size: 0.95rem;">${token.ticker}</div>
+						<div class="token-name text-muted" style="font-size: 0.7rem;">${token.emoji}</div>
 					</div>
-					<div class="token-info" style="min-width: 120px;">
-					  <div class="token-symbol fw-bold fs-5 text-uppercase">${token.ticker}</div>
-					  <div class="token-name small text-muted">${token.emoji} Token</div>
-					</div>
-					<div class="token-price fw-bold fs-6 text-end" style="min-width: 100px;">
-					  ${priceFormatted}
-					</div>
-					<div class="token-change ${changeClass} fw-bold fs-6 text-end" style="min-width: 80px;">
-					  ${changeFormatted}
-					</div>
-					<div class="token-market-cap text-end fw-bold fs-6" style="min-width: 90px;">
-					  ${marketCapFormatted}
-					</div>
-					<div class="token-actions ms-auto d-flex gap-2">
-					  <button class="btn btn-primary fw-bold px-4 py-2 rounded-4 border border-2 border-dark shadow-sharp"
-							  style="min-width: 80px;">
-						BUY
-					  </button>
-					  <button class="btn btn-warning fw-bold px-4 py-2 rounded-4 border border-2 border-dark shadow-sharp text-dark"
-							  style="min-width: 90px;">
-						CHART
-					  </button>
-					</div>
-				  </div>
+					<span class="token-price text-dark fw-medium me-2" style="min-width: 85px; font-size: 0.85rem;">${token.price}</span>
+					<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold me-2" style="min-width: 65px; font-size: 0.85rem;">${token.change}</span>
+					<span class="token-marketcap text-muted fw-medium me-2" style="min-width: 60px; font-size: 0.85rem;">${token.marketCap}</span>
+					<button class="btn btn-sm btn-primary fw-bold px-3 py-1 rounded-3 border border-2 border-dark shadow-sm" style="font-size: 0.75rem;">BUY</button>
+					<button class="btn btn-sm btn-warning fw-bold px-3 py-1 rounded-3 border border-2 border-dark shadow-sm text-dark ms-1" style="font-size: 0.75rem;">CHART</button>
 				</div>
-			`;
+			</div>
+		`;
 		}).join('');
 		
 		// Setup chart buttons after populating
