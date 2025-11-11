@@ -1,4 +1,5 @@
 const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
 const API_BASE = `${SUPABASE_URL}/functions/v1`;
 const REFRESH_INTERVAL = 5000;
 
@@ -31,27 +32,41 @@ class TokemojiLiveData {
     try {
       this.isLoading = true;
 
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'apikey': SUPABASE_ANON_KEY
+      };
+
       const [tokensRes, summaryRes] = await Promise.all([
-        fetch(`${API_BASE}/get-tokens`),
-        fetch(`${API_BASE}/get-market-summary`)
+        fetch(`${API_BASE}/get-tokens`, { headers }),
+        fetch(`${API_BASE}/get-market-summary`, { headers })
       ]);
 
       if (!tokensRes.ok || !summaryRes.ok) {
-        throw new Error('Failed to fetch data');
+        const tokensError = tokensRes.ok ? null : await tokensRes.text();
+        const summaryError = summaryRes.ok ? null : await summaryRes.text();
+        console.error('[Tokemoji] API Error Details:', {
+          tokensStatus: tokensRes.status,
+          tokensError,
+          summaryStatus: summaryRes.status,
+          summaryError
+        });
+        throw new Error(`API returned error status: Tokens ${tokensRes.status}, Summary ${summaryRes.status}`);
       }
 
       this.tokens = await tokensRes.json();
       this.summary = await summaryRes.json();
       this.lastUpdate = new Date();
 
-      console.log('[Tokemoji] Data updated:', {
+      console.log('[Tokemoji] Data updated successfully:', {
         tokens: this.tokens.length,
-        totalMarketCap: this.summary.total_market_cap
+        totalMarketCap: this.summary?.total_market_cap
       });
 
     } catch (error) {
       console.error('[Tokemoji] Error fetching data:', error);
-      this.showError();
+      this.showError(error.message);
     } finally {
       this.isLoading = false;
     }
@@ -294,12 +309,13 @@ class TokemojiLiveData {
     }
   }
 
-  showError() {
+  showError(details = '') {
     const container = document.getElementById('token-list');
     if (container) {
       container.innerHTML = `
         <div class="alert alert-danger">
           <strong>Connection Error:</strong> Unable to fetch live data. Retrying...
+          ${details ? `<br><small>${details}</small>` : ''}
         </div>
       `;
     }
