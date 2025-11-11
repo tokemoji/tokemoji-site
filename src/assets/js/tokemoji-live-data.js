@@ -89,40 +89,48 @@ class TokemojiLiveData {
 
       const change24h = token.change_24h || 0;
       const changeClass = change24h >= 0 ? 'text-success' : 'text-danger';
-      const changeIcon = change24h >= 0 ? '↑' : '↓';
-      const changeFormatted = `${changeIcon} ${Math.abs(change24h).toFixed(2)}%`;
+      const changeIcon = change24h >= 0 ? '↑' : '';
+      const changeFormatted = `${changeIcon}${change24h.toFixed(2)}%`;
 
       const videoSrc = token.icon_path || 'assets/img/emojis/happy.webm';
       const bgColor = token.display_color || '#ffc107';
 
       return `
-        <div class="token-item mb-3 p-3 border border-2 border-dark rounded-4 bg-white shadow-sharp"
+        <div class="token-item mb-3 p-4 border border-3 border-dark rounded-5 bg-white shadow-sharp"
              data-token-id="${token.id}"
              data-change="${change24h}"
              data-market-cap="${token.market_cap || 0}">
-          <div class="row align-items-center">
-            <div class="col-2 col-md-1">
-              <div class="token-rank fw-bold text-muted">#${index + 1}</div>
+          <div class="d-flex align-items-center gap-3">
+            <div class="token-rank fw-bold fs-4" style="min-width: 40px;">
+              ${index + 1}
             </div>
-            <div class="col-3 col-md-2">
-              <div class="token-emoji" style="width: 50px; height: 50px; background: ${bgColor}20; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                <video autoplay loop muted playsinline style="width: 40px; height: 40px;">
-                  <source src="${videoSrc}" type="video/webm">
-                </video>
-              </div>
+            <div class="token-emoji" style="width: 60px; height: 60px; background: ${bgColor}30; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <video autoplay loop muted playsinline style="width: 50px; height: 50px;">
+                <source src="${videoSrc}" type="video/webm">
+              </video>
             </div>
-            <div class="col-7 col-md-3">
-              <div class="token-symbol fw-bold">${token.symbol}</div>
+            <div class="token-info" style="min-width: 120px;">
+              <div class="token-symbol fw-bold fs-5 text-uppercase">${token.emoji_type || token.symbol}</div>
               <div class="token-name small text-muted">${token.name}</div>
             </div>
-            <div class="col-6 col-md-2 text-end">
-              <div class="token-price fw-bold">${priceFormatted}</div>
+            <div class="token-price fw-bold fs-6 text-end" style="min-width: 100px;">
+              ${priceFormatted}
             </div>
-            <div class="col-6 col-md-2 text-end">
-              <div class="token-market-cap">${marketCapFormatted}</div>
+            <div class="token-change ${changeClass} fw-bold fs-6 text-end" style="min-width: 80px;">
+              ${changeFormatted}
             </div>
-            <div class="col-12 col-md-2 text-end">
-              <div class="token-change ${changeClass} fw-bold">${changeFormatted}</div>
+            <div class="token-market-cap text-end fw-bold fs-6" style="min-width: 90px;">
+              ${marketCapFormatted}
+            </div>
+            <div class="token-actions ms-auto d-flex gap-2">
+              <button class="btn btn-primary fw-bold px-4 py-2 rounded-4 border border-2 border-dark shadow-sharp"
+                      style="min-width: 80px;">
+                BUY
+              </button>
+              <button class="btn btn-warning fw-bold px-4 py-2 rounded-4 border border-2 border-dark shadow-sharp text-dark"
+                      style="min-width: 90px;">
+                CHART
+              </button>
             </div>
           </div>
         </div>
