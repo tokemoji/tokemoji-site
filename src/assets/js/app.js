@@ -1081,16 +1081,40 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (response.ok) {
 				const liveTokens = await response.json();
 
-				// Convert API data to match mockup format
-				apiTokens = liveTokens.map(token => ({
-					emoji: token.emoji_type || token.symbol,
-					ticker: token.emoji_type || token.symbol,
-					price: token.price_usd ? `$${formatAPIPrice(token.price_usd)}` : 'N/A',
-					change: token.change_24h !== null ? `${token.change_24h >= 0 ? '+' : ''}${token.change_24h.toFixed(2)}%` : '0%',
-					marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
-					changeType: (token.change_24h || 0) >= 0 ? 'positive' : 'negative',
-					hasGraphic: true
-				}));
+				// Convert API data to match mockup format and detect price changes
+				apiTokens = liveTokens.map(token => {
+					const ticker = token.emoji_type || token.symbol;
+					const currentPrice = token.price_usd;
+
+					// Find previous price for this token
+					const previousToken = currentTokenData.find(t => t.ticker === ticker);
+					const previousPrice = previousToken ? parseFloat(previousToken.price.replace('$', '')) : null;
+
+					// Determine price movement for flash effect
+					let priceMovement = 'none';
+					if (previousPrice && currentPrice) {
+						if (currentPrice > previousPrice) {
+							priceMovement = 'up';
+						} else if (currentPrice < previousPrice) {
+							priceMovement = 'down';
+						}
+					}
+
+					return {
+						emoji: ticker,
+						ticker: ticker,
+						price: currentPrice ? `$${formatAPIPrice(currentPrice)}` : 'N/A',
+						priceRaw: currentPrice,
+						change: token.change_24h !== null ? `${token.change_24h >= 0 ? '+' : ''}${token.change_24h.toFixed(2)}%` : '0%',
+						marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
+						changeType: (token.change_24h || 0) >= 0 ? 'positive' : 'negative',
+						hasGraphic: true,
+						priceMovement: priceMovement
+					};
+				});
+
+				// Store current data for next comparison
+				currentTokenData = [...apiTokens];
 			}
 		} catch (error) {
 			console.error('[Tokemoji] Error fetching API data:', error);
@@ -1139,8 +1163,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			'LIKE': 'assets/img/emojis/like.webm'
 		};
 
-		tokenList.innerHTML = sortedTokens.map((token, index) => `
-			<div class="token-row d-flex align-items-center py-1 border-bottom border-light" data-token="${token.ticker}">
+		tokenList.innerHTML = sortedTokens.map((token, index) => {
+			const flashClass = token.priceMovement === 'up' ? 'price-flash-up' :
+							   token.priceMovement === 'down' ? 'price-flash-down' : '';
+
+			return `
+			<div class="token-row d-flex align-items-center py-1 border-bottom border-light ${flashClass}" data-token="${token.ticker}">
 				<span class="token-rank me-2 fw-bold text-muted" style="min-width: 20px; flex-shrink: 0;">${index + 1}</span>
 				<div class="token-emoji me-2" style="flex-shrink: 0; width: 36px; height: 36px;">
 					${isIOS() ? 
@@ -1162,7 +1190,8 @@ document.addEventListener("DOMContentLoaded", function () {
 					<canvas id="chart-canvas-${token.ticker}" width="300" height="100"></canvas>
 				</div>
 			</div>
-		`).join('');
+		`;
+		}).join('');
 		
 		// Setup chart buttons after populating
 		setupChartButtons();
@@ -1528,13 +1557,57 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
+	// Store token data for price change detection
+	let currentTokenData = [];
+	let priceChangeTimeouts = new Map();
+
+	// Setup Realtime price updates
+	function setupRealtimePriceUpdates() {
+		const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
+		const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+
+		// Create Supabase client with Realtime
+		const { createClient } = window.supabase || {};
+		if (!createClient) {
+			console.warn('[Tokemoji] Supabase client not available, falling back to polling');
+			// Fallback to polling every 30 seconds
+			setInterval(() => {
+				populateTokenList();
+			}, 30000);
+			return;
+		}
+
+		const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+		// Subscribe to price_ticks inserts
+		const channel = supabaseClient
+			.channel('price-updates')
+			.on('postgres_changes', {
+				event: 'INSERT',
+				schema: 'public',
+				table: 'price_ticks'
+			}, (payload) => {
+				console.log('[Tokemoji] New price tick received:', payload.new);
+				handlePriceTick(payload.new);
+			})
+			.subscribe((status) => {
+				if (status === 'SUBSCRIBED') {
+					console.log('[Tokemoji] ✓ Subscribed to real-time price updates');
+				}
+			});
+	}
+
+	// Handle incoming price tick
+	async function handlePriceTick(tick) {
+		// Refresh the token list with latest data
+		await populateTokenList();
+	}
+
 	// Initialize dashboard when DOM is ready
 	initTokemojiDashboard();
 
-	// Auto-refresh token list every 5 seconds
-	setInterval(() => {
-		populateTokenList();
-	}, 5000);
+	// Set up Realtime subscription to price_ticks table
+	setupRealtimePriceUpdates();
 
 	// Initialize ticker news
 	initTickerNews();
