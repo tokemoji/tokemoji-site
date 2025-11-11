@@ -373,13 +373,7 @@ class TokemojiLiveData {
 if (typeof window !== 'undefined') {
   window.TokemojiLiveData = TokemojiLiveData;
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      const liveData = new TokemojiLiveData();
-      liveData.init();
-    });
-  } else {
-    const liveData = new TokemojiLiveData();
-    liveData.init();
-  }
+  // DISABLED: Token list is now populated by app.js using API data
+  // The main app.js already handles token list population with proper styling
+  console.log('[Tokemoji] tokemoji-live-data.js loaded but not initialized - app.js handles token list');
 }

@@ -1033,16 +1033,71 @@ document.addEventListener("DOMContentLoaded", function () {
 		setInterval(updateTopLosers, 3000); // Every 3 seconds
 	}
 
+	// Helper functions for API data formatting
+	function formatAPIPrice(price) {
+		if (price >= 1) {
+			return price.toFixed(4);
+		} else if (price >= 0.0001) {
+			return price.toFixed(6);
+		} else {
+			return price.toFixed(10);
+		}
+	}
+
+	function formatAPIMarketCap(marketCap) {
+		if (marketCap >= 1000000000) {
+			return `${(marketCap / 1000000000).toFixed(2)}B`;
+		} else if (marketCap >= 1000000) {
+			return `${(marketCap / 1000000).toFixed(2)}M`;
+		} else if (marketCap >= 1000) {
+			return `${(marketCap / 1000).toFixed(2)}K`;
+		} else {
+			return marketCap.toFixed(2);
+		}
+	}
+
 	// Current sort type
 	let currentSortType = 'marketcap';
 
-	// Populate token list
-	function populateTokenList() {
+	// Populate token list with API data
+	async function populateTokenList() {
 		const tokenList = document.getElementById('token-list');
 		if (!tokenList) return;
 
-		// Sort tokens based on current sort type
-		let sortedTokens = [...tokemojiData];
+		// Fetch live data from API
+		let apiTokens = [];
+		try {
+			const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
+			const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+			const API_BASE = `${SUPABASE_URL}/functions/v1`;
+
+			const headers = {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+				'apikey': SUPABASE_ANON_KEY
+			};
+
+			const response = await fetch(`${API_BASE}/get-tokens`, { headers });
+			if (response.ok) {
+				const liveTokens = await response.json();
+
+				// Convert API data to match mockup format
+				apiTokens = liveTokens.map(token => ({
+					emoji: token.emoji_type || token.symbol,
+					ticker: token.emoji_type || token.symbol,
+					price: token.price_usd ? `$${formatAPIPrice(token.price_usd)}` : 'N/A',
+					change: token.change_24h !== null ? `${token.change_24h >= 0 ? '+' : ''}${token.change_24h.toFixed(2)}%` : '0%',
+					marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
+					changeType: (token.change_24h || 0) >= 0 ? 'positive' : 'negative',
+					hasGraphic: true
+				}));
+			}
+		} catch (error) {
+			console.error('[Tokemoji] Error fetching API data:', error);
+		}
+
+		// Use API data if available, otherwise fall back to mockup
+		let sortedTokens = apiTokens.length > 0 ? [...apiTokens] : [...tokemojiData];
 		
 		switch(currentSortType) {
 			case 'marketcap':
@@ -1475,7 +1530,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Initialize dashboard when DOM is ready
 	initTokemojiDashboard();
-	
+
+	// Auto-refresh token list every 5 seconds
+	setInterval(() => {
+		populateTokenList();
+	}, 5000);
+
 	// Initialize ticker news
 	initTickerNews();
 	
