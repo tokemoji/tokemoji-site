@@ -28,56 +28,54 @@ class MoralisClient {
       return [];
     }
 
-    const cacheKey = mintAddresses.sort().join(',');
-    const cachedData = this.cache.get(cacheKey);
-
-    if (cachedData && Date.now() - cachedData.timestamp < this.cacheTimeout) {
-      console.log('[Moralis] Using cached data for', mintAddresses.length, 'tokens');
-      return cachedData.data;
-    }
-
-    const batches = this.createBatches(mintAddresses, 25);
     const results = [];
 
-    for (const batch of batches) {
-      const batchResult = await this.fetchBatch(batch);
-      results.push(...batchResult);
+    for (const address of mintAddresses) {
+      const cachedData = this.cache.get(address);
+
+      if (cachedData && Date.now() - cachedData.timestamp < this.cacheTimeout) {
+        results.push(cachedData.data);
+        continue;
+      }
+
+      try {
+        const data = await this.fetchSingleToken(address);
+        results.push(data);
+
+        this.cache.set(address, {
+          data,
+          timestamp: Date.now()
+        });
+
+        setTimeout(() => this.cache.delete(address), this.cacheTimeout);
+
+        await this.sleep(200);
+
+      } catch (error) {
+        console.error(`[Moralis] Error fetching ${address}:`, error.message);
+        results.push({
+          mintAddress: address,
+          priceUsd: null,
+          liquidityUsd: null,
+          volume24h: null,
+          error: error.message
+        });
+      }
     }
-
-    this.cache.set(cacheKey, {
-      data: results,
-      timestamp: Date.now()
-    });
-
-    setTimeout(() => this.cache.delete(cacheKey), this.cacheTimeout);
 
     return results;
   }
 
-  createBatches(array, size) {
-    const batches = [];
-    for (let i = 0; i < array.length; i += size) {
-      batches.push(array.slice(i, i + size));
-    }
-    return batches;
-  }
-
-  async fetchBatch(mintAddresses, attempt = 1) {
+  async fetchSingleToken(mintAddress, attempt = 1) {
     try {
-      const url = `${MORALIS_BASE_URL}/token/mainnet/price`;
+      const url = `${MORALIS_BASE_URL}/token/mainnet/${mintAddress}/price`;
 
       const response = await fetch(url, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/json',
           'X-API-Key': this.apiKey
-        },
-        body: JSON.stringify({
-          tokens: mintAddresses.map(address => ({
-            token_address: address
-          }))
-        })
+        }
       });
 
       if (!response.ok) {
@@ -86,7 +84,7 @@ class MoralisClient {
           await this.sleep(5000);
 
           if (attempt < this.maxRetries) {
-            return this.fetchBatch(mintAddresses, attempt + 1);
+            return this.fetchSingleToken(mintAddress, attempt + 1);
           }
           throw new Error('Rate limit exceeded after retries');
         }
@@ -97,51 +95,36 @@ class MoralisClient {
 
       const data = await response.json();
 
-      return this.normalizeResponse(data, mintAddresses);
+      return this.normalizeResponse(data, mintAddress);
 
     } catch (error) {
-      console.error(`[Moralis] Fetch error (attempt ${attempt}/${this.maxRetries}):`, error.message);
-
       if (attempt < this.maxRetries) {
         await this.sleep(this.retryDelay * attempt);
-        return this.fetchBatch(mintAddresses, attempt + 1);
+        return this.fetchSingleToken(mintAddress, attempt + 1);
       }
 
       throw error;
     }
   }
 
-  normalizeResponse(data, mintAddresses) {
-    if (!data || !Array.isArray(data)) {
-      console.warn('[Moralis] Invalid response format, returning empty array');
-      return mintAddresses.map(address => ({
-        mintAddress: address,
-        priceUsd: null,
-        error: 'Invalid response format'
-      }));
-    }
-
-    return data.map((item, index) => {
-      const mintAddress = mintAddresses[index];
-
-      if (!item || item.error) {
-        return {
-          mintAddress,
-          priceUsd: null,
-          liquidityUsd: null,
-          volume24h: null,
-          error: item?.error || 'No data available'
-        };
-      }
-
+  normalizeResponse(data, mintAddress) {
+    if (!data) {
       return {
         mintAddress,
-        priceUsd: item.usdPrice || item.price || null,
-        liquidityUsd: item.liquidity || null,
-        volume24h: item.volume24h || item['24hrVolume'] || null,
-        timestamp: new Date().toISOString()
+        priceUsd: null,
+        liquidityUsd: null,
+        volume24h: null,
+        error: 'No data available'
       };
-    });
+    }
+
+    return {
+      mintAddress,
+      priceUsd: data.usdPrice || null,
+      liquidityUsd: data.nativePrice?.value || null,
+      volume24h: null,
+      timestamp: new Date().toISOString()
+    };
   }
 
   sleep(ms) {
