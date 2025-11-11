@@ -165,12 +165,16 @@ class TokemojiLiveData {
 
     const gifElement = document.getElementById('dominance-gif');
     if (gifElement && dominant.icon_path) {
-      gifElement.src = dominant.icon_path;
+      const source = gifElement.querySelector('source');
+      if (source) {
+        source.src = dominant.icon_path;
+        gifElement.load();
+      }
     }
 
     const tickerElement = document.getElementById('dominance-ticker');
     if (tickerElement) {
-      tickerElement.textContent = dominant.symbol;
+      tickerElement.textContent = dominant.emoji_type || dominant.symbol;
     }
 
     const percentageElement = document.getElementById('dominance-percentage');
@@ -237,11 +241,29 @@ class TokemojiLiveData {
     if (topGainers && topGainers.length > 0) {
       const gainer = topGainers[0];
 
-      const gifElement = document.getElementById('top-gainer-gif-center');
-      if (gifElement) gifElement.src = gainer.icon_path;
+      const gifLeftElement = document.getElementById('top-gainer-gif-left');
+      if (gifLeftElement && topGainers.length > 1) {
+        const leftSource = gifLeftElement.querySelector('source');
+        if (leftSource) leftSource.src = topGainers[1].icon_path;
+        gifLeftElement.load();
+      }
+
+      const gifCenterElement = document.getElementById('top-gainer-gif-center');
+      if (gifCenterElement) {
+        const centerSource = gifCenterElement.querySelector('source');
+        if (centerSource) centerSource.src = gainer.icon_path;
+        gifCenterElement.load();
+      }
+
+      const gifRightElement = document.getElementById('top-gainer-gif-right');
+      if (gifRightElement && topGainers.length > 2) {
+        const rightSource = gifRightElement.querySelector('source');
+        if (rightSource) rightSource.src = topGainers[2].icon_path;
+        gifRightElement.load();
+      }
 
       const tickerElement = document.getElementById('top-gainer-ticker');
-      if (tickerElement) tickerElement.textContent = gainer.symbol;
+      if (tickerElement) tickerElement.textContent = gainer.emoji_type || gainer.symbol;
 
       const changeElement = document.getElementById('top-gainer-change');
       if (changeElement) changeElement.textContent = `+${gainer.change_24h.toFixed(2)}%`;
@@ -250,11 +272,29 @@ class TokemojiLiveData {
     if (topLosers && topLosers.length > 0) {
       const loser = topLosers[0];
 
-      const gifElement = document.getElementById('top-loser-gif-center');
-      if (gifElement) gifElement.src = loser.icon_path;
+      const gifLeftElement = document.getElementById('top-loser-gif-left');
+      if (gifLeftElement && topLosers.length > 1) {
+        const leftSource = gifLeftElement.querySelector('source');
+        if (leftSource) leftSource.src = topLosers[1].icon_path;
+        gifLeftElement.load();
+      }
+
+      const gifCenterElement = document.getElementById('top-loser-gif-center');
+      if (gifCenterElement) {
+        const centerSource = gifCenterElement.querySelector('source');
+        if (centerSource) centerSource.src = loser.icon_path;
+        gifCenterElement.load();
+      }
+
+      const gifRightElement = document.getElementById('top-loser-gif-right');
+      if (gifRightElement && topLosers.length > 2) {
+        const rightSource = gifRightElement.querySelector('source');
+        if (rightSource) rightSource.src = topLosers[2].icon_path;
+        gifRightElement.load();
+      }
 
       const tickerElement = document.getElementById('top-loser-ticker');
-      if (tickerElement) tickerElement.textContent = loser.symbol;
+      if (tickerElement) tickerElement.textContent = loser.emoji_type || loser.symbol;
 
       const changeElement = document.getElementById('top-loser-change');
       if (changeElement) changeElement.textContent = `${loser.change_24h.toFixed(2)}%`;

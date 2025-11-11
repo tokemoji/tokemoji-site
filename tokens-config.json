@@ -1,4 +1,5 @@
 {
+  "_comment": "Update mint_address fields with production Tokemoji token addresses when ready. test_token_name is for reference only and will be removed from display name when removed from config.",
   "tokens": [
     {
       "symbol": "GREED",
