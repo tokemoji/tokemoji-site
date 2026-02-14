@@ -1,0 +1,32 @@
+.token-mini-chart {
+  display: inline-block;
+  background: white;
+  border-radius: 4px;
+  padding: 2px;
+  overflow: hidden;
+  vertical-align: middle;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.mini-chart-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #999;
+  background: #f8f9fa;
+}
+
+.mini-chart-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #999;
+  background: #f8f9fa;
+}

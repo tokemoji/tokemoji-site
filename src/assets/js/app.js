@@ -1585,7 +1585,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	function renderTokenRow(token, index) {
 		const videoSrc = TOKEN_WEBM_MAP[token.ticker] || 'assets/img/emojis/happy.webm';
 		return `
-		<div class="token-row d-flex align-items-center py-1 border-bottom border-light" data-token="${token.ticker}">
+		<div class="token-row d-flex align-items-center py-1 border-bottom border-light" data-token="${token.ticker}" data-token-id="${token.id || ''}">
 			<span class="token-rank me-2 fw-bold text-muted" style="min-width: 20px; flex-shrink: 0;">${index + 1}</span>
 			<div class="token-emoji me-2" style="flex-shrink: 0; width: 36px; height: 36px;">
 				${isIOS() ?
@@ -1600,9 +1600,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			<span class="token-ticker fw-bold text-heading me-2" style="min-width: 60px; flex-shrink: 0;">${token.ticker}</span>
 			<span class="token-price text-muted me-2" style="min-width: 70px; flex-shrink: 0;">${token.price}</span>
 			<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold me-2" style="min-width: 60px; flex-shrink: 0;">${token.change}</span>
+			<div class="token-mini-chart me-2" id="chart-${token.ticker}" style="width: 100px; height: 30px; flex-shrink: 0; background: white; border-radius: 4px; padding: 2px;"></div>
 			<span class="token-marketcap text-muted me-2" style="min-width: 50px; flex-shrink: 0;">${token.marketCap}</span>
 			<button class="btn btn-sm btn-primary buy-btn me-1" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;">BUY</button>
-			<button class="btn btn-sm btn-outline-secondary chart-btn" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;" data-token="${token.ticker}">CHART</button>
 		</div>`;
 	}
 
@@ -1622,6 +1622,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		currentTokenDataInitialized = true;
 		tokenListRendered = true;
 		setupChartButtons();
+		loadMiniCharts(apiTokens.length > 0 ? apiTokens : sortedTokens);
 	}
 
 	async function refreshTokenPrices() {
@@ -2135,6 +2136,55 @@ document.addEventListener("DOMContentLoaded", function () {
 			setTimeout(() => {
 				row.style.backgroundColor = '';
 			}, 1000);
+		}
+	});
+}
+
+async function loadMiniCharts(tokens) {
+	if (typeof MiniChart === 'undefined') {
+		console.warn('MiniChart class not loaded');
+		return;
+	}
+
+	const supabaseUrl = 'https://wdqmlzyqymkahksdazac.supabase.co';
+
+	tokens.forEach(async (token) => {
+		const tokenId = token.id;
+		const tokenTicker = token.ticker || token.symbol;
+		if (!tokenId || !tokenTicker) return;
+
+		const chartContainer = document.getElementById(`chart-${tokenTicker}`);
+		if (!chartContainer) return;
+
+		try {
+			const response = await fetch(
+				`${supabaseUrl}/functions/v1/get-token-chart?token_id=${tokenId}&range=24h`,
+				{
+					headers: {
+						'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkcW1senlxeW1rYWhrc2RhemFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExNTU1ODgsImV4cCI6MjA0NjczMTU4OH0.Ff-i3CYYjdqFCR_HMDG9r-1RQdNSqOFePFLw5VXhYc8`,
+						'Content-Type': 'application/json'
+					}
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error('Failed to fetch chart data');
+			}
+
+			const result = await response.json();
+			const chartData = result.data || [];
+
+			if (chartData.length > 0) {
+				const chart = new MiniChart(`chart-${tokenTicker}`, {
+					width: 100,
+					height: 30,
+					gradientColor: '#2196F3',
+					lineColor: '#1976D2'
+				});
+				chart.render(chartData);
+			}
+		} catch (error) {
+			console.error(`Error loading chart for ${tokenTicker}:`, error);
 		}
 	});
 }
