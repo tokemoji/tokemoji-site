@@ -1770,10 +1770,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function applyGaugeFlash(resultId, isPositive) {
 		const resultEl = document.getElementById(resultId);
-		if (!resultEl) return;
+		if (!resultEl) {
+			console.log('applyGaugeFlash: resultEl not found for', resultId);
+			return;
+		}
 
 		const gaugeContainer = resultEl.closest('.border');
-		if (!gaugeContainer) return;
+		if (!gaugeContainer) {
+			console.log('applyGaugeFlash: gaugeContainer not found for', resultId);
+			return;
+		}
+
+		console.log('applyGaugeFlash:', resultId, 'isPositive:', isPositive);
 
 		gaugeContainer.classList.remove('gauge-flash-positive', 'gauge-flash-negative');
 		void gaugeContainer.offsetWidth;
@@ -1829,20 +1837,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		// Apply flash effects when values change
 		if (lastGaugeValues.greedMarketCap > 0 || lastGaugeValues.fearMarketCap > 0) {
-			if (greedMarketCap !== lastGaugeValues.greedMarketCap || fearMarketCap !== lastGaugeValues.fearMarketCap) {
-				const greedIncreased = greedMarketCap > lastGaugeValues.greedMarketCap;
+			const greedDelta = greedMarketCap - lastGaugeValues.greedMarketCap;
+			const fearDelta = fearMarketCap - lastGaugeValues.fearMarketCap;
+
+			if (greedDelta !== 0 || fearDelta !== 0) {
+				const greedIncreased = greedDelta > fearDelta;
 				applyGaugeFlash('greed-fear-result', greedIncreased);
 			}
 		}
 		if (lastGaugeValues.goodMarketCap > 0 || lastGaugeValues.evilMarketCap > 0) {
-			if (goodMarketCap !== lastGaugeValues.goodMarketCap || evilMarketCap !== lastGaugeValues.evilMarketCap) {
-				const goodIncreased = goodMarketCap > lastGaugeValues.goodMarketCap;
+			const goodDelta = goodMarketCap - lastGaugeValues.goodMarketCap;
+			const evilDelta = evilMarketCap - lastGaugeValues.evilMarketCap;
+
+			if (goodDelta !== 0 || evilDelta !== 0) {
+				const goodIncreased = goodDelta > evilDelta;
 				applyGaugeFlash('good-evil-result', goodIncreased);
 			}
 		}
 		if (lastGaugeValues.loveMarketCap > 0 || lastGaugeValues.hateMarketCap > 0) {
-			if (loveMarketCap !== lastGaugeValues.loveMarketCap || hateMarketCap !== lastGaugeValues.hateMarketCap) {
-				const loveIncreased = loveMarketCap > lastGaugeValues.loveMarketCap;
+			const loveDelta = loveMarketCap - lastGaugeValues.loveMarketCap;
+			const hateDelta = hateMarketCap - lastGaugeValues.hateMarketCap;
+
+			if (loveDelta !== 0 || hateDelta !== 0) {
+				const loveIncreased = loveDelta > hateDelta;
 				applyGaugeFlash('love-hate-result', loveIncreased);
 			}
 		}
@@ -1865,99 +1882,18 @@ document.addEventListener("DOMContentLoaded", function () {
 			const dominancePercent = Math.max(greedRatio, 100 - greedRatio);
 			greedFearResult.querySelector('.gauge-ticker').textContent = dominantEmotion;
 			greedFearResult.querySelector('.gauge-percentage').textContent = `${dominancePercent.toFixed(0)}%`;
-			
-			// Update gauge emojis - find all gauge-gif-img elements in this gauge
-			const gaugeContainer = greedFearResult.closest('.border');
-			if (gaugeContainer) {
-				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
-				gaugeEmojis.forEach((emoji, index) => {
-					// First emoji is GREED, second is FEAR
-					const webmPath = index === 0 ? 'assets/img/emojis/greed.webm' : 'assets/img/emojis/fear.webm';
-					const finalPath = getEmojiPath(webmPath);
-					
-					
-					if (emoji.tagName === 'VIDEO') {
-						// Update existing video element
-						const source = emoji.querySelector('source');
-						if (source) {
-							source.src = finalPath;
-							emoji.load();
-						} else {
-							emoji.src = finalPath;
-							emoji.load();
-						}
-						} else if (emoji.tagName === 'IMG') {
-						// Update img src directly
-						emoji.src = finalPath;
-					}
-				});
-			}
 		}
 		if (goodEvilResult) {
 			const dominantEmotion = goodRatio > 50 ? 'GOOD' : 'EVIL';
 			const dominancePercent = Math.max(goodRatio, 100 - goodRatio);
 			goodEvilResult.querySelector('.gauge-ticker').textContent = dominantEmotion;
 			goodEvilResult.querySelector('.gauge-percentage').textContent = `${dominancePercent.toFixed(0)}%`;
-			
-			// Update gauge emojis - find all gauge-gif-img elements in this gauge
-			const gaugeContainer = goodEvilResult.closest('.border');
-			if (gaugeContainer) {
-				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
-				gaugeEmojis.forEach((emoji, index) => {
-					// First emoji is GOOD, second is EVIL
-					const webmPath = index === 0 ? 'assets/img/emojis/good.webm' : 'assets/img/emojis/evil.webm';
-					const finalPath = getEmojiPath(webmPath);
-					
-					
-					if (emoji.tagName === 'VIDEO') {
-						// Update existing video element
-						const source = emoji.querySelector('source');
-						if (source) {
-							source.src = finalPath;
-							emoji.load();
-						} else {
-							emoji.src = finalPath;
-							emoji.load();
-						}
-						} else if (emoji.tagName === 'IMG') {
-						// Update img src directly
-						emoji.src = finalPath;
-					}
-				});
-			}
 		}
 		if (loveHateResult) {
 			const dominantEmotion = loveRatio > 50 ? 'LOVE' : 'HATE';
 			const dominancePercent = Math.max(loveRatio, 100 - loveRatio);
 			loveHateResult.querySelector('.gauge-ticker').textContent = dominantEmotion;
 			loveHateResult.querySelector('.gauge-percentage').textContent = `${dominancePercent.toFixed(0)}%`;
-			
-			// Update gauge emojis - find all gauge-gif-img elements in this gauge
-			const gaugeContainer = loveHateResult.closest('.border');
-			if (gaugeContainer) {
-				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
-				gaugeEmojis.forEach((emoji, index) => {
-					// First emoji is LOVE, second is HATE
-					const webmPath = index === 0 ? 'assets/img/emojis/love.webm' : 'assets/img/emojis/hate.webm';
-					const finalPath = getEmojiPath(webmPath);
-					
-					
-					if (emoji.tagName === 'VIDEO') {
-						// Update existing video element
-						const source = emoji.querySelector('source');
-						if (source) {
-							source.src = finalPath;
-							emoji.load();
-						} else {
-							emoji.src = finalPath;
-							emoji.load();
-						}
-						} else if (emoji.tagName === 'IMG') {
-						// Update img src directly
-						emoji.src = finalPath;
-					}
-				});
-			}
 		}
 	}
 
