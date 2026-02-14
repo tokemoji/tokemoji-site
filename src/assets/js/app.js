@@ -1524,6 +1524,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					oldPriceRaw: oldPriceRaw,
 					change: changeStr,
 					marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
+					marketCapRaw: token.market_cap || 0,
 					changeType: cType,
 					hasGraphic: true,
 					priceMovement: priceMovement
@@ -1540,8 +1541,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		switch(currentSortType) {
 			case 'marketcap':
 				sorted.sort((a, b) => {
-					const aCap = parseFloat(a.marketCap.replace('$', '').replace('M', '').replace('K', '').replace('B', ''));
-					const bCap = parseFloat(b.marketCap.replace('$', '').replace('M', '').replace('K', '').replace('B', ''));
+					const aCap = a.marketCapRaw || 0;
+					const bCap = b.marketCapRaw || 0;
 					return bCap - aCap;
 				});
 				break;
