@@ -1049,7 +1049,7 @@ function flushPriceTicks() {
 
 async function fetchSolPrice() {
 	try {
-		var res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+		var res = await fetch('https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1/get-sol-price');
 		if (res.ok) {
 			var data = await res.json();
 			if (data.solana && data.solana.usd) {
@@ -1145,6 +1145,10 @@ function handleNewTokenEvent(data) {
 	lastNewTokenTime = Date.now();
 	pulseLiveIndicator();
 
+	var shortMint = data.mint ? data.mint.substring(0, 8) + '...' : 'unknown';
+	var name = data.name || data.symbol || shortMint;
+	console.log('[PumpPortal] NEW TOKEN:', name, '(' + shortMint + ')');
+
 	var counterEl = document.getElementById('live-trade-counter');
 	if (counterEl) {
 		counterEl.textContent = liveTradeCount;
@@ -1152,7 +1156,6 @@ function handleNewTokenEvent(data) {
 
 	var lastTradeEl = document.getElementById('live-last-trade');
 	if (lastTradeEl && data.mint) {
-		var shortMint = data.mint.substring(0, 6) + '...';
 		lastTradeEl.textContent = 'NEW: ' + shortMint;
 	}
 }
@@ -1792,7 +1795,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	fetchSolPrice().then(function() {
 		connectPumpPortal();
 	});
-	setInterval(fetchSolPrice, 2000);
+	setInterval(fetchSolPrice, 30000);
 
 	// Initialize ticker news
 	initTickerNews();
