@@ -976,6 +976,15 @@ const baselinePrices = {};
 const lastPriceWriteTime = {};
 const PRICE_WRITE_THROTTLE_MS = 30000;
 
+const lastGaugeValues = {
+	greedMarketCap: 0,
+	fearMarketCap: 0,
+	goodMarketCap: 0,
+	evilMarketCap: 0,
+	loveMarketCap: 0,
+	hateMarketCap: 0
+};
+
 const SUPABASE_EDGE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1';
 const SUPABASE_EDGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
@@ -1374,7 +1383,7 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 
 		setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-		}, 1500);
+		}, 3000);
 	}
 }
 
@@ -1759,28 +1768,44 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
+	function applyGaugeFlash(resultId, isPositive) {
+		const resultEl = document.getElementById(resultId);
+		if (!resultEl) return;
+
+		const gaugeContainer = resultEl.closest('.border');
+		if (!gaugeContainer) return;
+
+		gaugeContainer.classList.remove('gauge-flash-positive', 'gauge-flash-negative');
+		void gaugeContainer.offsetWidth;
+		gaugeContainer.classList.add(isPositive ? 'gauge-flash-positive' : 'gauge-flash-negative');
+
+		setTimeout(function() {
+			gaugeContainer.classList.remove('gauge-flash-positive', 'gauge-flash-negative');
+		}, 3000);
+	}
+
 	function updateGauges() {
 		const liveData = getLiveTokenData();
 		const mcap = (tokens) => tokens.reduce((sum, t) => sum + getTokenMarketCapRaw(t), 0);
 
-		const greedTokens = liveData.filter(token => ['GREED', 'HAPPY', 'LOVE', 'LOL', 'GOOD', 'LIKE'].includes(token.ticker));
-		const fearTokens = liveData.filter(token => ['FEAR', 'SAD', 'HATE', 'MAD'].includes(token.ticker));
+		const greedTokens = liveData.filter(token => token.ticker === 'GREED');
+		const fearTokens = liveData.filter(token => token.ticker === 'FEAR');
 		const greedMarketCap = mcap(greedTokens);
 		const fearMarketCap = mcap(fearTokens);
 		const totalEmotionCap = greedMarketCap + fearMarketCap;
 		const greedRatio = totalEmotionCap > 0 ? (greedMarketCap / totalEmotionCap) * 100 : 50;
 		const greedOffset = 157.1 - (greedRatio / 100) * 157.1;
 
-		const goodTokens = liveData.filter(token => ['GOOD', 'LOVE', 'HAPPY', 'LIKE'].includes(token.ticker));
-		const evilTokens = liveData.filter(token => ['EVIL', 'HATE', 'MAD'].includes(token.ticker));
+		const goodTokens = liveData.filter(token => token.ticker === 'GOOD');
+		const evilTokens = liveData.filter(token => token.ticker === 'EVIL');
 		const goodMarketCap = mcap(goodTokens);
 		const evilMarketCap = mcap(evilTokens);
 		const totalMoralCap = goodMarketCap + evilMarketCap;
 		const goodRatio = totalMoralCap > 0 ? (goodMarketCap / totalMoralCap) * 100 : 50;
 		const goodOffset = 157.1 - (goodRatio / 100) * 157.1;
 
-		const loveTokens = liveData.filter(token => ['LOVE', 'HAPPY', 'LIKE'].includes(token.ticker));
-		const hateTokens = liveData.filter(token => ['HATE', 'MAD', 'EVIL'].includes(token.ticker));
+		const loveTokens = liveData.filter(token => token.ticker === 'LOVE');
+		const hateTokens = liveData.filter(token => token.ticker === 'HATE');
 		const loveMarketCap = mcap(loveTokens);
 		const hateMarketCap = mcap(hateTokens);
 		const totalLoveHateCap = loveMarketCap + hateMarketCap;
@@ -1791,7 +1816,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		const greedFearGauge = document.getElementById('greed-fear-gauge');
 		const goodEvilGauge = document.getElementById('good-evil-gauge');
 		const loveHateGauge = document.getElementById('love-hate-gauge');
-		
+
 		if (greedFearGauge) {
 			greedFearGauge.style.strokeDashoffset = greedOffset;
 		}
@@ -1801,6 +1826,34 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (loveHateGauge) {
 			loveHateGauge.style.strokeDashoffset = loveOffset;
 		}
+
+		// Apply flash effects when values change
+		if (lastGaugeValues.greedMarketCap > 0 || lastGaugeValues.fearMarketCap > 0) {
+			if (greedMarketCap !== lastGaugeValues.greedMarketCap || fearMarketCap !== lastGaugeValues.fearMarketCap) {
+				const greedIncreased = greedMarketCap > lastGaugeValues.greedMarketCap;
+				applyGaugeFlash('greed-fear-result', greedIncreased);
+			}
+		}
+		if (lastGaugeValues.goodMarketCap > 0 || lastGaugeValues.evilMarketCap > 0) {
+			if (goodMarketCap !== lastGaugeValues.goodMarketCap || evilMarketCap !== lastGaugeValues.evilMarketCap) {
+				const goodIncreased = goodMarketCap > lastGaugeValues.goodMarketCap;
+				applyGaugeFlash('good-evil-result', goodIncreased);
+			}
+		}
+		if (lastGaugeValues.loveMarketCap > 0 || lastGaugeValues.hateMarketCap > 0) {
+			if (loveMarketCap !== lastGaugeValues.loveMarketCap || hateMarketCap !== lastGaugeValues.hateMarketCap) {
+				const loveIncreased = loveMarketCap > lastGaugeValues.loveMarketCap;
+				applyGaugeFlash('love-hate-result', loveIncreased);
+			}
+		}
+
+		// Update last values
+		lastGaugeValues.greedMarketCap = greedMarketCap;
+		lastGaugeValues.fearMarketCap = fearMarketCap;
+		lastGaugeValues.goodMarketCap = goodMarketCap;
+		lastGaugeValues.evilMarketCap = evilMarketCap;
+		lastGaugeValues.loveMarketCap = loveMarketCap;
+		lastGaugeValues.hateMarketCap = hateMarketCap;
 		
 		// Update gauge result text
 		const greedFearResult = document.getElementById('greed-fear-result');
