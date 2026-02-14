@@ -105,6 +105,10 @@ Deno.serve(async (req: Request) => {
     if (lastTickAge > STALE_THRESHOLD_MS) {
       livePrices = await fetchPricesJupiter(mintAddresses);
 
+      const jupiterMints = new Set(
+        mintAddresses.filter((m: string) => livePrices[m] && livePrices[m] > 0)
+      );
+
       const missingMints = mintAddresses.filter(
         (m: string) => !livePrices[m] || livePrices[m] <= 0
       );
@@ -120,7 +124,7 @@ Deno.serve(async (req: Request) => {
         .map((t: any) => ({
           token_id: t.id,
           price_usd: livePrices[t.mint_address],
-          source: "jupiter",
+          source: jupiterMints.has(t.mint_address) ? "jupiter" : "dexscreener",
           timestamp: new Date().toISOString(),
         }));
 

@@ -1053,6 +1053,105 @@ function flushPriceTicks() {
 	});
 }
 
+const DEXSCREENER_POLL_INTERVAL_MS = 3000;
+let dexScreenerPollTimer = null;
+let dexScreenerLastPrices = {};
+
+function getAllMintAddresses() {
+	return Object.keys(TOKEMOJI_MINT_MAP);
+}
+
+async function fetchDexScreenerPrices() {
+	var mints = getAllMintAddresses();
+	if (mints.length === 0) return {};
+
+	try {
+		var res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + mints.join(','));
+		if (!res.ok) return {};
+		var json = await res.json();
+		var prices = {};
+		var pairs = json.pairs || [];
+		for (var i = 0; i < pairs.length; i++) {
+			var pair = pairs[i];
+			if (pair.baseToken && pair.baseToken.address && pair.priceUsd) {
+				var addr = pair.baseToken.address;
+				if (!prices[addr]) {
+					prices[addr] = parseFloat(pair.priceUsd);
+				}
+			}
+		}
+		return prices;
+	} catch (e) {
+		console.warn('[DexScreener] Fetch failed:', e.message);
+		return {};
+	}
+}
+
+function applyDexScreenerPrices(prices) {
+	if (!currentTokenData || currentTokenData.length === 0) return;
+
+	var mints = getAllMintAddresses();
+	for (var i = 0; i < mints.length; i++) {
+		var mint = mints[i];
+		var ticker = TOKEMOJI_MINT_MAP[mint];
+		var newPrice = prices[mint];
+		if (!ticker || !newPrice || newPrice <= 0) continue;
+
+		var tokenIdx = currentTokenData.findIndex(function(t) { return t.ticker === ticker; });
+		if (tokenIdx === -1) continue;
+
+		var token = currentTokenData[tokenIdx];
+		var oldPrice = token.priceRaw;
+		if (oldPrice && Math.abs(newPrice - oldPrice) / oldPrice < 0.000001) continue;
+
+		var marketCapUsd = newPrice * PUMP_FUN_TOTAL_SUPPLY;
+
+		if (!baselinePrices[ticker]) {
+			baselinePrices[ticker] = newPrice;
+		}
+
+		var changePercent = 0;
+		var baseline = baselinePrices[ticker];
+		if (baseline && baseline > 0) {
+			changePercent = ((newPrice - baseline) / baseline) * 100;
+		}
+		var changeStr = (changePercent >= 0 ? '+' : '') + changePercent.toFixed(2) + '%';
+		var changeType = changePercent >= 0 ? 'positive' : 'negative';
+		var direction = (!oldPrice || newPrice > oldPrice) ? 'up' : 'down';
+
+		currentTokenData[tokenIdx].priceRaw = newPrice;
+		currentTokenData[tokenIdx].price = '$' + formatAPIPrice(newPrice);
+		currentTokenData[tokenIdx].marketCap = '$' + formatAPIMarketCap(marketCapUsd);
+		currentTokenData[tokenIdx].change = changeStr;
+		currentTokenData[tokenIdx].changeType = changeType;
+		currentTokenData[tokenIdx].priceMovement = direction;
+
+		var txType = direction === 'up' ? 'buy' : 'sell';
+		updateSingleTokenRow(ticker, newPrice, marketCapUsd, txType, changeStr, changeType);
+
+		writePriceTickThrottled(ticker, newPrice);
+	}
+
+	globalUpdateMarketDominance();
+	globalUpdateGauges();
+}
+
+async function dexScreenerPollCycle() {
+	var prices = await fetchDexScreenerPrices();
+	var keys = Object.keys(prices);
+	if (keys.length > 0) {
+		dexScreenerLastPrices = prices;
+		applyDexScreenerPrices(prices);
+	}
+}
+
+function startDexScreenerPolling() {
+	if (dexScreenerPollTimer) return;
+	console.log('[DexScreener] Starting direct polling every ' + (DEXSCREENER_POLL_INTERVAL_MS / 1000) + 's');
+	dexScreenerPollCycle();
+	dexScreenerPollTimer = setInterval(dexScreenerPollCycle, DEXSCREENER_POLL_INTERVAL_MS);
+}
+
 async function fetchSolPrice() {
 	try {
 		var res = await fetch(SUPABASE_EDGE_URL + '/get-sol-price', {
@@ -1808,6 +1907,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 	setInterval(fetchSolPrice, 30000);
 
+	setTimeout(startDexScreenerPolling, 2000);
+
 	// Initialize ticker news
 	initTickerNews();
 	
@@ -1932,10 +2033,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		}).join('');
 	}
 
-	setInterval(async () => {
-		await refreshTokenPrices();
-		updateMarketDominance();
-		updateGauges();
+	setInterval(() => {
 		initializeCarouselData();
 		updateTopGainers();
 		updateTopLosers();
