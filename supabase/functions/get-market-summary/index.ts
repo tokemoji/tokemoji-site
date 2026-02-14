@@ -8,39 +8,6 @@ const corsHeaders = {
     "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const STALE_THRESHOLD_MS = 30_000;
-
-async function fetchLivePrices(
-  mintAddresses: string[]
-): Promise<Record<string, number>> {
-  const prices: Record<string, number> = {};
-  const batchSize = 5;
-
-  for (let i = 0; i < mintAddresses.length; i += batchSize) {
-    const batch = mintAddresses.slice(i, i + batchSize);
-    try {
-      const res = await fetch(
-        `https://api.dexscreener.com/latest/dex/tokens/${batch.join(",")}`
-      );
-      if (res.ok) {
-        const json = await res.json();
-        for (const pair of json.pairs || []) {
-          if (pair.baseToken?.address && pair.priceUsd) {
-            const addr = pair.baseToken.address;
-            if (!prices[addr]) {
-              prices[addr] = parseFloat(pair.priceUsd);
-            }
-          }
-        }
-      }
-    } catch (e) {
-      console.error("DexScreener batch error:", e);
-    }
-  }
-
-  return prices;
-}
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
@@ -58,67 +25,56 @@ Deno.serve(async (req: Request) => {
 
     if (tokensError) throw tokensError;
 
-    const { data: latestTick } = await supabase
+    const tokenIds = tokens.map((t: any) => t.id);
+
+    const { data: latestTicks } = await supabase
       .from("price_ticks")
-      .select("timestamp")
+      .select("token_id, price_usd")
+      .in("token_id", tokenIds)
       .order("timestamp", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(tokenIds.length * 3);
 
-    const lastTickAge = latestTick
-      ? Date.now() - new Date(latestTick.timestamp).getTime()
-      : Infinity;
-
-    let livePrices: Record<string, number> = {};
-    if (lastTickAge > STALE_THRESHOLD_MS) {
-      livePrices = await fetchLivePrices(
-        tokens.map((t: any) => t.mint_address)
-      );
+    const latestByToken: Record<string, number> = {};
+    for (const tick of latestTicks || []) {
+      if (!latestByToken[tick.token_id]) {
+        latestByToken[tick.token_id] = parseFloat(tick.price_usd);
+      }
     }
 
-    const tokensWithMetrics = await Promise.all(
-      tokens.map(async (token: any) => {
-        let currentPrice = livePrices[token.mint_address] || null;
+    const { data: earliestTicks } = await supabase
+      .from("price_ticks")
+      .select("token_id, price_usd")
+      .in("token_id", tokenIds)
+      .order("timestamp", { ascending: true })
+      .limit(tokenIds.length * 3);
 
-        if (!currentPrice) {
-          const { data: tick } = await supabase
-            .from("price_ticks")
-            .select("price_usd")
-            .eq("token_id", token.id)
-            .order("timestamp", { ascending: false })
-            .limit(1)
-            .maybeSingle();
-          currentPrice = tick ? parseFloat(tick.price_usd) : 0;
-        }
+    const earliestByToken: Record<string, number> = {};
+    for (const tick of earliestTicks || []) {
+      if (!earliestByToken[tick.token_id]) {
+        earliestByToken[tick.token_id] = parseFloat(tick.price_usd);
+      }
+    }
 
-        const { data: price24hAgo } = await supabase
-          .from("price_ticks")
-          .select("price_usd")
-          .eq("token_id", token.id)
-          .lt("timestamp", new Date(Date.now() - 86400000).toISOString())
-          .order("timestamp", { ascending: false })
-          .limit(1)
-          .maybeSingle();
+    const tokensWithMetrics = tokens.map((token: any) => {
+      const currentPrice = latestByToken[token.id] || 0;
+      const marketCap = currentPrice * token.total_supply;
 
-        const marketCap = currentPrice * token.total_supply;
-        const change24h =
-          currentPrice && price24hAgo
-            ? ((currentPrice - parseFloat(price24hAgo.price_usd)) /
-                parseFloat(price24hAgo.price_usd)) *
-              100
-            : 0;
+      let change = 0;
+      const oldPrice = earliestByToken[token.id];
+      if (currentPrice && oldPrice && oldPrice > 0) {
+        change = ((currentPrice - oldPrice) / oldPrice) * 100;
+      }
 
-        return {
-          id: token.id,
-          symbol: token.symbol,
-          emoji_type: token.emoji_type,
-          icon_path: token.icon_path,
-          display_color: token.display_color,
-          market_cap: marketCap,
-          change_24h: change24h,
-        };
-      })
-    );
+      return {
+        id: token.id,
+        symbol: token.symbol,
+        emoji_type: token.emoji_type,
+        icon_path: token.icon_path,
+        display_color: token.display_color,
+        market_cap: marketCap,
+        change_24h: change,
+      };
+    });
 
     const totalMarketCap = tokensWithMetrics.reduce(
       (sum, t) => sum + t.market_cap,
