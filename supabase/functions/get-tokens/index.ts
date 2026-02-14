@@ -8,13 +8,13 @@ const corsHeaders = {
     "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const STALE_THRESHOLD_MS = 8_000;
+const STALE_THRESHOLD_MS = 30_000;
 
 async function fetchLivePrices(
   mintAddresses: string[]
 ): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
-  const batchSize = 5;
+  const batchSize = 30;
 
   for (let i = 0; i < mintAddresses.length; i += batchSize) {
     const batch = mintAddresses.slice(i, i + batchSize);
@@ -67,6 +67,8 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    const tokenIds = tokens.map((t: any) => t.id);
+
     const { data: latestTick } = await supabaseRead
       .from("price_ticks")
       .select("timestamp")
@@ -106,87 +108,103 @@ Deno.serve(async (req: Request) => {
       }
     }
 
-    const tokensWithPrices = await Promise.all(
-      tokens.map(async (token: any) => {
-        let currentPrice = livePrices[token.mint_address] || null;
+    const { data: recentTicks } = await supabaseRead
+      .from("price_ticks")
+      .select("token_id, price_usd, timestamp")
+      .in("token_id", tokenIds)
+      .order("timestamp", { ascending: false })
+      .limit(tokenIds.length * 3);
 
-        if (!currentPrice) {
-          const { data: tick } = await supabaseRead
-            .from("price_ticks")
-            .select("price_usd, timestamp")
-            .eq("token_id", token.id)
-            .order("timestamp", { ascending: false })
-            .limit(1)
-            .maybeSingle();
+    const latestByToken: Record<string, { price_usd: string; timestamp: string }> = {};
+    for (const tick of recentTicks || []) {
+      if (!latestByToken[tick.token_id]) {
+        latestByToken[tick.token_id] = tick;
+      }
+    }
 
-          if (tick) {
-            currentPrice = parseFloat(tick.price_usd);
-          }
-        }
+    const oneHourAgo = new Date(Date.now() - 3600000).toISOString();
+    const twoHoursAgo = new Date(Date.now() - 7200000).toISOString();
+    const { data: hourOldTicks } = await supabaseRead
+      .from("price_ticks")
+      .select("token_id, price_usd")
+      .in("token_id", tokenIds)
+      .lt("timestamp", oneHourAgo)
+      .gte("timestamp", twoHoursAgo)
+      .order("timestamp", { ascending: false })
+      .limit(tokenIds.length * 3);
 
-        const { data: prevTick } = await supabaseRead
-          .from("price_ticks")
-          .select("price_usd")
-          .eq("token_id", token.id)
-          .lt(
-            "timestamp",
-            new Date(Date.now() - 3600000).toISOString()
-          )
-          .order("timestamp", { ascending: false })
-          .limit(1)
-          .maybeSingle();
+    const hourOldByToken: Record<string, { price_usd: string }> = {};
+    for (const tick of hourOldTicks || []) {
+      if (!hourOldByToken[tick.token_id]) {
+        hourOldByToken[tick.token_id] = tick;
+      }
+    }
 
-        const marketCap = currentPrice
-          ? currentPrice * token.total_supply
+    const oneDayAgo = new Date(Date.now() - 86400000).toISOString();
+    const twoDaysAgo = new Date(Date.now() - 172800000).toISOString();
+    const { data: dayOldTicks } = await supabaseRead
+      .from("price_ticks")
+      .select("token_id, price_usd")
+      .in("token_id", tokenIds)
+      .lt("timestamp", oneDayAgo)
+      .gte("timestamp", twoDaysAgo)
+      .order("timestamp", { ascending: false })
+      .limit(tokenIds.length * 3);
+
+    const dayOldByToken: Record<string, { price_usd: string }> = {};
+    for (const tick of dayOldTicks || []) {
+      if (!dayOldByToken[tick.token_id]) {
+        dayOldByToken[tick.token_id] = tick;
+      }
+    }
+
+    const tokensWithPrices = tokens.map((token: any) => {
+      const currentPrice =
+        livePrices[token.mint_address] ||
+        (latestByToken[token.id]
+          ? parseFloat(latestByToken[token.id].price_usd)
+          : null);
+
+      const marketCap = currentPrice
+        ? currentPrice * token.total_supply
+        : null;
+
+      const prevTick = hourOldByToken[token.id];
+      const change1h =
+        currentPrice && prevTick
+          ? ((currentPrice - parseFloat(prevTick.price_usd)) /
+              parseFloat(prevTick.price_usd)) *
+            100
           : null;
 
-        const change1h =
-          currentPrice && prevTick
-            ? ((currentPrice - parseFloat(prevTick.price_usd)) /
-                parseFloat(prevTick.price_usd)) *
-              100
-            : null;
+      const dayTick = dayOldByToken[token.id];
+      const change24h =
+        currentPrice && dayTick
+          ? ((currentPrice - parseFloat(dayTick.price_usd)) /
+              parseFloat(dayTick.price_usd)) *
+            100
+          : null;
 
-        const { data: dayOldTick } = await supabaseRead
-          .from("price_ticks")
-          .select("price_usd")
-          .eq("token_id", token.id)
-          .lt(
-            "timestamp",
-            new Date(Date.now() - 86400000).toISOString()
-          )
-          .order("timestamp", { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        const change24h =
-          currentPrice && dayOldTick
-            ? ((currentPrice - parseFloat(dayOldTick.price_usd)) /
-                parseFloat(dayOldTick.price_usd)) *
-              100
-            : null;
-
-        return {
-          id: token.id,
-          symbol: token.symbol,
-          name: token.name,
-          emoji_type: token.emoji_type,
-          icon_path: token.icon_path,
-          display_color: token.display_color,
-          price_usd: currentPrice,
-          market_cap: marketCap,
-          change_24h: change24h,
-          change_1h: change1h,
-          last_updated: new Date().toISOString(),
-        };
-      })
-    );
+      return {
+        id: token.id,
+        symbol: token.symbol,
+        name: token.name,
+        emoji_type: token.emoji_type,
+        icon_path: token.icon_path,
+        display_color: token.display_color,
+        price_usd: currentPrice,
+        market_cap: marketCap,
+        change_24h: change24h,
+        change_1h: change1h,
+        last_updated: new Date().toISOString(),
+      };
+    });
 
     return new Response(JSON.stringify(tokensWithPrices), {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=5",
+        "Cache-Control": "no-cache",
       },
     });
   } catch (error) {
