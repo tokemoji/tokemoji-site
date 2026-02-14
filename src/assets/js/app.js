@@ -1012,6 +1012,8 @@ function animatePriceGlobal(element, fromVal, toVal, duration) {
 }
 
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
+let pumpPortalLastMessage = 0;
+let pumpPortalHeartbeatTimer = null;
 const TOKEMOJI_MINT_MAP = {
 	'FVvsVkTQ8cgtzX9dnzZwVh353TZ3k88KVC8eymtqpump': 'GREED',
 	'3pWZBTJFByDh7Zojv3PL5FD18CGuvRamRGhKDMiMpump': 'FEAR',
@@ -1048,10 +1050,28 @@ async function fetchSolPrice() {
 	}
 }
 
+function startHeartbeat() {
+	clearInterval(pumpPortalHeartbeatTimer);
+	pumpPortalHeartbeatTimer = setInterval(function() {
+		if (!pumpPortalWs || pumpPortalWs.readyState !== WebSocket.OPEN) return;
+
+		var timeSinceLastMsg = Date.now() - pumpPortalLastMessage;
+		if (timeSinceLastMsg > 30000) {
+			console.warn('[PumpPortal] No messages for 30s, reconnecting...');
+			pumpPortalWs.close();
+		}
+	}, 10000);
+}
+
 function connectPumpPortal() {
-	if (pumpPortalWs && pumpPortalWs.readyState === WebSocket.OPEN) {
-		pumpPortalWs.close();
+	if (pumpPortalWs) {
+		if (pumpPortalWs.readyState === WebSocket.OPEN || pumpPortalWs.readyState === WebSocket.CONNECTING) {
+			pumpPortalWs.close();
+		}
 	}
+
+	clearTimeout(pumpPortalReconnectTimer);
+	clearInterval(pumpPortalHeartbeatTimer);
 
 	console.log('[PumpPortal] Connecting...');
 	pumpPortalWs = new WebSocket(PUMP_PORTAL_WS_URL);
@@ -1059,6 +1079,7 @@ function connectPumpPortal() {
 	pumpPortalWs.onopen = function() {
 		console.log('[PumpPortal] Connected');
 		updateLiveIndicator(true);
+		pumpPortalLastMessage = Date.now();
 
 		var mintAddresses = Object.keys(TOKEMOJI_MINT_MAP);
 		pumpPortalWs.send(JSON.stringify({
@@ -1071,9 +1092,11 @@ function connectPumpPortal() {
 		}));
 
 		console.log('[PumpPortal] Subscribed to', mintAddresses.length, 'tokens + new token events');
+		startHeartbeat();
 	};
 
 	pumpPortalWs.onmessage = function(event) {
+		pumpPortalLastMessage = Date.now();
 		try {
 			var data = JSON.parse(event.data);
 
@@ -1082,7 +1105,7 @@ function connectPumpPortal() {
 			} else if (data.txType === 'buy' || data.txType === 'sell') {
 				var ticker = TOKEMOJI_MINT_MAP[data.mint];
 				if (ticker) {
-					console.log('[PumpPortal] LIVE TRADE:', data.txType.toUpperCase(), ticker, 'mint:', data.mint.substring(0, 8) + '...');
+					console.log('[PumpPortal] LIVE TRADE:', data.txType.toUpperCase(), ticker, '$' + formatAPIPrice(data.vSolInBondingCurve / data.vTokensInBondingCurve * solPriceUsd));
 				}
 				handleTokenTradeEvent(data);
 			}
@@ -1092,10 +1115,11 @@ function connectPumpPortal() {
 	};
 
 	pumpPortalWs.onclose = function() {
-		console.log('[PumpPortal] Disconnected, reconnecting in 3s...');
+		console.log('[PumpPortal] Disconnected, reconnecting in 1s...');
 		updateLiveIndicator(false);
+		clearInterval(pumpPortalHeartbeatTimer);
 		clearTimeout(pumpPortalReconnectTimer);
-		pumpPortalReconnectTimer = setTimeout(connectPumpPortal, 3000);
+		pumpPortalReconnectTimer = setTimeout(connectPumpPortal, 1000);
 	};
 
 	pumpPortalWs.onerror = function() {
@@ -1130,7 +1154,7 @@ function handleTokenTradeEvent(data) {
 
 	var priceInSol = data.vSolInBondingCurve / data.vTokensInBondingCurve;
 	var priceUsd = priceInSol * solPriceUsd;
-	var marketCapUsd = data.marketCapSol * solPriceUsd;
+	var marketCapUsd = priceUsd * PUMP_FUN_TOTAL_SUPPLY;
 
 	console.log('[PumpPortal] ' + data.txType.toUpperCase() + ' ' + ticker + ': $' + formatAPIPrice(priceUsd) + ' (mcap: $' + formatAPIMarketCap(marketCapUsd) + ')');
 
@@ -1338,63 +1362,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		} catch (error) {
 			console.error('[Tokemoji] Error fetching API data:', error);
 			return [];
-		}
-	}
-
-	async function fetchJupiterPricesDirectly() {
-		if (!tokenListRendered || currentTokenData.length === 0) return;
-
-		var mintAddresses = Object.keys(TOKEMOJI_MINT_MAP);
-		try {
-			var res = await fetch('https://api.jup.ag/price/v2?ids=' + mintAddresses.join(','));
-			if (!res.ok) return;
-			var json = await res.json();
-			if (!json.data) return;
-
-			var mintToTicker = TOKEMOJI_MINT_MAP;
-			var updated = false;
-
-			for (var addr in json.data) {
-				var entry = json.data[addr];
-				if (!entry || !entry.price) continue;
-
-				var ticker = mintToTicker[addr];
-				if (!ticker) continue;
-
-				var newPrice = parseFloat(entry.price);
-				if (!newPrice || isNaN(newPrice)) continue;
-
-				var tokenIdx = currentTokenData.findIndex(function(t) { return t.ticker === ticker; });
-				if (tokenIdx === -1) continue;
-
-				var oldPrice = currentTokenData[tokenIdx].priceRaw;
-				if (oldPrice && Math.abs(newPrice - oldPrice) / oldPrice < 0.000001) continue;
-
-				var row = document.querySelector('.token-row[data-token="' + ticker + '"]');
-				if (!row) continue;
-
-				var priceEl = row.querySelector('.token-price');
-				if (priceEl && oldPrice && oldPrice !== newPrice) {
-					animatePriceGlobal(priceEl, oldPrice, newPrice, 600);
-					var direction = newPrice > oldPrice ? 'up' : 'down';
-					flashTokenRow(row, priceEl, direction);
-					updated = true;
-				} else if (priceEl) {
-					priceEl.textContent = '$' + formatAPIPrice(newPrice);
-				}
-
-				currentTokenData[tokenIdx].priceRaw = newPrice;
-				currentTokenData[tokenIdx].oldPriceRaw = oldPrice;
-				currentTokenData[tokenIdx].price = '$' + formatAPIPrice(newPrice);
-				currentTokenData[tokenIdx].priceMovement = newPrice > oldPrice ? 'up' : (newPrice < oldPrice ? 'down' : 'none');
-			}
-
-			if (updated) {
-				updateMarketDominance();
-				updateGauges();
-			}
-		} catch (e) {
-			console.warn('[Jupiter] Direct price fetch error:', e.message);
 		}
 	}
 
@@ -2021,10 +1988,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		}).join('');
 	}
 
-	setInterval(function() {
-		fetchJupiterPricesDirectly();
-	}, 3000);
-
 	setInterval(async () => {
 		await refreshTokenPrices();
 		updateMarketDominance();
@@ -2033,7 +1996,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateTopGainers();
 		updateTopLosers();
 		updateGlobalAdoption();
-	}, 30000);
+	}, 60000);
 	
 	// Setup chart buttons
 	setupChartButtons();
