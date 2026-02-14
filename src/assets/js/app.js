@@ -1027,6 +1027,9 @@ function animatePriceGlobal(element, fromVal, toVal, duration) {
 
 let currentTokenData = [];
 let tokenListRendered = false;
+let currentTokenDataInitialized = false;
+var globalUpdateMarketDominance = function() {};
+var globalUpdateGauges = function() {};
 
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
@@ -1187,8 +1190,8 @@ function handleTokenTradeEvent(data) {
 		currentTokenData[tokenIdx].priceMovement = priceUsd > oldPrice ? 'up' : 'down';
 	}
 
-	updateMarketDominance();
-	updateGauges();
+	globalUpdateMarketDominance();
+	globalUpdateGauges();
 
 	var counterEl = document.getElementById('live-trade-counter');
 	if (counterEl) {
@@ -1458,7 +1461,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		const sortedTokens = apiTokens.length > 0 ? sortTokens(apiTokens) : [...tokemojiData];
 
 		tokenList.innerHTML = sortedTokens.map((token, index) => renderTokenRow(token, index)).join('');
-		if (apiTokens.length > 0) currentTokenData = [...apiTokens];
+		if (apiTokens.length > 0) {
+			currentTokenData = [...apiTokens];
+		} else if (!currentTokenDataInitialized) {
+			currentTokenData = tokemojiDataWithGraphics.map(t => ({...t, priceRaw: 0}));
+		}
+		currentTokenDataInitialized = true;
 		tokenListRendered = true;
 		setupChartButtons();
 	}
@@ -1855,6 +1863,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}
 	}
+
+	globalUpdateMarketDominance = updateMarketDominance;
+	globalUpdateGauges = updateGauges;
 
 	initTokemojiDashboard();
 
