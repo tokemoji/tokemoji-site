@@ -7,6 +7,37 @@ const corsHeaders = {
     "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
+async function fetchJupiter(
+  ids: string,
+): Promise<Record<string, { price: string }>> {
+  const res = await fetch(
+    `https://api.jup.ag/price/v2?ids=${encodeURIComponent(ids)}`,
+  );
+  if (!res.ok) return {};
+  const json = await res.json();
+  return json.data || {};
+}
+
+async function fetchDexScreener(
+  ids: string,
+): Promise<Record<string, { price: string }>> {
+  const res = await fetch(
+    `https://api.dexscreener.com/latest/dex/tokens/${encodeURIComponent(ids)}`,
+  );
+  if (!res.ok) return {};
+  const json = await res.json();
+  const pairs = json.pairs || [];
+  const data: Record<string, { price: string }> = {};
+  for (const pair of pairs) {
+    if (pair.baseToken?.address && pair.priceUsd) {
+      if (!data[pair.baseToken.address]) {
+        data[pair.baseToken.address] = { price: pair.priceUsd };
+      }
+    }
+  }
+  return data;
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
@@ -26,47 +57,30 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const jupRes = await fetch(
-      `https://api.jup.ag/price/v2?ids=${encodeURIComponent(ids)}`,
-    );
+    const [jupData, dsData] = await Promise.all([
+      fetchJupiter(ids).catch(() => ({})),
+      fetchDexScreener(ids).catch(() => ({})),
+    ]);
 
-    if (!jupRes.ok) {
-      const dsRes = await fetch(
-        `https://api.dexscreener.com/latest/dex/tokens/${encodeURIComponent(ids)}`,
-      );
+    const merged: Record<string, { price: string }> = {};
+    const sources: string[] = [];
 
-      if (!dsRes.ok) {
-        throw new Error("Both Jupiter and DexScreener failed");
+    for (const [mint, val] of Object.entries(dsData)) {
+      if (val?.price) {
+        merged[mint] = val;
       }
-
-      const dsData = await dsRes.json();
-      const pairs = dsData.pairs || [];
-      const data: Record<string, { price: string }> = {};
-
-      for (const pair of pairs) {
-        if (pair.baseToken?.address && pair.priceUsd) {
-          if (!data[pair.baseToken.address]) {
-            data[pair.baseToken.address] = { price: pair.priceUsd };
-          }
-        }
-      }
-
-      return new Response(
-        JSON.stringify({ data, source: "dexscreener" }),
-        {
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-            "Cache-Control": "public, max-age=2",
-          },
-        },
-      );
     }
+    if (Object.keys(dsData).length > 0) sources.push("dexscreener");
 
-    const jupData = await jupRes.json();
+    for (const [mint, val] of Object.entries(jupData)) {
+      if (val?.price) {
+        merged[mint] = val;
+      }
+    }
+    if (Object.keys(jupData).length > 0) sources.push("jupiter");
 
     return new Response(
-      JSON.stringify({ data: jupData.data || {}, source: "jupiter" }),
+      JSON.stringify({ data: merged, sources }),
       {
         headers: {
           ...corsHeaders,

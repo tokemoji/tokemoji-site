@@ -1164,14 +1164,6 @@ async function pricePollCycle() {
 	var mints = getAllMintAddresses();
 	var prices = await fetchJupiterPrices(mints);
 
-	var missing = mints.filter(function(m) { return !prices[m] || prices[m] <= 0; });
-	if (missing.length > 0) {
-		var dexPrices = await fetchDexScreenerPrices(missing);
-		for (var m in dexPrices) {
-			if (!prices[m]) prices[m] = dexPrices[m];
-		}
-	}
-
 	var keys = Object.keys(prices);
 	if (keys.length > 0) {
 		applyLivePrices(prices);
