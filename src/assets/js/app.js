@@ -1241,139 +1241,142 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
-	// Current sort type
 	let currentSortType = 'marketcap';
+	let tokenListRendered = false;
 
-	// Populate token list with API data
-	async function populateTokenList() {
-		const tokenList = document.getElementById('token-list');
-		if (!tokenList) return;
+	const TOKEN_WEBM_MAP = {
+		'LOVE': 'assets/img/emojis/love.webm',
+		'LOL': 'assets/img/emojis/lol.webm',
+		'GOOD': 'assets/img/emojis/good.webm',
+		'EVIL': 'assets/img/emojis/evil.webm',
+		'GREED': 'assets/img/emojis/greed.webm',
+		'FEAR': 'assets/img/emojis/fear.webm',
+		'MAD': 'assets/img/emojis/mad.webm',
+		'HATE': 'assets/img/emojis/hate.webm',
+		'OMG': 'assets/img/emojis/omg.webm',
+		'HAPPY': 'assets/img/emojis/happy.webm',
+		'SAD': 'assets/img/emojis/sad.webm',
+		'LIKE': 'assets/img/emojis/like.webm'
+	};
 
-		// Fetch live data from API
-		let apiTokens = [];
+	const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
+	const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+	const API_BASE = `${SUPABASE_URL}/functions/v1`;
+	const API_HEADERS = {
+		'Content-Type': 'application/json',
+		'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+		'apikey': SUPABASE_ANON_KEY
+	};
+
+	async function fetchTokenData() {
 		try {
-			const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
-			const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
-			const API_BASE = `${SUPABASE_URL}/functions/v1`;
+			const response = await fetch(`${API_BASE}/get-tokens`, { headers: API_HEADERS });
+			if (!response.ok) return [];
+			const liveTokens = await response.json();
 
-			const headers = {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-				'apikey': SUPABASE_ANON_KEY
-			};
+			return liveTokens.map(token => {
+				const ticker = token.emoji_type || token.symbol;
+				const currentPrice = token.price_usd;
+				const previousToken = currentTokenData.find(t => t.ticker === ticker);
+				const oldPriceRaw = previousToken ? previousToken.priceRaw : null;
 
-			const response = await fetch(`${API_BASE}/get-tokens`, { headers });
-			if (response.ok) {
-				const liveTokens = await response.json();
+				let priceMovement = 'none';
+				if (oldPriceRaw && currentPrice) {
+					if (currentPrice > oldPriceRaw) priceMovement = 'up';
+					else if (currentPrice < oldPriceRaw) priceMovement = 'down';
+				}
 
-				// Convert API data to match mockup format and detect price changes
-				apiTokens = liveTokens.map(token => {
-					const ticker = token.emoji_type || token.symbol;
-					const currentPrice = token.price_usd;
-
-					// Find previous price for this token
-					const previousToken = currentTokenData.find(t => t.ticker === ticker);
-					const previousPrice = previousToken ? parseFloat(previousToken.price.replace('$', '')) : null;
-
-					// Determine price movement for flash effect
-					let priceMovement = 'none';
-					if (previousPrice && currentPrice) {
-						if (currentPrice > previousPrice) {
-							priceMovement = 'up';
-						} else if (currentPrice < previousPrice) {
-							priceMovement = 'down';
-						}
-					}
-
-					return {
-						emoji: ticker,
-						ticker: ticker,
-						price: currentPrice ? `$${formatAPIPrice(currentPrice)}` : 'N/A',
-						priceRaw: currentPrice,
-						change: token.change_24h !== null ? `${token.change_24h >= 0 ? '+' : ''}${token.change_24h.toFixed(2)}%` : '0%',
-						marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
-						changeType: (token.change_24h || 0) >= 0 ? 'positive' : 'negative',
-						hasGraphic: true,
-						priceMovement: priceMovement
-					};
-				});
-
-				// Store current data for next comparison
-				currentTokenData = [...apiTokens];
-			}
+				return {
+					emoji: ticker,
+					ticker: ticker,
+					price: currentPrice ? `$${formatAPIPrice(currentPrice)}` : 'N/A',
+					priceRaw: currentPrice,
+					oldPriceRaw: oldPriceRaw,
+					change: token.change_24h !== null ? `${token.change_24h >= 0 ? '+' : ''}${token.change_24h.toFixed(2)}%` : '0%',
+					marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
+					changeType: (token.change_24h || 0) >= 0 ? 'positive' : 'negative',
+					hasGraphic: true,
+					priceMovement: priceMovement
+				};
+			});
 		} catch (error) {
 			console.error('[Tokemoji] Error fetching API data:', error);
+			return [];
 		}
+	}
 
-		// Use API data if available, otherwise fall back to mockup
-		let sortedTokens = apiTokens.length > 0 ? [...apiTokens] : [...tokemojiData];
-		
+	function sortTokens(tokens) {
+		const sorted = [...tokens];
 		switch(currentSortType) {
 			case 'marketcap':
-				sortedTokens.sort((a, b) => {
-					const aCap = parseFloat(a.marketCap.replace('$', '').replace('M', ''));
-					const bCap = parseFloat(b.marketCap.replace('$', '').replace('M', ''));
+				sorted.sort((a, b) => {
+					const aCap = parseFloat(a.marketCap.replace('$', '').replace('M', '').replace('K', '').replace('B', ''));
+					const bCap = parseFloat(b.marketCap.replace('$', '').replace('M', '').replace('K', '').replace('B', ''));
 					return bCap - aCap;
 				});
 				break;
 			case 'losers':
-				sortedTokens.sort((a, b) => {
+				sorted.sort((a, b) => {
 					const aChange = parseFloat(a.change.replace('%', '').replace('+', ''));
 					const bChange = parseFloat(b.change.replace('%', '').replace('+', ''));
-					return aChange - bChange; // Most negative first
+					return aChange - bChange;
 				});
 				break;
 			case 'gainers':
-				sortedTokens.sort((a, b) => {
+				sorted.sort((a, b) => {
 					const aChange = parseFloat(a.change.replace('%', '').replace('+', ''));
 					const bChange = parseFloat(b.change.replace('%', '').replace('+', ''));
-					return bChange - aChange; // Most positive first
+					return bChange - aChange;
 				});
 				break;
 		}
+		return sorted;
+	}
 
-		// Map token tickers to WebM paths
-		const tokenWebMMap = {
-			'LOVE': 'assets/img/emojis/love.webm',
-			'LOL': 'assets/img/emojis/lol.webm',
-			'GOOD': 'assets/img/emojis/good.webm',
-			'EVIL': 'assets/img/emojis/evil.webm',
-			'GREED': 'assets/img/emojis/greed.webm',
-			'FEAR': 'assets/img/emojis/fear.webm',
-			'MAD': 'assets/img/emojis/mad.webm',
-			'HATE': 'assets/img/emojis/hate.webm',
-			'OMG': 'assets/img/emojis/omg.webm',
-			'HAPPY': 'assets/img/emojis/happy.webm',
-			'SAD': 'assets/img/emojis/sad.webm',
-			'LIKE': 'assets/img/emojis/like.webm'
-		};
+	function animatePrice(element, fromVal, toVal, duration) {
+		if (!fromVal || !toVal || fromVal === toVal) {
+			element.textContent = '$' + formatAPIPrice(toVal || 0);
+			return;
+		}
+		const startTime = performance.now();
+		function tick(now) {
+			const elapsed = now - startTime;
+			const progress = Math.min(elapsed / duration, 1);
+			const eased = 1 - Math.pow(1 - progress, 3);
+			const current = fromVal + (toVal - fromVal) * eased;
+			element.textContent = '$' + formatAPIPrice(current);
+			if (progress < 1) requestAnimationFrame(tick);
+		}
+		requestAnimationFrame(tick);
+	}
 
-		tokenList.innerHTML = sortedTokens.map((token, index) => {
-			const priceFormatted = token.priceRaw
-				? `$${formatAPIPrice(token.priceRaw)}`
-				: token.price;
+	function flashTokenRow(row, priceEl, direction) {
+		priceEl.classList.remove('price-tick-up', 'price-tick-down');
+		void priceEl.offsetWidth;
+		priceEl.classList.add(direction === 'up' ? 'price-tick-up' : 'price-tick-down');
 
-			const marketCapFormatted = token.marketCap;
+		row.classList.remove('trade-flash-buy', 'trade-flash-sell');
+		void row.offsetWidth;
+		row.classList.add(direction === 'up' ? 'trade-flash-buy' : 'trade-flash-sell');
 
-			const change24h = parseFloat(token.change.replace('%', '').replace('+', ''));
-			const changeClass = change24h >= 0 ? 'text-success' : 'text-danger';
-			const changeIcon = change24h >= 0 ? '↑' : '↓';
-			const changeFormatted = `${changeIcon}${token.change}`;
+		setTimeout(function() {
+			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
+		}, 1500);
+		setTimeout(function() {
+			priceEl.classList.remove('price-tick-up', 'price-tick-down');
+		}, 2000);
+	}
 
-			const videoSrc = tokenWebMMap[token.ticker] || 'assets/img/emojis/happy.webm';
-			const bgColor = '#ffc107';
-
-			const flashClass = token.priceMovement === 'up' ? 'price-flash-up' :
-						   token.priceMovement === 'down' ? 'price-flash-down' : '';
-
+	function renderTokenRow(token, index) {
+		const videoSrc = TOKEN_WEBM_MAP[token.ticker] || 'assets/img/emojis/happy.webm';
 		return `
-		<div class="token-row d-flex align-items-center py-1 border-bottom border-light ${flashClass}" data-token="${token.ticker}">
+		<div class="token-row d-flex align-items-center py-1 border-bottom border-light" data-token="${token.ticker}">
 			<span class="token-rank me-2 fw-bold text-muted" style="min-width: 20px; flex-shrink: 0;">${index + 1}</span>
 			<div class="token-emoji me-2" style="flex-shrink: 0; width: 36px; height: 36px;">
 				${isIOS() ?
-					`<img src="${getEmojiPath(tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm')}"
+					`<img src="${getEmojiPath(videoSrc)}"
 						  style="width: 100%; height: 100%; object-fit: contain;">` :
-					`<video src="${tokenWebMMap[token.ticker] || 'assets/img/emojis/love.webm'}"
+					`<video src="${videoSrc}"
 						   autoplay loop muted playsinline
 						   style="width: 100%; height: 100%; object-fit: contain;">
 					</video>`
@@ -1385,12 +1388,67 @@ document.addEventListener("DOMContentLoaded", function () {
 			<span class="token-marketcap text-muted me-2" style="min-width: 50px; flex-shrink: 0;">${token.marketCap}</span>
 			<button class="btn btn-sm btn-primary buy-btn me-1" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;">BUY</button>
 			<button class="btn btn-sm btn-outline-secondary chart-btn" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;" data-token="${token.ticker}">CHART</button>
-		</div>
-	`;
-		}).join('');
-		
-		// Setup chart buttons after populating
+		</div>`;
+	}
+
+	async function populateTokenList() {
+		const tokenList = document.getElementById('token-list');
+		if (!tokenList) return;
+
+		const apiTokens = await fetchTokenData();
+		const sortedTokens = apiTokens.length > 0 ? sortTokens(apiTokens) : [...tokemojiData];
+
+		tokenList.innerHTML = sortedTokens.map((token, index) => renderTokenRow(token, index)).join('');
+		if (apiTokens.length > 0) currentTokenData = [...apiTokens];
+		tokenListRendered = true;
 		setupChartButtons();
+	}
+
+	async function refreshTokenPrices() {
+		const tokenList = document.getElementById('token-list');
+		if (!tokenList || !tokenListRendered) {
+			await populateTokenList();
+			return;
+		}
+
+		const apiTokens = await fetchTokenData();
+		if (apiTokens.length === 0) return;
+
+		const delay = 120;
+		apiTokens.forEach((token, i) => {
+			setTimeout(() => {
+				const row = tokenList.querySelector('.token-row[data-token="' + token.ticker + '"]');
+				if (!row) return;
+
+				const priceEl = row.querySelector('.token-price');
+				const changeEl = row.querySelector('.token-change');
+				const mcapEl = row.querySelector('.token-marketcap');
+
+				if (priceEl && token.priceRaw) {
+					const oldPrice = token.oldPriceRaw;
+					if (oldPrice && oldPrice !== token.priceRaw) {
+						animatePrice(priceEl, oldPrice, token.priceRaw, 800);
+						const direction = token.priceRaw > oldPrice ? 'up' : 'down';
+						flashTokenRow(row, priceEl, direction);
+					} else {
+						priceEl.textContent = token.price;
+					}
+				}
+
+				if (changeEl) {
+					changeEl.textContent = token.change;
+					changeEl.className = 'token-change ' + (token.changeType === 'positive' ? 'text-success' : 'text-danger') + ' fw-bold me-2';
+					changeEl.style.minWidth = '60px';
+					changeEl.style.flexShrink = '0';
+				}
+
+				if (mcapEl) {
+					mcapEl.textContent = token.marketCap;
+				}
+			}, i * delay);
+		});
+
+		currentTokenData = [...apiTokens];
 	}
 
 	// Populate news feed (single item)
@@ -1888,14 +1946,13 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	setInterval(async () => {
-		await populateTokenList();
+		await refreshTokenPrices();
 		updateMarketDominance();
 		updateGauges();
 		initializeCarouselData();
 		updateTopGainers();
 		updateTopLosers();
 		updateGlobalAdoption();
-		addPriceChangeEffects();
 	}, 30000);
 	
 	// Setup chart buttons
