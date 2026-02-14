@@ -976,6 +976,8 @@ const baselinePrices = {};
 const lastPriceWriteTime = {};
 const PRICE_WRITE_THROTTLE_MS = 30000;
 
+const SUPABASE_EDGE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1';
+const SUPABASE_EDGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
 let pumpPortalHeartbeatTimer = null;
@@ -1049,7 +1051,12 @@ function flushPriceTicks() {
 
 async function fetchSolPrice() {
 	try {
-		var res = await fetch('https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1/get-sol-price');
+		var res = await fetch(SUPABASE_EDGE_URL + '/get-sol-price', {
+			headers: {
+				'Authorization': 'Bearer ' + SUPABASE_EDGE_KEY,
+				'apikey': SUPABASE_EDGE_KEY
+			}
+		});
 		if (res.ok) {
 			var data = await res.json();
 			if (data.solana && data.solana.usd) {
