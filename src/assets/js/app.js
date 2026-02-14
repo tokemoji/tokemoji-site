@@ -1792,7 +1792,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	fetchSolPrice().then(function() {
 		connectPumpPortal();
 	});
-	setInterval(fetchSolPrice, 60000);
+	setInterval(fetchSolPrice, 2000);
 
 	// Initialize ticker news
 	initTickerNews();
