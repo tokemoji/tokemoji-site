@@ -972,6 +972,45 @@ const tokemojiData = [
 // Filter to only show tokens with graphics
 const tokemojiDataWithGraphics = tokemojiData.filter(token => token.hasGraphic);
 
+function formatAPIPrice(price) {
+	if (price >= 1) {
+		return price.toFixed(4);
+	} else if (price >= 0.0001) {
+		return price.toFixed(6);
+	} else {
+		return price.toFixed(10);
+	}
+}
+
+function formatAPIMarketCap(marketCap) {
+	if (marketCap >= 1000000000) {
+		return (marketCap / 1000000000).toFixed(2) + 'B';
+	} else if (marketCap >= 1000000) {
+		return (marketCap / 1000000).toFixed(2) + 'M';
+	} else if (marketCap >= 1000) {
+		return (marketCap / 1000).toFixed(2) + 'K';
+	} else {
+		return marketCap.toFixed(2);
+	}
+}
+
+function animatePriceGlobal(element, fromVal, toVal, duration) {
+	if (!fromVal || !toVal || fromVal === toVal) {
+		element.textContent = '$' + formatAPIPrice(toVal || 0);
+		return;
+	}
+	var startTime = performance.now();
+	function tick(now) {
+		var elapsed = now - startTime;
+		var progress = Math.min(elapsed / duration, 1);
+		var eased = 1 - Math.pow(1 - progress, 3);
+		var current = fromVal + (toVal - fromVal) * eased;
+		element.textContent = '$' + formatAPIPrice(current);
+		if (progress < 1) requestAnimationFrame(tick);
+	}
+	requestAnimationFrame(tick);
+}
+
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 const TOKEMOJI_MINT_MAP = {
 	'FVvsVkTQ8cgtzX9dnzZwVh353TZ3k88KVC8eymtqpump': 'GREED',
@@ -1125,7 +1164,23 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType) {
 	var priceEl = row.querySelector('.token-price');
 	var mcapEl = row.querySelector('.token-marketcap');
 
-	if (priceEl) priceEl.textContent = '$' + formatAPIPrice(priceUsd);
+	if (priceEl) {
+		var oldText = priceEl.textContent.replace('$', '');
+		var oldVal = parseFloat(oldText) || 0;
+		if (oldVal && priceUsd && oldVal !== priceUsd) {
+			animatePriceGlobal(priceEl, oldVal, priceUsd, 600);
+		} else {
+			priceEl.textContent = '$' + formatAPIPrice(priceUsd);
+		}
+
+		priceEl.classList.remove('price-tick-up', 'price-tick-down');
+		void priceEl.offsetWidth;
+		priceEl.classList.add(txType === 'buy' ? 'price-tick-up' : 'price-tick-down');
+		setTimeout(function() {
+			priceEl.classList.remove('price-tick-up', 'price-tick-down');
+		}, 2000);
+	}
+
 	if (mcapEl) mcapEl.textContent = '$' + formatAPIMarketCap(marketCapUsd);
 
 	row.classList.remove('trade-flash-buy', 'trade-flash-sell');
@@ -1216,29 +1271,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Start carousel intervals
 		setInterval(updateTopGainers, 3000); // Every 3 seconds
 		setInterval(updateTopLosers, 3000); // Every 3 seconds
-	}
-
-	// Helper functions for API data formatting
-	function formatAPIPrice(price) {
-		if (price >= 1) {
-			return price.toFixed(4);
-		} else if (price >= 0.0001) {
-			return price.toFixed(6);
-		} else {
-			return price.toFixed(10);
-		}
-	}
-
-	function formatAPIMarketCap(marketCap) {
-		if (marketCap >= 1000000000) {
-			return `${(marketCap / 1000000000).toFixed(2)}B`;
-		} else if (marketCap >= 1000000) {
-			return `${(marketCap / 1000000).toFixed(2)}M`;
-		} else if (marketCap >= 1000) {
-			return `${(marketCap / 1000).toFixed(2)}K`;
-		} else {
-			return marketCap.toFixed(2);
-		}
 	}
 
 	let currentSortType = 'marketcap';
@@ -1333,23 +1365,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		return sorted;
 	}
 
-	function animatePrice(element, fromVal, toVal, duration) {
-		if (!fromVal || !toVal || fromVal === toVal) {
-			element.textContent = '$' + formatAPIPrice(toVal || 0);
-			return;
-		}
-		const startTime = performance.now();
-		function tick(now) {
-			const elapsed = now - startTime;
-			const progress = Math.min(elapsed / duration, 1);
-			const eased = 1 - Math.pow(1 - progress, 3);
-			const current = fromVal + (toVal - fromVal) * eased;
-			element.textContent = '$' + formatAPIPrice(current);
-			if (progress < 1) requestAnimationFrame(tick);
-		}
-		requestAnimationFrame(tick);
-	}
-
 	function flashTokenRow(row, priceEl, direction) {
 		priceEl.classList.remove('price-tick-up', 'price-tick-down');
 		void priceEl.offsetWidth;
@@ -1427,7 +1442,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				if (priceEl && token.priceRaw) {
 					const oldPrice = token.oldPriceRaw;
 					if (oldPrice && oldPrice !== token.priceRaw) {
-						animatePrice(priceEl, oldPrice, token.priceRaw, 800);
+						animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 800);
 						const direction = token.priceRaw > oldPrice ? 'up' : 'down';
 						flashTokenRow(row, priceEl, direction);
 					} else {
