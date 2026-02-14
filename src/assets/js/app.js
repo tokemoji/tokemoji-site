@@ -1115,16 +1115,18 @@ function applyLivePrices(prices) {
 		}
 		var changeStr = (changePercent >= 0 ? '+' : '') + changePercent.toFixed(2) + '%';
 		var changeType = changePercent >= 0 ? 'positive' : 'negative';
-		var direction = (!oldPrice || newPrice > oldPrice) ? 'up' : 'down';
+
+		var txType = null;
+		if (oldPrice && oldPrice > 0) {
+			txType = (newPrice > oldPrice) ? 'buy' : 'sell';
+		}
 
 		currentTokenData[tokenIdx].priceRaw = newPrice;
 		currentTokenData[tokenIdx].price = '$' + formatAPIPrice(newPrice);
 		currentTokenData[tokenIdx].marketCap = '$' + formatAPIMarketCap(marketCapUsd);
 		currentTokenData[tokenIdx].change = changeStr;
 		currentTokenData[tokenIdx].changeType = changeType;
-		currentTokenData[tokenIdx].priceMovement = direction;
 
-		var txType = direction === 'up' ? 'buy' : 'sell';
 		updateSingleTokenRow(ticker, newPrice, marketCapUsd, txType, changeStr, changeType);
 
 		writePriceTickThrottled(ticker, newPrice);
@@ -1348,12 +1350,14 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 			priceEl.textContent = '$' + formatAPIPrice(priceUsd);
 		}
 
-		priceEl.classList.remove('price-tick-up', 'price-tick-down');
-		void priceEl.offsetWidth;
-		priceEl.classList.add(txType === 'buy' ? 'price-tick-up' : 'price-tick-down');
-		setTimeout(function() {
+		if (txType) {
 			priceEl.classList.remove('price-tick-up', 'price-tick-down');
-		}, 2000);
+			void priceEl.offsetWidth;
+			priceEl.classList.add(txType === 'buy' ? 'price-tick-up' : 'price-tick-down');
+			setTimeout(function() {
+				priceEl.classList.remove('price-tick-up', 'price-tick-down');
+			}, 2000);
+		}
 	}
 
 	if (mcapEl) mcapEl.textContent = '$' + formatAPIMarketCap(marketCapUsd);
@@ -1363,13 +1367,15 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 		changeEl.className = 'token-change ' + (changeType === 'positive' ? 'text-success' : 'text-danger') + ' fw-bold me-2';
 	}
 
-	row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-	void row.offsetWidth;
-	row.classList.add(txType === 'buy' ? 'trade-flash-buy' : 'trade-flash-sell');
-
-	setTimeout(function() {
+	if (txType) {
 		row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-	}, 1500);
+		void row.offsetWidth;
+		row.classList.add(txType === 'buy' ? 'trade-flash-buy' : 'trade-flash-sell');
+
+		setTimeout(function() {
+			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
+		}, 1500);
+	}
 }
 
 function updateLiveIndicator(connected) {
