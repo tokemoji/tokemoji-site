@@ -10,14 +10,14 @@ const corsHeaders = {
 
 const STALE_THRESHOLD_MS = 8_000;
 
-async function fetchFromDexScreener(
-  addresses: string[]
+async function fetchLivePrices(
+  mintAddresses: string[]
 ): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
   const batchSize = 5;
 
-  for (let i = 0; i < addresses.length; i += batchSize) {
-    const batch = addresses.slice(i, i + batchSize);
+  for (let i = 0; i < mintAddresses.length; i += batchSize) {
+    const batch = mintAddresses.slice(i, i + batchSize);
     try {
       const res = await fetch(
         `https://api.dexscreener.com/latest/dex/tokens/${batch.join(",")}`
@@ -33,38 +33,9 @@ async function fetchFromDexScreener(
           }
         }
       }
-    } catch (_) {}
-  }
-
-  return prices;
-}
-
-async function fetchLivePrices(
-  mintAddresses: string[]
-): Promise<Record<string, number>> {
-  const prices: Record<string, number> = {};
-
-  try {
-    const res = await fetch(
-      `https://api.jup.ag/price/v2?ids=${mintAddresses.join(",")}`
-    );
-    if (!res.ok) throw new Error(`Jupiter API ${res.status}`);
-    const json = await res.json();
-
-    for (const addr of mintAddresses) {
-      const entry = json.data?.[addr];
-      if (entry?.price) {
-        prices[addr] = parseFloat(entry.price);
-      }
+    } catch (e) {
+      console.error("DexScreener batch error:", e);
     }
-  } catch (e) {
-    console.error("Jupiter API error:", e);
-  }
-
-  const missing = mintAddresses.filter((a) => !prices[a]);
-  if (missing.length > 0) {
-    const dexPrices = await fetchFromDexScreener(missing);
-    Object.assign(prices, dexPrices);
   }
 
   return prices;
@@ -120,7 +91,7 @@ Deno.serve(async (req: Request) => {
         .map((t: any) => ({
           token_id: t.id,
           price_usd: livePrices[t.mint_address],
-          source: "jupiter",
+          source: "dexscreener",
           timestamp: new Date().toISOString(),
         }));
 

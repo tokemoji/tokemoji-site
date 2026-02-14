@@ -14,21 +14,30 @@ async function fetchLivePrices(
   mintAddresses: string[]
 ): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
-  try {
-    const res = await fetch(
-      `https://api.jup.ag/price/v2?ids=${mintAddresses.join(",")}`
-    );
-    if (!res.ok) throw new Error(`Jupiter API ${res.status}`);
-    const json = await res.json();
-    for (const addr of mintAddresses) {
-      const entry = json.data?.[addr];
-      if (entry?.price) {
-        prices[addr] = parseFloat(entry.price);
+  const batchSize = 5;
+
+  for (let i = 0; i < mintAddresses.length; i += batchSize) {
+    const batch = mintAddresses.slice(i, i + batchSize);
+    try {
+      const res = await fetch(
+        `https://api.dexscreener.com/latest/dex/tokens/${batch.join(",")}`
+      );
+      if (res.ok) {
+        const json = await res.json();
+        for (const pair of json.pairs || []) {
+          if (pair.baseToken?.address && pair.priceUsd) {
+            const addr = pair.baseToken.address;
+            if (!prices[addr]) {
+              prices[addr] = parseFloat(pair.priceUsd);
+            }
+          }
+        }
       }
+    } catch (e) {
+      console.error("DexScreener batch error:", e);
     }
-  } catch (e) {
-    console.error("Jupiter API error:", e);
   }
+
   return prices;
 }
 

@@ -12,15 +12,6 @@ function isIOS() {
 	// Don't include mobile Safari detection as it's too broad
 	const result = isIOSDevice || isIPadPro;
 	
-	console.log('iOS Detection:', {
-		userAgent: userAgent,
-		platform: platform,
-		touchPoints: navigator.maxTouchPoints,
-		isIOSDevice: isIOSDevice,
-		isIPadPro: isIPadPro,
-		result: result
-	});
-	
 	return result;
 }
 
@@ -34,9 +25,6 @@ function getEmojiPath(webmPath) {
 
 function replaceWebMWithWebP() {
 	if (!isIOS()) return;
-	
-	console.log('iOS detected - replacing WebM with WebP fallbacks');
-	console.log('iOS replacement starting at:', new Date().toISOString());
 	
 	// Simple function to convert WebM to WebP
 	function webmToWebp(src) {
@@ -53,7 +41,6 @@ function replaceWebMWithWebP() {
 			const webmSrc = sources[0].src;
 			// Skip if this is the hero video
 			if (webmSrc.includes('hero-img-1.webm')) {
-				console.log('🎬 Skipping hero video - will be handled by cycling function');
 				return;
 			}
 			
@@ -80,7 +67,6 @@ function replaceWebMWithWebP() {
 			
 			// Replace video with img
 			video.parentNode.replaceChild(img, video);
-			console.log('Replaced video:', webmSrc, '->', webpSrc);
 		}
 	});
 	
@@ -102,7 +88,6 @@ function replaceWebMWithWebP() {
 				img.style.pointerEvents = 'none';
 				img.style.userSelect = 'none';
 				img.style.objectFit = 'contain';
-				console.log('Replaced picture:', webmSrc, '->', webpSrc);
 			}
 		}
 	});
@@ -145,7 +130,6 @@ function replaceWebMWithWebP() {
 			element.style.objectFit = 'contain';
 		}
 		
-		console.log('Replaced element:', webmSrc, '->', webpSrc);
 	});
 }
 
@@ -155,30 +139,22 @@ function initHeroWebPCycling() {
 	// TEST MODE: Commented out iOS check to test on all devices
 	// if (!isIOS()) return;
 	
-	console.log('🎬 Initializing Hero WebP cycling (TEST MODE - all devices)');
-	
 	// Find the hero video by looking for the source element
 	const heroVideoSource = document.querySelector('source[src*="hero-img-1.webm"]');
 	const heroVideo = heroVideoSource ? heroVideoSource.closest('video') : null;
 	const heroFallback = document.getElementById('hero-webp-fallback');
 	
 	if (!heroFallback) {
-		console.log('❌ Hero WebP fallback element not found');
 		return;
 	}
-	
-	console.log('🎬 Hero video found:', !!heroVideo);
-	console.log('🎬 Hero fallback found:', !!heroFallback);
 	
 	// Immediately hide the video to prevent any overlap
 	if (heroVideo) {
 		heroVideo.style.display = 'none';
-		console.log('🎬 Hero video immediately hidden');
 	}
 	
 	// Ensure fallback is visible
 	heroFallback.style.display = 'block';
-	console.log('🎬 Hero fallback shown');
 	
 	// Hero WebP files to cycle through (available files: 1, 2, 4, 5)
 	const heroImages = [
@@ -195,8 +171,6 @@ function initHeroWebPCycling() {
 		currentIndex = (currentIndex + 1) % heroImages.length;
 		const nextImageSrc = heroImages[currentIndex];
 		
-		console.log(`🎬 Hero cycling to: ${nextImageSrc} (${currentIndex + 1}/${heroImages.length})`);
-		
 		// Create new image to preload
 		const newImg = new Image();
 		newImg.onload = function() {
@@ -207,29 +181,25 @@ function initHeroWebPCycling() {
 			setTimeout(() => {
 				// Change to new image
 				heroFallback.src = nextImageSrc;
-				
+
 				// Fade in new image
 				heroFallback.style.opacity = '1';
-				
-				console.log(`✅ Hero image loaded: ${nextImageSrc}`);
 			}, 300);
 		};
-		
+
 		newImg.onerror = function() {
 			console.error(`❌ Failed to load hero image: ${nextImageSrc}`);
 			// Try next image after a short delay
 			setTimeout(cycleHeroImage, 1000);
 		};
-		
+
 		// Start loading the new image
 		newImg.src = nextImageSrc;
 	}
-	
+
 	function showNextImage() {
 		// This function shows the next image without incrementing currentIndex first
 		const nextImageSrc = heroImages[currentIndex];
-		
-		console.log(`🎬 Hero showing: ${nextImageSrc} (${currentIndex + 1}/${heroImages.length})`);
 		
 		// Create new image to preload
 		const newImg = new Image();
@@ -241,14 +211,12 @@ function initHeroWebPCycling() {
 			setTimeout(() => {
 				// Change to new image
 				heroFallback.src = nextImageSrc;
-				
+
 				// Fade in new image
 				heroFallback.style.opacity = '1';
-				
-				console.log(`✅ Hero image loaded: ${nextImageSrc}`);
 			}, 300);
 		};
-		
+
 		newImg.onerror = function() {
 			console.error(`❌ Failed to load hero image: ${nextImageSrc}`);
 			// Try next image after a short delay
@@ -263,9 +231,7 @@ function initHeroWebPCycling() {
 	setTimeout(() => {
 		// Show first image (index 0)
 		showNextImage();
-		
-		console.log('🎬 Hero WebP cycling started with', heroImages.length, 'images');
-		
+
 		// Start the cycling loop (change every 2.25 seconds)
 		// First cycle will happen after 2.25 seconds, showing image at index 1
 		setInterval(cycleHeroImage, 2250);
@@ -273,13 +239,6 @@ function initHeroWebPCycling() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-	// Debug: Log browser info
-	console.log('Browser Info:', {
-		userAgent: navigator.userAgent,
-		platform: navigator.platform,
-		isIOS: isIOS()
-	});
-	
 	// Apply iOS fallbacks immediately
 	replaceWebMWithWebP();
 	
@@ -293,19 +252,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	setTimeout(() => {
 		// Handle broken images in video elements
 		const videos = document.querySelectorAll('video');
-		console.log('Found', videos.length, 'video elements');
-		
+
 		videos.forEach((video, index) => {
 			const sources = video.querySelectorAll('source');
-			console.log(`Video ${index}:`, {
-				sources: sources.length,
-				src: sources[0]?.src,
-				readyState: video.readyState,
-				networkState: video.networkState
-			});
-			
+
 			video.addEventListener('error', function(e) {
-				console.log('Video failed to load:', e, 'trying WebP fallback');
 				if (sources.length > 0) {
 					const webmSrc = sources[0].src;
 					const webpSrc = webmSrc.replace('.webm', '.webp');
@@ -325,16 +276,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					});
 					
 					video.parentNode.replaceChild(img, video);
-					console.log('Video fallback triggered:', webmSrc, '->', webpSrc);
 				}
-			});
-			
-			video.addEventListener('loadstart', function() {
-				console.log('Video load started:', sources[0]?.src);
-			});
-			
-			video.addEventListener('canplay', function() {
-				console.log('Video can play:', sources[0]?.src);
 			});
 		});
 		
@@ -345,7 +287,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				const currentSrc = this.src;
 				if (currentSrc.includes('.webm')) {
 					this.src = currentSrc.replace('.webm', '.webp');
-					console.log('Image fallback triggered:', currentSrc, '->', this.src);
 				}
 			});
 		});
@@ -1275,11 +1216,8 @@ const newsData = [
 // Helper function to convert img element to video element for WebM files (global)
 function convertImgToVideo(imgElement, webmPath) {
 	if (!imgElement || !webmPath) {
-		console.log('convertImgToVideo: Missing element or path', imgElement, webmPath);
 		return;
 	}
-	
-	console.log('Converting IMG to VIDEO:', imgElement.id, 'with path:', webmPath);
 	
 	// Create video element
 	const videoEl = document.createElement('video');
@@ -1293,7 +1231,6 @@ function convertImgToVideo(imgElement, webmPath) {
 	
 	// Replace img with video element
 	imgElement.parentNode.replaceChild(videoEl, imgElement);
-	console.log('Successfully converted IMG to VIDEO');
 	return videoEl;
 }
 
@@ -1576,35 +1513,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			'LIKE': 'assets/img/emojis/like.webm'
 		};
 		
-		console.log('Top token:', topToken);
-		console.log('TokenWebMMap:', tokenWebMMap);
-		console.log('DOM elements found:', {
-			dominanceGifEl: !!dominanceGifEl,
-			dominanceTickerEl: !!dominanceTickerEl,
-			dominancePercentageEl: !!dominancePercentageEl,
-			dominanceBarEl: !!dominanceBarEl
-		});
-		
 		if (dominanceGifEl) {
 			const webmPath = tokenWebMMap[topToken.ticker] || 'assets/img/emojis/love.webm';
-			console.log('🎯 DOMINANCE WIDGET DEBUG:', {
-				topTokenTicker: topToken.ticker,
-				webmPath: webmPath,
-				elementType: dominanceGifEl.tagName,
-				hasMapping: !!tokenWebMMap[topToken.ticker],
-				finalPath: getEmojiPath(webmPath),
-				currentSrc: dominanceGifEl.src || dominanceGifEl.querySelector('source')?.src || 'none',
-				isIOS: isIOS()
-			});
-			console.warn('🎯 DOMINANCE WIDGET DEBUG:', {
-				topTokenTicker: topToken.ticker,
-				webmPath: webmPath,
-				elementType: dominanceGifEl.tagName,
-				hasMapping: !!tokenWebMMap[topToken.ticker],
-				finalPath: getEmojiPath(webmPath),
-				currentSrc: dominanceGifEl.src || dominanceGifEl.querySelector('source')?.src || 'none',
-				isIOS: isIOS()
-			});
 			
 			if (dominanceGifEl.tagName === 'VIDEO') {
 				// Update source element for video and reload
@@ -1612,18 +1522,13 @@ document.addEventListener("DOMContentLoaded", function () {
 				if (source) {
 					source.src = getEmojiPath(webmPath);
 					dominanceGifEl.load(); // Reload the video
-					console.log('✅ Updated DOMINANCE VIDEO source to:', getEmojiPath(webmPath));
-					console.warn('✅ Updated DOMINANCE VIDEO source to:', getEmojiPath(webmPath));
 				} else {
 					dominanceGifEl.src = getEmojiPath(webmPath);
 					dominanceGifEl.load(); // Reload the video
-					console.log('Updated DOMINANCE VIDEO src to:', getEmojiPath(webmPath));
 				}
 			} else {
 				// Update src for img element
 				dominanceGifEl.src = getEmojiPath(webmPath);
-				console.log('✅ Updated DOMINANCE IMG src to:', getEmojiPath(webmPath));
-				console.warn('✅ Updated DOMINANCE IMG src to:', getEmojiPath(webmPath));
 			}
 		}
 		if (dominanceTickerEl) dominanceTickerEl.textContent = topToken.ticker;
@@ -1705,26 +1610,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			
 			// Update gauge emojis - find all gauge-gif-img elements in this gauge
 			const gaugeContainer = greedFearResult.closest('.border');
-			console.log('🔍 GREED/FEAR GAUGE DEBUG - Container found:', !!gaugeContainer);
-			console.warn('🔍 GREED/FEAR GAUGE DEBUG - Container found:', !!gaugeContainer);
 			if (gaugeContainer) {
 				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
-				console.log('🔍 GREED/FEAR GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
-				console.warn('🔍 GREED/FEAR GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
-				gaugeEmojis.forEach((emoji, index) => {
-					console.log(`🔍 GREED/FEAR GAUGE DEBUG - Emoji ${index}:`, {
-						tagName: emoji.tagName,
-						className: emoji.className,
-						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
-						hasSource: !!emoji.querySelector('source')
-					});
-					console.warn(`🔍 GREED/FEAR GAUGE DEBUG - Emoji ${index}:`, {
-						tagName: emoji.tagName,
-						className: emoji.className,
-						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
-						hasSource: !!emoji.querySelector('source')
-					});
-				});
 				gaugeEmojis.forEach((emoji, index) => {
 					// First emoji is GREED, second is FEAR
 					const webmPath = index === 0 ? 'assets/img/emojis/greed.webm' : 'assets/img/emojis/fear.webm';
@@ -1741,13 +1628,9 @@ document.addEventListener("DOMContentLoaded", function () {
 							emoji.src = finalPath;
 							emoji.load();
 						}
-						console.log(`✅ GREED/FEAR Updated gauge video ${index}:`, webmPath, '->', finalPath);
-						console.warn(`✅ GREED/FEAR Updated gauge video ${index}:`, webmPath, '->', finalPath);
-					} else if (emoji.tagName === 'IMG') {
+						} else if (emoji.tagName === 'IMG') {
 						// Update img src directly
 						emoji.src = finalPath;
-						console.log(`✅ GREED/FEAR Updated gauge img ${index}:`, webmPath, '->', finalPath);
-						console.warn(`✅ GREED/FEAR Updated gauge img ${index}:`, webmPath, '->', finalPath);
 					}
 				});
 			}
@@ -1760,26 +1643,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			
 			// Update gauge emojis - find all gauge-gif-img elements in this gauge
 			const gaugeContainer = goodEvilResult.closest('.border');
-			console.log('🔍 GOOD/EVIL GAUGE DEBUG - Container found:', !!gaugeContainer);
-			console.warn('🔍 GOOD/EVIL GAUGE DEBUG - Container found:', !!gaugeContainer);
 			if (gaugeContainer) {
 				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
-				console.log('🔍 GOOD/EVIL GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
-				console.warn('🔍 GOOD/EVIL GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
-				gaugeEmojis.forEach((emoji, index) => {
-					console.log(`🔍 GOOD/EVIL GAUGE DEBUG - Emoji ${index}:`, {
-						tagName: emoji.tagName,
-						className: emoji.className,
-						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
-						hasSource: !!emoji.querySelector('source')
-					});
-					console.warn(`🔍 GOOD/EVIL GAUGE DEBUG - Emoji ${index}:`, {
-						tagName: emoji.tagName,
-						className: emoji.className,
-						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
-						hasSource: !!emoji.querySelector('source')
-					});
-				});
 				gaugeEmojis.forEach((emoji, index) => {
 					// First emoji is GOOD, second is EVIL
 					const webmPath = index === 0 ? 'assets/img/emojis/good.webm' : 'assets/img/emojis/evil.webm';
@@ -1796,13 +1661,9 @@ document.addEventListener("DOMContentLoaded", function () {
 							emoji.src = finalPath;
 							emoji.load();
 						}
-						console.log(`✅ GOOD/EVIL Updated gauge video ${index}:`, webmPath, '->', finalPath);
-						console.warn(`✅ GOOD/EVIL Updated gauge video ${index}:`, webmPath, '->', finalPath);
-					} else if (emoji.tagName === 'IMG') {
+						} else if (emoji.tagName === 'IMG') {
 						// Update img src directly
 						emoji.src = finalPath;
-						console.log(`✅ GOOD/EVIL Updated gauge img ${index}:`, webmPath, '->', finalPath);
-						console.warn(`✅ GOOD/EVIL Updated gauge img ${index}:`, webmPath, '->', finalPath);
 					}
 				});
 			}
@@ -1815,26 +1676,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			
 			// Update gauge emojis - find all gauge-gif-img elements in this gauge
 			const gaugeContainer = loveHateResult.closest('.border');
-			console.log('🔍 LOVE/HATE GAUGE DEBUG - Container found:', !!gaugeContainer);
-			console.warn('🔍 LOVE/HATE GAUGE DEBUG - Container found:', !!gaugeContainer);
 			if (gaugeContainer) {
 				const gaugeEmojis = gaugeContainer.querySelectorAll('.gauge-gif-img');
-				console.log('🔍 LOVE/HATE GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
-				console.warn('🔍 LOVE/HATE GAUGE DEBUG - Emojis found:', gaugeEmojis.length, gaugeEmojis);
-				gaugeEmojis.forEach((emoji, index) => {
-					console.log(`🔍 LOVE/HATE GAUGE DEBUG - Emoji ${index}:`, {
-						tagName: emoji.tagName,
-						className: emoji.className,
-						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
-						hasSource: !!emoji.querySelector('source')
-					});
-					console.warn(`🔍 LOVE/HATE GAUGE DEBUG - Emoji ${index}:`, {
-						tagName: emoji.tagName,
-						className: emoji.className,
-						currentSrc: emoji.src || emoji.querySelector('source')?.src || 'none',
-						hasSource: !!emoji.querySelector('source')
-					});
-				});
 				gaugeEmojis.forEach((emoji, index) => {
 					// First emoji is LOVE, second is HATE
 					const webmPath = index === 0 ? 'assets/img/emojis/love.webm' : 'assets/img/emojis/hate.webm';
@@ -1851,13 +1694,9 @@ document.addEventListener("DOMContentLoaded", function () {
 							emoji.src = finalPath;
 							emoji.load();
 						}
-						console.log(`✅ LOVE/HATE Updated gauge video ${index}:`, webmPath, '->', finalPath);
-						console.warn(`✅ LOVE/HATE Updated gauge video ${index}:`, webmPath, '->', finalPath);
-					} else if (emoji.tagName === 'IMG') {
+						} else if (emoji.tagName === 'IMG') {
 						// Update img src directly
 						emoji.src = finalPath;
-						console.log(`✅ LOVE/HATE Updated gauge img ${index}:`, webmPath, '->', finalPath);
-						console.warn(`✅ LOVE/HATE Updated gauge img ${index}:`, webmPath, '->', finalPath);
 					}
 				});
 			}
@@ -2171,14 +2010,6 @@ function initializeCarouselData() {
 	const gainers = getLiveTokenData().filter(token => token.changeType === 'positive');
 	const losers = getLiveTokenData().filter(token => token.changeType === 'negative');
 
-	console.log('Carousel data initialization:', {
-		totalTokens: getLiveTokenData().length,
-		gainers: gainers.length,
-		losers: losers.length,
-		gainersData: gainers.map(g => g.ticker),
-		losersData: losers.map(l => l.ticker)
-	});
-	
 	// Sort and store all gainers
 	gainersCarouselData = gainers.sort((a, b) => {
 		const aChange = parseFloat(a.change.replace('%', '').replace('+', ''));
@@ -2197,9 +2028,6 @@ function initializeCarouselData() {
 // Update Top Gainers Widget with carousel
 function updateTopGainers() {
 	if (gainersCarouselData.length === 0) return;
-	
-	console.log('🔄 CAROUSEL UPDATE - Top Gainers, current index:', gainersCurrentIndex, 'at:', new Date().toISOString());
-	console.warn('🔄 CAROUSEL UPDATE - Top Gainers, current index:', gainersCurrentIndex, 'at:', new Date().toISOString());
 	
 	// Map token tickers to WebM paths
 	const tokenWebMMap = {
@@ -2229,47 +2057,8 @@ function updateTopGainers() {
 	const centerGif = document.getElementById('top-gainer-gif-center');
 	const rightGif = document.getElementById('top-gainer-gif-right');
 	
-	console.log('🎯 CAROUSEL ELEMENTS - Top Gainers elements found:', {
-		leftGif: !!leftGif,
-		centerGif: !!centerGif,
-		rightGif: !!rightGif,
-		currentSet: currentSet.map(c => c ? c.ticker : 'null'),
-		isIOS: isIOS(),
-		leftGifTag: leftGif ? leftGif.tagName : 'null',
-		centerGifTag: centerGif ? centerGif.tagName : 'null',
-		rightGifTag: rightGif ? rightGif.tagName : 'null'
-	});
-	console.warn('🎯 CAROUSEL ELEMENTS - Top Gainers elements found:', {
-		leftGif: !!leftGif,
-		centerGif: !!centerGif,
-		rightGif: !!rightGif,
-		currentSet: currentSet.map(c => c ? c.ticker : 'null'),
-		isIOS: isIOS(),
-		leftGifTag: leftGif ? leftGif.tagName : 'null',
-		centerGifTag: centerGif ? centerGif.tagName : 'null',
-		rightGifTag: rightGif ? rightGif.tagName : 'null'
-	});
-	
 	if (leftGif && currentSet[0]) {
 		const webmPath = tokenWebMMap[currentSet[0].ticker] || 'assets/img/emojis/hate.webm';
-		console.log('🔍 LEFT GAINER DEBUG:', {
-			ticker: currentSet[0].ticker,
-			elementType: leftGif.tagName,
-			webmPath: webmPath,
-			hasMapping: !!tokenWebMMap[currentSet[0].ticker],
-			finalPath: getEmojiPath(webmPath),
-			currentSrc: leftGif.src || leftGif.querySelector('source')?.src || 'none',
-			isIOS: isIOS()
-		});
-		console.warn('🔍 LEFT GAINER DEBUG:', {
-			ticker: currentSet[0].ticker,
-			elementType: leftGif.tagName,
-			webmPath: webmPath,
-			hasMapping: !!tokenWebMMap[currentSet[0].ticker],
-			finalPath: getEmojiPath(webmPath),
-			currentSrc: leftGif.src || leftGif.querySelector('source')?.src || 'none',
-			isIOS: isIOS()
-		});
 		
 		if (leftGif.tagName === 'VIDEO') {
 			// Update source element for video and reload
@@ -2277,28 +2066,17 @@ function updateTopGainers() {
 			if (source) {
 				source.src = getEmojiPath(webmPath);
 				leftGif.load(); // Reload the video
-				console.log('✅ Updated VIDEO source to:', getEmojiPath(webmPath));
-				console.warn('✅ Updated VIDEO source to:', getEmojiPath(webmPath));
 			} else {
 				leftGif.src = getEmojiPath(webmPath);
 				leftGif.load(); // Reload the video
-				console.log('Updated VIDEO src to:', getEmojiPath(webmPath));
 			}
 		} else {
 			// Update src for img element
 			leftGif.src = getEmojiPath(webmPath);
-			console.log('✅ Updated IMG src to:', getEmojiPath(webmPath));
-			console.warn('✅ Updated IMG src to:', getEmojiPath(webmPath));
 		}
 	}
 	if (centerGif && currentSet[1]) {
 		const webmPath = tokenWebMMap[currentSet[1].ticker] || 'assets/img/emojis/hate.webm';
-		console.log('Center gainer debug:', {
-			ticker: currentSet[1].ticker,
-			elementType: centerGif.tagName,
-			webmPath: webmPath,
-			hasMapping: !!tokenWebMMap[currentSet[1].ticker]
-		});
 		
 		if (centerGif.tagName === 'VIDEO') {
 			// Update source element for video and reload
@@ -2317,12 +2095,6 @@ function updateTopGainers() {
 	}
 	if (rightGif && currentSet[2]) {
 		const webmPath = tokenWebMMap[currentSet[2].ticker] || 'assets/img/emojis/hate.webm';
-		console.log('Right gainer debug:', {
-			ticker: currentSet[2].ticker,
-			elementType: rightGif.tagName,
-			webmPath: webmPath,
-			hasMapping: !!tokenWebMMap[currentSet[2].ticker]
-		});
 		
 		if (rightGif.tagName === 'VIDEO') {
 			// Update source element for video and reload
@@ -2355,8 +2127,6 @@ function updateTopGainers() {
 function updateTopLosers() {
 	if (losersCarouselData.length === 0) return;
 	
-	console.log('Updating Top Losers, current index:', losersCurrentIndex);
-	
 	// Map token tickers to WebM paths
 	const tokenWebMMap = {
 		'LOVE': 'assets/img/emojis/love.webm',
@@ -2385,16 +2155,8 @@ function updateTopLosers() {
 	const centerGif = document.getElementById('top-loser-gif-center');
 	const rightGif = document.getElementById('top-loser-gif-right');
 	
-	console.log('Top Losers elements found:', {
-		leftGif: !!leftGif,
-		centerGif: !!centerGif,
-		rightGif: !!rightGif,
-		currentSet: currentSet.map(c => c ? c.ticker : 'null')
-	});
-	
 	if (leftGif && currentSet[0]) {
 		const webmPath = tokenWebMMap[currentSet[0].ticker] || 'assets/img/emojis/sad.webm';
-		console.log('Left loser:', currentSet[0].ticker, 'element type:', leftGif.tagName, 'path:', webmPath);
 		
 		if (leftGif.tagName === 'VIDEO') {
 			// Update source element for video and reload
@@ -2413,7 +2175,6 @@ function updateTopLosers() {
 	}
 	if (centerGif && currentSet[1]) {
 		const webmPath = tokenWebMMap[currentSet[1].ticker] || 'assets/img/emojis/sad.webm';
-		console.log('Center loser:', currentSet[1].ticker, 'element type:', centerGif.tagName, 'path:', webmPath);
 		
 		if (centerGif.tagName === 'VIDEO') {
 			// Update source element for video and reload
@@ -2432,7 +2193,6 @@ function updateTopLosers() {
 	}
 	if (rightGif && currentSet[2]) {
 		const webmPath = tokenWebMMap[currentSet[2].ticker] || 'assets/img/emojis/sad.webm';
-		console.log('Right loser:', currentSet[2].ticker, 'element type:', rightGif.tagName, 'path:', webmPath);
 		
 		if (rightGif.tagName === 'VIDEO') {
 			// Update source element for video and reload
