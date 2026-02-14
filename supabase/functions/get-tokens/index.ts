@@ -8,7 +8,7 @@ const corsHeaders = {
     "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const STALE_THRESHOLD_MS = 30_000;
+const STALE_THRESHOLD_MS = 15_000;
 
 async function fetchFromDexScreener(
   addresses: string[]

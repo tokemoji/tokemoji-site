@@ -976,12 +976,12 @@ const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 const TOKEMOJI_MINT_MAP = {
 	'FVvsVkTQ8cgtzX9dnzZwVh353TZ3k88KVC8eymtqpump': 'GREED',
 	'3pWZBTJFByDh7Zojv3PL5FD18CGuvRamRGhKDMiMpump': 'FEAR',
-	'ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY': 'LOVE',
+	'ESto2cvLsywSvZeyqaQSu5rTkk6PNudPRDjDqcPo47Gc': 'LOVE',
 	'HJXKDhXAkHegzyHpoJ3G2riL6HTbTfz3HNX7o6mRpump': 'HATE',
-	'DtR4D9FtVoTX2569gaL837ZgrB6wNjj6tkmnX9Rdk9B2': 'GOOD',
+	'EzRooYJ3yDsS5paSQdb8eW66mMdK3u6yFH8Bvoi4pump': 'GOOD',
 	'C7V47ci5u2Ak3VYb62a1obLTY74BLFxLB7d2NLKRpump': 'EVIL',
 	'XrJE4Dc7thUMdeox4yULE9KrHcSLU7Pcn92v5YJpump': 'HAPPY',
-	'c5UUH9RTDiSpq6HKS6bp4NdU9PNJpXRXuiw6ShBTBhgH2': 'SAD',
+	'BVrR1uUneY7UWJMggsHA1EUX8bftcMj3XEiGBt5Kpump': 'SAD',
 	'EirpkRcuj7oQvTZZgWXuCmQtGvbdHt7hx6Gk5n1Jpump': 'LOL',
 	'9HZVe4X2NS7SMUEahVcKbBnxZJzCZUy1UENXd6mppump': 'OMG',
 	'A1Z23YRk937wWLnnVi86oj7ykDdMGYuE28ekzpsQpump': 'MAD',
@@ -1896,7 +1896,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateTopLosers();
 		updateGlobalAdoption();
 		addPriceChangeEffects();
-	}, 120000);
+	}, 30000);
 	
 	// Setup chart buttons
 	setupChartButtons();
