@@ -972,6 +972,10 @@ let currentTokenDataInitialized = false;
 var globalUpdateMarketDominance = function() {};
 var globalUpdateGauges = function() {};
 
+const baselinePrices = {};
+const lastPriceWriteTime = {};
+const PRICE_WRITE_THROTTLE_MS = 30000;
+
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
 let pumpPortalHeartbeatTimer = null;
@@ -989,12 +993,59 @@ const TOKEMOJI_MINT_MAP = {
 	'A1Z23YRk937wWLnnVi86oj7ykDdMGYuE28ekzpsQpump': 'MAD',
 	'9y4nMHKQCMgjHE1UU1pbhykRXG5Xp75Y6B4MxdZapump': 'LIKE'
 };
+const TOKEMOJI_TOKEN_IDS = {
+	'GREED': '55f4421d-c18b-4772-a28a-0133f4cfe2c6',
+	'FEAR': '0ad031e4-b97d-4d2e-b7c8-2d1ad51c5dad',
+	'LOVE': 'dc322ae6-9967-4432-976d-cdd88d27f6f3',
+	'HATE': '8f996f28-2abd-4cfd-8dee-27156f62ce75',
+	'GOOD': '4a1780bb-b862-44dc-a1a3-e7dda5a57060',
+	'EVIL': 'b1028e86-0b9c-4d04-91bd-b20b59ac8329',
+	'HAPPY': '05eaa4c3-3bc0-46f0-92a9-8797a722c1f9',
+	'SAD': '4c6ea26b-b347-4100-909c-57d7c071df04',
+	'LOL': 'dae9ff6c-89bc-49b3-960d-5f7a2ff03544',
+	'OMG': '2a19eda2-7e18-41e7-adc6-0ccf6e927d98',
+	'MAD': 'ffe7c50b-2621-4985-90fe-315d083004bb',
+	'LIKE': '26d5531e-cc0a-462e-9319-fc738bf1abe6'
+};
 const PUMP_FUN_TOTAL_SUPPLY = 1000000000;
-let solPriceUsd = 170;
+let solPriceUsd = 0;
 let pumpPortalWs = null;
 let pumpPortalReconnectTimer = null;
 let liveTradeCount = 0;
 let lastNewTokenTime = 0;
+
+var pendingPriceTicks = [];
+var priceTickFlushTimer = null;
+
+function writePriceTickThrottled(ticker, priceUsd) {
+	var tokenId = TOKEMOJI_TOKEN_IDS[ticker];
+	if (!tokenId) return;
+	var now = Date.now();
+	if (lastPriceWriteTime[ticker] && (now - lastPriceWriteTime[ticker]) < PRICE_WRITE_THROTTLE_MS) return;
+	lastPriceWriteTime[ticker] = now;
+
+	pendingPriceTicks.push({ token_id: tokenId, price_usd: priceUsd });
+
+	if (!priceTickFlushTimer) {
+		priceTickFlushTimer = setTimeout(flushPriceTicks, 5000);
+	}
+}
+
+function flushPriceTicks() {
+	priceTickFlushTimer = null;
+	if (pendingPriceTicks.length === 0) return;
+
+	var ticks = pendingPriceTicks.splice(0);
+	var url = 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1/write-price-ticks';
+
+	fetch(url, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ ticks: ticks })
+	}).catch(function(e) {
+		console.warn('[PumpPortal] Price tick write failed:', e.message);
+	});
+}
 
 async function fetchSolPrice() {
 	try {
@@ -1109,6 +1160,7 @@ function handleNewTokenEvent(data) {
 function handleTokenTradeEvent(data) {
 	var ticker = TOKEMOJI_MINT_MAP[data.mint];
 	if (!ticker) return;
+	if (solPriceUsd <= 0) return;
 
 	liveTradeCount++;
 	pulseLiveIndicator();
@@ -1119,7 +1171,19 @@ function handleTokenTradeEvent(data) {
 
 	console.log('[PumpPortal] ' + data.txType.toUpperCase() + ' ' + ticker + ': $' + formatAPIPrice(priceUsd) + ' (mcap: $' + formatAPIMarketCap(marketCapUsd) + ')');
 
-	updateSingleTokenRow(ticker, priceUsd, marketCapUsd, data.txType);
+	if (!baselinePrices[ticker]) {
+		baselinePrices[ticker] = priceUsd;
+	}
+
+	var changePercent = 0;
+	var baseline = baselinePrices[ticker];
+	if (baseline && baseline > 0) {
+		changePercent = ((priceUsd - baseline) / baseline) * 100;
+	}
+	var changeStr = (changePercent >= 0 ? '+' : '') + changePercent.toFixed(2) + '%';
+	var changeType = changePercent >= 0 ? 'positive' : 'negative';
+
+	updateSingleTokenRow(ticker, priceUsd, marketCapUsd, data.txType, changeStr, changeType);
 
 	var tokenIdx = currentTokenData.findIndex(function(t) { return t.ticker === ticker; });
 	if (tokenIdx !== -1) {
@@ -1127,9 +1191,12 @@ function handleTokenTradeEvent(data) {
 		currentTokenData[tokenIdx].priceRaw = priceUsd;
 		currentTokenData[tokenIdx].price = '$' + formatAPIPrice(priceUsd);
 		currentTokenData[tokenIdx].marketCap = '$' + formatAPIMarketCap(marketCapUsd);
-		currentTokenData[tokenIdx].changeType = priceUsd >= oldPrice ? 'positive' : 'negative';
+		currentTokenData[tokenIdx].change = changeStr;
+		currentTokenData[tokenIdx].changeType = changeType;
 		currentTokenData[tokenIdx].priceMovement = priceUsd > oldPrice ? 'up' : 'down';
 	}
+
+	writePriceTickThrottled(ticker, priceUsd);
 
 	globalUpdateMarketDominance();
 	globalUpdateGauges();
@@ -1146,12 +1213,13 @@ function handleTokenTradeEvent(data) {
 	}
 }
 
-function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType) {
+function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr, changeType) {
 	var row = document.querySelector('.token-row[data-token="' + ticker + '"]');
 	if (!row) return;
 
 	var priceEl = row.querySelector('.token-price');
 	var mcapEl = row.querySelector('.token-marketcap');
+	var changeEl = row.querySelector('.token-change');
 
 	if (priceEl) {
 		var oldText = priceEl.textContent.replace('$', '');
@@ -1171,6 +1239,11 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType) {
 	}
 
 	if (mcapEl) mcapEl.textContent = '$' + formatAPIMarketCap(marketCapUsd);
+
+	if (changeEl && changeStr) {
+		changeEl.textContent = changeStr;
+		changeEl.className = 'token-change ' + (changeType === 'positive' ? 'text-success' : 'text-danger') + ' fw-bold me-2';
+	}
 
 	row.classList.remove('trade-flash-buy', 'trade-flash-sell');
 	void row.offsetWidth;
@@ -1302,15 +1375,23 @@ document.addEventListener("DOMContentLoaded", function () {
 					else if (currentPrice < oldPriceRaw) priceMovement = 'down';
 				}
 
+				if (currentPrice && !baselinePrices[ticker]) {
+					baselinePrices[ticker] = currentPrice;
+				}
+
+				var changeVal = token.change_24h !== null ? token.change_24h : (token.change_1h !== null ? token.change_1h : null);
+				var changeStr = changeVal !== null ? `${changeVal >= 0 ? '+' : ''}${changeVal.toFixed(2)}%` : '0%';
+				var cType = (changeVal || 0) >= 0 ? 'positive' : 'negative';
+
 				return {
 					emoji: ticker,
 					ticker: ticker,
 					price: currentPrice ? `$${formatAPIPrice(currentPrice)}` : 'N/A',
 					priceRaw: currentPrice,
 					oldPriceRaw: oldPriceRaw,
-					change: token.change_24h !== null ? `${token.change_24h >= 0 ? '+' : ''}${token.change_24h.toFixed(2)}%` : '0%',
+					change: changeStr,
 					marketCap: token.market_cap ? `$${formatAPIMarketCap(token.market_cap)}` : 'N/A',
-					changeType: (token.change_24h || 0) >= 0 ? 'positive' : 'negative',
+					changeType: cType,
 					hasGraphic: true,
 					priceMovement: priceMovement
 				};
@@ -1708,10 +1789,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	initTokemojiDashboard();
 
-	fetchSolPrice();
+	fetchSolPrice().then(function() {
+		connectPumpPortal();
+	});
 	setInterval(fetchSolPrice, 60000);
-
-	connectPumpPortal();
 
 	// Initialize ticker news
 	initTickerNews();
