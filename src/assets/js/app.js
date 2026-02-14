@@ -972,6 +972,20 @@ const tokemojiData = [
 // Filter to only show tokens with graphics
 const tokemojiDataWithGraphics = tokemojiData.filter(token => token.hasGraphic);
 
+function getLiveTokenData() {
+	return currentTokenData.length > 0 ? currentTokenData : tokemojiDataWithGraphics;
+}
+
+function getTokenMarketCapRaw(token) {
+	if (token.priceRaw) return token.priceRaw * PUMP_FUN_TOTAL_SUPPLY;
+	var str = (token.marketCap || '0').replace('$', '');
+	var multiplier = 1;
+	if (str.includes('B')) { multiplier = 1e9; str = str.replace('B', ''); }
+	else if (str.includes('M')) { multiplier = 1e6; str = str.replace('M', ''); }
+	else if (str.includes('K')) { multiplier = 1e3; str = str.replace('K', ''); }
+	return (parseFloat(str) || 0) * multiplier;
+}
+
 function formatAPIPrice(price) {
 	if (price >= 1) {
 		return price.toFixed(4);
@@ -1010,6 +1024,9 @@ function animatePriceGlobal(element, fromVal, toVal, duration) {
 	}
 	requestAnimationFrame(tick);
 }
+
+let currentTokenData = [];
+let tokenListRendered = false;
 
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
@@ -1302,7 +1319,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	let currentSortType = 'marketcap';
-	let tokenListRendered = false;
 
 	const TOKEN_WEBM_MAP = {
 		'LOVE': 'assets/img/emojis/love.webm',
@@ -1522,20 +1538,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Update market dominance (shows #1 coin)
 	function updateMarketDominance() {
-		// Sort by market cap to get #1 coin
-		const sortedTokens = [...tokemojiDataWithGraphics].sort((a, b) => {
-			const aCap = parseFloat(a.marketCap.replace('$', '').replace('M', ''));
-			const bCap = parseFloat(b.marketCap.replace('$', '').replace('M', ''));
-			return bCap - aCap;
-		});
-		
+		const liveData = getLiveTokenData();
+		if (!liveData.length) return;
+		const sortedTokens = [...liveData].sort((a, b) => getTokenMarketCapRaw(b) - getTokenMarketCapRaw(a));
 		const topToken = sortedTokens[0];
-		const totalMarketCap = tokemojiDataWithGraphics.reduce((sum, token) => {
-			return sum + parseFloat(token.marketCap.replace('$', '').replace('M', ''));
-		}, 0);
-		
-		const topTokenMarketCap = parseFloat(topToken.marketCap.replace('$', '').replace('M', ''));
-		const dominancePercentage = ((topTokenMarketCap / totalMarketCap) * 100).toFixed(1);
+		const totalMarketCap = liveData.reduce((sum, token) => sum + getTokenMarketCapRaw(token), 0);
+		const topTokenMarketCap = getTokenMarketCapRaw(topToken);
+		const dominancePercentage = totalMarketCap > 0 ? ((topTokenMarketCap / totalMarketCap) * 100).toFixed(1) : '0';
 
 		// Update DOM elements
 		const dominanceGifEl = document.getElementById('dominance-gif');
@@ -1632,39 +1641,32 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	// Update gauges
 	function updateGauges() {
-		// Calculate greed vs fear ratio
-		const greedTokens = tokemojiDataWithGraphics.filter(token => ['GREED', 'HAPPY', 'LOVE', 'MOON', 'HOT', 'LOL', 'GOOD', 'LIKE'].includes(token.ticker));
-		const fearTokens = tokemojiDataWithGraphics.filter(token => ['FEAR', 'SAD', 'HATE', 'DOUBT', 'MAD'].includes(token.ticker));
-		
-		const greedMarketCap = greedTokens.reduce((sum, token) => sum + parseFloat(token.marketCap.replace('$', '').replace('M', '')), 0);
-		const fearMarketCap = fearTokens.reduce((sum, token) => sum + parseFloat(token.marketCap.replace('$', '').replace('M', '')), 0);
+		const liveData = getLiveTokenData();
+		const mcap = (tokens) => tokens.reduce((sum, t) => sum + getTokenMarketCapRaw(t), 0);
+
+		const greedTokens = liveData.filter(token => ['GREED', 'HAPPY', 'LOVE', 'LOL', 'GOOD', 'LIKE'].includes(token.ticker));
+		const fearTokens = liveData.filter(token => ['FEAR', 'SAD', 'HATE', 'MAD'].includes(token.ticker));
+		const greedMarketCap = mcap(greedTokens);
+		const fearMarketCap = mcap(fearTokens);
 		const totalEmotionCap = greedMarketCap + fearMarketCap;
-		
-		const greedRatio = (greedMarketCap / totalEmotionCap) * 100;
+		const greedRatio = totalEmotionCap > 0 ? (greedMarketCap / totalEmotionCap) * 100 : 50;
 		const greedOffset = 157.1 - (greedRatio / 100) * 157.1;
 
-		// Calculate good vs evil ratio
-		const goodTokens = tokemojiDataWithGraphics.filter(token => ['GOOD', 'LOVE', 'HAPPY', 'LIKE'].includes(token.ticker));
-		const evilTokens = tokemojiDataWithGraphics.filter(token => ['EVIL', 'HATE', 'MAD'].includes(token.ticker));
-		
-		const goodMarketCap = goodTokens.reduce((sum, token) => sum + parseFloat(token.marketCap.replace('$', '').replace('M', '')), 0);
-		const evilMarketCap = evilTokens.reduce((sum, token) => sum + parseFloat(token.marketCap.replace('$', '').replace('M', '')), 0);
+		const goodTokens = liveData.filter(token => ['GOOD', 'LOVE', 'HAPPY', 'LIKE'].includes(token.ticker));
+		const evilTokens = liveData.filter(token => ['EVIL', 'HATE', 'MAD'].includes(token.ticker));
+		const goodMarketCap = mcap(goodTokens);
+		const evilMarketCap = mcap(evilTokens);
 		const totalMoralCap = goodMarketCap + evilMarketCap;
-		
-		const goodRatio = (goodMarketCap / totalMoralCap) * 100;
+		const goodRatio = totalMoralCap > 0 ? (goodMarketCap / totalMoralCap) * 100 : 50;
 		const goodOffset = 157.1 - (goodRatio / 100) * 157.1;
 
-		// Calculate love vs hate ratio
-		const loveTokens = tokemojiDataWithGraphics.filter(token => ['LOVE', 'HAPPY', 'LIKE'].includes(token.ticker));
-		const hateTokens = tokemojiDataWithGraphics.filter(token => ['HATE', 'MAD', 'EVIL'].includes(token.ticker));
-		
-		const loveMarketCap = loveTokens.reduce((sum, token) => sum + parseFloat(token.marketCap.replace('$', '').replace('M', '')), 0);
-		const hateMarketCap = hateTokens.reduce((sum, token) => sum + parseFloat(token.marketCap.replace('$', '').replace('M', '')), 0);
+		const loveTokens = liveData.filter(token => ['LOVE', 'HAPPY', 'LIKE'].includes(token.ticker));
+		const hateTokens = liveData.filter(token => ['HATE', 'MAD', 'EVIL'].includes(token.ticker));
+		const loveMarketCap = mcap(loveTokens);
+		const hateMarketCap = mcap(hateTokens);
 		const totalLoveHateCap = loveMarketCap + hateMarketCap;
-		
-		const loveRatio = (loveMarketCap / totalLoveHateCap) * 100;
+		const loveRatio = totalLoveHateCap > 0 ? (loveMarketCap / totalLoveHateCap) * 100 : 50;
 		const loveOffset = 157.1 - (loveRatio / 100) * 157.1;
 
 		// Update gauge animations
@@ -1853,9 +1855,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}
 	}
-
-	let currentTokenData = [];
-	let priceChangeTimeouts = new Map();
 
 	initTokemojiDashboard();
 
@@ -2158,11 +2157,11 @@ let losersCurrentIndex = 0;
 
 // Initialize carousel data
 function initializeCarouselData() {
-	const gainers = tokemojiDataWithGraphics.filter(token => token.changeType === 'positive');
-	const losers = tokemojiDataWithGraphics.filter(token => token.changeType === 'negative');
-	
+	const gainers = getLiveTokenData().filter(token => token.changeType === 'positive');
+	const losers = getLiveTokenData().filter(token => token.changeType === 'negative');
+
 	console.log('Carousel data initialization:', {
-		totalTokens: tokemojiDataWithGraphics.length,
+		totalTokens: getLiveTokenData().length,
 		gainers: gainers.length,
 		losers: losers.length,
 		gainersData: gainers.map(g => g.ticker),
