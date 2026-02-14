@@ -918,6 +918,7 @@ function getLiveTokenData() {
 }
 
 function getTokenMarketCapRaw(token) {
+	if (token.marketCapRaw) return token.marketCapRaw;
 	if (token.priceRaw) return token.priceRaw * PUMP_FUN_TOTAL_SUPPLY;
 	var str = (token.marketCap || '0').replace('$', '');
 	var multiplier = 1;
