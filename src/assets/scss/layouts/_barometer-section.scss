@@ -456,24 +456,56 @@
 			padding: 0.2rem 0.4rem;
 		}
 	}
-	
+
 	.token-list {
 		.token-row {
-			flex-wrap: wrap;
-			gap: 0.2rem;
-			
-			.token-rank,
-			.token-emoji,
-			.token-ticker,
-			.token-price,
-			.token-change,
-			.token-marketcap {
-				flex-shrink: 1;
-				min-width: auto;
+			display: grid;
+			grid-template-columns: auto auto 1fr auto;
+			grid-template-rows: auto auto;
+			gap: 0.4rem 0.5rem;
+			padding: 0.6rem 0.4rem;
+			align-items: center;
+
+			.token-rank {
+				grid-column: 1;
+				grid-row: 1;
 			}
-			
+
+			.token-emoji {
+				grid-column: 2;
+				grid-row: 1;
+			}
+
+			.token-ticker {
+				grid-column: 3;
+				grid-row: 1;
+			}
+
+			.token-price {
+				grid-column: 4;
+				grid-row: 1;
+				text-align: right;
+			}
+
+			.token-change {
+				grid-column: 1 / 2;
+				grid-row: 2;
+				min-width: 60px;
+			}
+
+			.token-mini-chart {
+				grid-column: 2 / 4;
+				grid-row: 2;
+			}
+
+			.token-marketcap {
+				grid-column: 4;
+				grid-row: 2;
+				text-align: right;
+			}
+
 			.buy-btn {
-				margin-left: auto;
+				display: none;
 			}
 		}
 	}
@@ -510,38 +542,68 @@
 @media (max-width: 575.98px) {
 	.token-list {
 		.token-row {
-			flex-wrap: wrap;
-			gap: 0.25rem;
-			padding: 0.5rem 0;
-			
+			display: grid;
+			grid-template-columns: auto auto 1fr auto;
+			grid-template-rows: auto auto;
+			gap: 0.5rem 0.5rem;
+			padding: 0.75rem 0.5rem;
+			align-items: center;
+
 			.token-rank {
-				font-size: 1rem;
-			}
-			
-			.token-emoji {
-				font-size: 1.2rem;
-			}
-			
-			.token-ticker {
+				grid-column: 1;
+				grid-row: 1;
 				font-size: 0.9rem;
+				min-width: 20px;
 			}
-			
+
+			.token-emoji {
+				grid-column: 2;
+				grid-row: 1;
+				font-size: 1.2rem;
+				width: 32px;
+				height: 32px;
+			}
+
+			.token-ticker {
+				grid-column: 3;
+				grid-row: 1;
+				font-size: 0.9rem;
+				font-weight: 700;
+			}
+
 			.token-price {
-				font-size: 0.8rem;
-			}
-			
-			.token-change {
-				font-size: 0.8rem;
-			}
-			
-			.token-marketcap {
+				grid-column: 4;
+				grid-row: 1;
 				font-size: 0.75rem;
+				text-align: right;
 			}
-			
+
+			.token-change {
+				grid-column: 1 / 2;
+				grid-row: 2;
+				font-size: 0.75rem;
+				font-weight: 700;
+				text-align: left;
+				min-width: 55px;
+			}
+
+			.token-mini-chart {
+				grid-column: 2 / 4;
+				grid-row: 2;
+				width: 100px !important;
+				height: 30px !important;
+			}
+
+			.token-marketcap {
+				grid-column: 4;
+				grid-row: 2;
+				font-size: 0.7rem;
+				text-align: right;
+				min-width: 50px;
+			}
+
 			.buy-btn, .chart-btn {
-				font-size: 0.6rem;
-				padding: 0.15rem 0.4rem;
-				margin-top: 0.25rem;
+				display: none;
 			}
 		}
 	}
@@ -631,29 +693,58 @@
 @include screen(sm) {
 	.token-list {
 		.token-row {
+			display: grid;
+			grid-template-columns: auto auto 1fr auto;
+			grid-template-rows: auto auto;
+			gap: 0.4rem 0.5rem;
+			padding: 0.6rem 0.4rem;
+			align-items: center;
+
+			.token-rank {
+				grid-column: 1;
+				grid-row: 1;
+			}
+
 			.token-emoji {
+				grid-column: 2;
+				grid-row: 1;
 				font-size: 0.9rem;
 			}
-			
+
 			.token-ticker {
+				grid-column: 3;
+				grid-row: 1;
 				font-size: 0.8rem;
 			}
-			
+
 			.token-price {
+				grid-column: 4;
+				grid-row: 1;
 				font-size: 0.7rem;
+				text-align: right;
 			}
-			
+
 			.token-change {
+				grid-column: 1 / 2;
+				grid-row: 2;
 				font-size: 0.7rem;
+				min-width: 60px;
 			}
-			
+
+			.token-mini-chart {
+				grid-column: 2 / 4;
+				grid-row: 2;
+			}
+
 			.token-marketcap {
+				grid-column: 4;
+				grid-row: 2;
 				font-size: 0.65rem;
+				text-align: right;
 			}
-			
+
 			.buy-btn {
-				font-size: 0.6rem;
-				padding: 0.15rem 0.4rem;
+				display: none;
 			}
 		}
 	}
