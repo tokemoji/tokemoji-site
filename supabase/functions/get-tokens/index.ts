@@ -10,30 +10,17 @@ const corsHeaders = {
 
 const STALE_THRESHOLD_MS = 30_000;
 
-async function fetchLivePrices(
-  mintAddresses: string[]
+async function fetchFromDexScreener(
+  addresses: string[]
 ): Promise<Record<string, number>> {
   const prices: Record<string, number> = {};
-  const ids = mintAddresses.join(",");
+  const batchSize = 5;
 
-  try {
-    const res = await fetch(
-      `https://api.jup.ag/price/v2?ids=${ids}`
-    );
-    if (!res.ok) throw new Error(`Jupiter API ${res.status}`);
-    const json = await res.json();
-
-    for (const addr of mintAddresses) {
-      const entry = json.data?.[addr];
-      if (entry?.price) {
-        prices[addr] = parseFloat(entry.price);
-      }
-    }
-  } catch (e) {
-    console.error("Jupiter API error, trying DexScreener:", e);
+  for (let i = 0; i < addresses.length; i += batchSize) {
+    const batch = addresses.slice(i, i + batchSize);
     try {
       const res = await fetch(
-        `https://api.dexscreener.com/latest/dex/tokens/${mintAddresses.slice(0, 6).join(",")}`
+        `https://api.dexscreener.com/latest/dex/tokens/${batch.join(",")}`
       );
       if (res.ok) {
         const json = await res.json();
@@ -46,9 +33,38 @@ async function fetchLivePrices(
           }
         }
       }
-    } catch (e2) {
-      console.error("DexScreener fallback also failed:", e2);
+    } catch (_) {}
+  }
+
+  return prices;
+}
+
+async function fetchLivePrices(
+  mintAddresses: string[]
+): Promise<Record<string, number>> {
+  const prices: Record<string, number> = {};
+
+  try {
+    const res = await fetch(
+      `https://api.jup.ag/price/v2?ids=${mintAddresses.join(",")}`
+    );
+    if (!res.ok) throw new Error(`Jupiter API ${res.status}`);
+    const json = await res.json();
+
+    for (const addr of mintAddresses) {
+      const entry = json.data?.[addr];
+      if (entry?.price) {
+        prices[addr] = parseFloat(entry.price);
+      }
     }
+  } catch (e) {
+    console.error("Jupiter API error:", e);
+  }
+
+  const missing = mintAddresses.filter((a) => !prices[a]);
+  if (missing.length > 0) {
+    const dexPrices = await fetchFromDexScreener(missing);
+    Object.assign(prices, dexPrices);
   }
 
   return prices;
