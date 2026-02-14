@@ -4,68 +4,180 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
+  "Access-Control-Allow-Headers":
+    "Content-Type, Authorization, X-Client-Info, Apikey",
 };
+
+const STALE_THRESHOLD_MS = 30_000;
+
+async function fetchLivePrices(
+  mintAddresses: string[]
+): Promise<Record<string, number>> {
+  const prices: Record<string, number> = {};
+  const ids = mintAddresses.join(",");
+
+  try {
+    const res = await fetch(
+      `https://api.jup.ag/price/v2?ids=${ids}`
+    );
+    if (!res.ok) throw new Error(`Jupiter API ${res.status}`);
+    const json = await res.json();
+
+    for (const addr of mintAddresses) {
+      const entry = json.data?.[addr];
+      if (entry?.price) {
+        prices[addr] = parseFloat(entry.price);
+      }
+    }
+  } catch (e) {
+    console.error("Jupiter API error, trying DexScreener:", e);
+    try {
+      const res = await fetch(
+        `https://api.dexscreener.com/latest/dex/tokens/${mintAddresses.slice(0, 6).join(",")}`
+      );
+      if (res.ok) {
+        const json = await res.json();
+        for (const pair of json.pairs || []) {
+          if (pair.baseToken?.address && pair.priceUsd) {
+            const addr = pair.baseToken.address;
+            if (!prices[addr]) {
+              prices[addr] = parseFloat(pair.priceUsd);
+            }
+          }
+        }
+      }
+    } catch (e2) {
+      console.error("DexScreener fallback also failed:", e2);
+    }
+  }
+
+  return prices;
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    const { data: tokens, error: tokensError } = await supabase
+    const supabaseRead = createClient(supabaseUrl, anonKey);
+    const supabaseWrite = createClient(supabaseUrl, serviceKey);
+
+    const { data: tokens, error: tokensError } = await supabaseRead
       .from("tokens")
       .select("*")
       .eq("is_active", true)
       .order("display_order");
 
     if (tokensError) throw tokensError;
+    if (!tokens || tokens.length === 0) {
+      return new Response(JSON.stringify([]), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const { data: latestTick } = await supabaseRead
+      .from("price_ticks")
+      .select("timestamp")
+      .order("timestamp", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const lastTickAge = latestTick
+      ? Date.now() - new Date(latestTick.timestamp).getTime()
+      : Infinity;
+
+    const isStale = lastTickAge > STALE_THRESHOLD_MS;
+
+    let livePrices: Record<string, number> = {};
+
+    if (isStale) {
+      const mintAddresses = tokens.map((t: any) => t.mint_address);
+      livePrices = await fetchLivePrices(mintAddresses);
+
+      const ticks = tokens
+        .filter((t: any) => livePrices[t.mint_address])
+        .map((t: any) => ({
+          token_id: t.id,
+          price_usd: livePrices[t.mint_address],
+          source: "jupiter",
+          timestamp: new Date().toISOString(),
+        }));
+
+      if (ticks.length > 0) {
+        const { error: insertError } = await supabaseWrite
+          .from("price_ticks")
+          .insert(ticks);
+
+        if (insertError) {
+          console.error("Error writing price ticks:", insertError);
+        }
+      }
+    }
 
     const tokensWithPrices = await Promise.all(
       tokens.map(async (token: any) => {
-        const { data: latestTick } = await supabase
+        let currentPrice = livePrices[token.mint_address] || null;
+
+        if (!currentPrice) {
+          const { data: tick } = await supabaseRead
+            .from("price_ticks")
+            .select("price_usd, timestamp")
+            .eq("token_id", token.id)
+            .order("timestamp", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+          if (tick) {
+            currentPrice = parseFloat(tick.price_usd);
+          }
+        }
+
+        const { data: prevTick } = await supabaseRead
           .from("price_ticks")
-          .select("price_usd, timestamp")
+          .select("price_usd")
           .eq("token_id", token.id)
+          .lt(
+            "timestamp",
+            new Date(Date.now() - 3600000).toISOString()
+          )
           .order("timestamp", { ascending: false })
           .limit(1)
           .maybeSingle();
 
-        const { data: price24hAgo } = await supabase
-          .from("price_aggregates_1m")
-          .select("close")
+        const marketCap = currentPrice
+          ? currentPrice * token.total_supply
+          : null;
+
+        const change1h =
+          currentPrice && prevTick
+            ? ((currentPrice - parseFloat(prevTick.price_usd)) /
+                parseFloat(prevTick.price_usd)) *
+              100
+            : null;
+
+        const { data: dayOldTick } = await supabaseRead
+          .from("price_ticks")
+          .select("price_usd")
           .eq("token_id", token.id)
-          .gte("bucket_start", new Date(Date.now() - 86400000).toISOString())
-          .order("bucket_start", { ascending: true })
+          .lt(
+            "timestamp",
+            new Date(Date.now() - 86400000).toISOString()
+          )
+          .order("timestamp", { ascending: false })
           .limit(1)
           .maybeSingle();
 
-        const { data: price1hAgo } = await supabase
-          .from("price_aggregates_1m")
-          .select("close")
-          .eq("token_id", token.id)
-          .gte("bucket_start", new Date(Date.now() - 3600000).toISOString())
-          .order("bucket_start", { ascending: true })
-          .limit(1)
-          .maybeSingle();
-
-        const currentPrice = latestTick ? parseFloat(latestTick.price_usd) : null;
-        const marketCap = currentPrice ? currentPrice * token.total_supply : null;
-
-        const change24h = currentPrice && price24hAgo
-          ? ((currentPrice - parseFloat(price24hAgo.close)) / parseFloat(price24hAgo.close)) * 100
-          : null;
-
-        const change1h = currentPrice && price1hAgo
-          ? ((currentPrice - parseFloat(price1hAgo.close)) / parseFloat(price1hAgo.close)) * 100
-          : null;
+        const change24h =
+          currentPrice && dayOldTick
+            ? ((currentPrice - parseFloat(dayOldTick.price_usd)) /
+                parseFloat(dayOldTick.price_usd)) *
+              100
+            : null;
 
         return {
           id: token.id,
@@ -78,7 +190,7 @@ Deno.serve(async (req: Request) => {
           market_cap: marketCap,
           change_24h: change24h,
           change_1h: change1h,
-          last_updated: latestTick?.timestamp || null,
+          last_updated: new Date().toISOString(),
         };
       })
     );
@@ -87,21 +199,14 @@ Deno.serve(async (req: Request) => {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=3",
+        "Cache-Control": "public, max-age=5",
       },
     });
   } catch (error) {
     console.error("Error:", error);
-
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });

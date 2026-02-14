@@ -1744,33 +1744,16 @@ document.addEventListener("DOMContentLoaded", function () {
 		}).join('');
 	}
 
-	// Simulate real-time updates (optional)
-	setInterval(() => {
-		// Add some random fluctuation to prices
-		tokemojiDataWithGraphics.forEach(token => {
-			const currentPrice = parseFloat(token.price.replace('$', ''));
-			const fluctuation = (Math.random() - 0.5) * 0.0002; // ±0.0001
-			const newPrice = Math.max(0.0001, currentPrice + fluctuation);
-			token.price = '$' + newPrice.toFixed(4);
-			
-			// Update change percentage
-			const changePercent = (Math.random() - 0.5) * 20; // ±10%
-			token.change = (changePercent >= 0 ? '+' : '') + changePercent.toFixed(1) + '%';
-			token.changeType = changePercent >= 0 ? 'positive' : 'negative';
-		});
-		
-		// Re-populate with updated data
-		populateTokenList();
+	setInterval(async () => {
+		await populateTokenList();
 		updateMarketDominance();
 		updateGauges();
-		initializeCarouselData(); // Reinitialize carousel data with new prices
+		initializeCarouselData();
 		updateTopGainers();
 		updateTopLosers();
 		updateGlobalAdoption();
-		
-		// Add price change effects
 		addPriceChangeEffects();
-	}, 10000); // Update every 10 seconds
+	}, 30000);
 	
 	// Setup chart buttons
 	setupChartButtons();

@@ -4,21 +4,43 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
+  "Access-Control-Allow-Headers":
+    "Content-Type, Authorization, X-Client-Info, Apikey",
 };
+
+const STALE_THRESHOLD_MS = 30_000;
+
+async function fetchLivePrices(
+  mintAddresses: string[]
+): Promise<Record<string, number>> {
+  const prices: Record<string, number> = {};
+  try {
+    const res = await fetch(
+      `https://api.jup.ag/price/v2?ids=${mintAddresses.join(",")}`
+    );
+    if (!res.ok) throw new Error(`Jupiter API ${res.status}`);
+    const json = await res.json();
+    for (const addr of mintAddresses) {
+      const entry = json.data?.[addr];
+      if (entry?.price) {
+        prices[addr] = parseFloat(entry.price);
+      }
+    }
+  } catch (e) {
+    console.error("Jupiter API error:", e);
+  }
+  return prices;
+}
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: corsHeaders,
-    });
+    return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabase = createClient(supabaseUrl, anonKey);
 
     const { data: tokens, error: tokensError } = await supabase
       .from("tokens")
@@ -27,31 +49,55 @@ Deno.serve(async (req: Request) => {
 
     if (tokensError) throw tokensError;
 
+    const { data: latestTick } = await supabase
+      .from("price_ticks")
+      .select("timestamp")
+      .order("timestamp", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const lastTickAge = latestTick
+      ? Date.now() - new Date(latestTick.timestamp).getTime()
+      : Infinity;
+
+    let livePrices: Record<string, number> = {};
+    if (lastTickAge > STALE_THRESHOLD_MS) {
+      livePrices = await fetchLivePrices(
+        tokens.map((t: any) => t.mint_address)
+      );
+    }
+
     const tokensWithMetrics = await Promise.all(
       tokens.map(async (token: any) => {
-        const { data: latestTick } = await supabase
+        let currentPrice = livePrices[token.mint_address] || null;
+
+        if (!currentPrice) {
+          const { data: tick } = await supabase
+            .from("price_ticks")
+            .select("price_usd")
+            .eq("token_id", token.id)
+            .order("timestamp", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+          currentPrice = tick ? parseFloat(tick.price_usd) : 0;
+        }
+
+        const { data: price24hAgo } = await supabase
           .from("price_ticks")
           .select("price_usd")
           .eq("token_id", token.id)
+          .lt("timestamp", new Date(Date.now() - 86400000).toISOString())
           .order("timestamp", { ascending: false })
           .limit(1)
           .maybeSingle();
 
-        const { data: price24hAgo } = await supabase
-          .from("price_aggregates_1m")
-          .select("close")
-          .eq("token_id", token.id)
-          .gte("bucket_start", new Date(Date.now() - 86400000).toISOString())
-          .order("bucket_start", { ascending: true })
-          .limit(1)
-          .maybeSingle();
-
-        const currentPrice = latestTick ? parseFloat(latestTick.price_usd) : 0;
         const marketCap = currentPrice * token.total_supply;
-
-        const change24h = currentPrice && price24hAgo
-          ? ((currentPrice - parseFloat(price24hAgo.close)) / parseFloat(price24hAgo.close)) * 100
-          : 0;
+        const change24h =
+          currentPrice && price24hAgo
+            ? ((currentPrice - parseFloat(price24hAgo.price_usd)) /
+                parseFloat(price24hAgo.price_usd)) *
+              100
+            : 0;
 
         return {
           id: token.id,
@@ -66,17 +112,18 @@ Deno.serve(async (req: Request) => {
     );
 
     const totalMarketCap = tokensWithMetrics.reduce(
-      (sum, token) => sum + token.market_cap,
+      (sum, t) => sum + t.market_cap,
       0
     );
 
-    const dominant = tokensWithMetrics.reduce((prev, current) =>
-      current.market_cap > prev.market_cap ? current : prev
+    const dominant = tokensWithMetrics.reduce((prev, cur) =>
+      cur.market_cap > prev.market_cap ? cur : prev
     );
 
-    const dominancePercentage = totalMarketCap > 0
-      ? (dominant.market_cap / totalMarketCap) * 100
-      : 0;
+    const dominancePercentage =
+      totalMarketCap > 0
+        ? (dominant.market_cap / totalMarketCap) * 100
+        : 0;
 
     const sortedByGain = [...tokensWithMetrics].sort(
       (a, b) => b.change_24h - a.change_24h
@@ -84,42 +131,25 @@ Deno.serve(async (req: Request) => {
     const topGainers = sortedByGain.slice(0, 3);
     const topLosers = sortedByGain.slice(-3).reverse();
 
-    const findTokenByEmoji = (type: string) =>
+    const findByEmoji = (type: string) =>
       tokensWithMetrics.find((t) => t.emoji_type === type);
 
-    const greed = findTokenByEmoji("GREED");
-    const fear = findTokenByEmoji("FEAR");
-    const good = findTokenByEmoji("GOOD");
-    const evil = findTokenByEmoji("EVIL");
-    const love = findTokenByEmoji("LOVE");
-    const hate = findTokenByEmoji("HATE") || findTokenByEmoji("MAD");
+    const greed = findByEmoji("GREED");
+    const fear = findByEmoji("FEAR");
+    const good = findByEmoji("GOOD");
+    const evil = findByEmoji("EVIL");
+    const love = findByEmoji("LOVE");
+    const hate = findByEmoji("HATE") || findByEmoji("MAD");
 
-    const greedFearComparison = greed && fear
-      ? {
-          greed_cap: greed.market_cap,
-          fear_cap: fear.market_cap,
-          greed_percentage:
-            (greed.market_cap / (greed.market_cap + fear.market_cap)) * 100,
-        }
-      : null;
-
-    const goodEvilComparison = good && evil
-      ? {
-          good_cap: good.market_cap,
-          evil_cap: evil.market_cap,
-          good_percentage:
-            (good.market_cap / (good.market_cap + evil.market_cap)) * 100,
-        }
-      : null;
-
-    const loveHateComparison = love && hate
-      ? {
-          love_cap: love.market_cap,
-          hate_cap: hate.market_cap,
-          love_percentage:
-            (love.market_cap / (love.market_cap + hate.market_cap)) * 100,
-        }
-      : null;
+    const makeComparison = (a: any, b: any) =>
+      a && b
+        ? {
+            [`${a.emoji_type.toLowerCase()}_cap`]: a.market_cap,
+            [`${b.emoji_type.toLowerCase()}_cap`]: b.market_cap,
+            [`${a.emoji_type.toLowerCase()}_percentage`]:
+              (a.market_cap / (a.market_cap + b.market_cap)) * 100,
+          }
+        : null;
 
     const summary = {
       total_market_cap: totalMarketCap,
@@ -145,9 +175,9 @@ Deno.serve(async (req: Request) => {
         change_24h: t.change_24h,
       })),
       comparisons: {
-        greed_vs_fear: greedFearComparison,
-        good_vs_evil: goodEvilComparison,
-        love_vs_hate: loveHateComparison,
+        greed_vs_fear: makeComparison(greed, fear),
+        good_vs_evil: makeComparison(good, evil),
+        love_vs_hate: makeComparison(love, hate),
       },
     };
 
@@ -160,16 +190,9 @@ Deno.serve(async (req: Request) => {
     });
   } catch (error) {
     console.error("Error:", error);
-
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      {
-        status: 500,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
