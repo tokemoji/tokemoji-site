@@ -974,18 +974,18 @@ const tokemojiDataWithGraphics = tokemojiData.filter(token => token.hasGraphic);
 
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 const TOKEMOJI_MINT_MAP = {
-	'vRseBFqTy9QLmmo5qGiwo74AVpdqqMTnxPqWoWMpump': 'GREED',
-	'ArUyEVWGCzZMtAxcPmNH8nDFZ4kMjxrMbpsQf3NEpump': 'FEAR',
+	'FVvsVkTQ8cgtzX9dnzZwVh353TZ3k88KVC8eymtqpump': 'GREED',
+	'3pWZBTJFByDh7Zojv3PL5FD18CGuvRamRGhKDMiMpump': 'FEAR',
 	'ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY': 'LOVE',
-	'FeR8VBqNRSUD5NtXAj2n3j1dAHkZHfyDktKuLXD4pump': 'HATE',
+	'HJXKDhXAkHegzyHpoJ3G2riL6HTbTfz3HNX7o6mRpump': 'HATE',
 	'DtR4D9FtVoTX2569gaL837ZgrB6wNjj6tkmnX9Rdk9B2': 'GOOD',
-	'GqXX9MfkURBZ5cFym9HDzqTL7uZkjtCSqLkUSe2xpump': 'EVIL',
-	'9PR7nCP9DpcUotnDPVLUBUZKu5WAYkwrCUx9wDnSpump': 'HAPPY',
+	'C7V47ci5u2Ak3VYb62a1obLTY74BLFxLB7d2NLKRpump': 'EVIL',
+	'XrJE4Dc7thUMdeox4yULE9KrHcSLU7Pcn92v5YJpump': 'HAPPY',
 	'c5UUH9RTDiSpq6HKS6bp4NdU9PNJpXRXuiw6ShBTBhgH2': 'SAD',
-	'J1Wpmugrooj1yMyQKrdZ2vwRXG5rhfx3vTnYE39gpump': 'LOL',
-	'CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump': 'OMG',
-	'CreiuhfwdWCN5mJbMJtA9bBpYQrQF2tCBuZwSPWfpump': 'MAD',
-	'Dfh5DzRgSvvCFDoYc2ciTkMrbDfRKybA4SoFbPmApump': 'LIKE'
+	'EirpkRcuj7oQvTZZgWXuCmQtGvbdHt7hx6Gk5n1Jpump': 'LOL',
+	'9HZVe4X2NS7SMUEahVcKbBnxZJzCZUy1UENXd6mppump': 'OMG',
+	'A1Z23YRk937wWLnnVi86oj7ykDdMGYuE28ekzpsQpump': 'MAD',
+	'9y4nMHKQCMgjHE1UU1pbhykRXG5Xp75Y6B4MxdZapump': 'LIKE'
 };
 const PUMP_FUN_TOTAL_SUPPLY = 1000000000;
 let solPriceUsd = 170;
