@@ -1080,6 +1080,10 @@ function connectPumpPortal() {
 			if (data.txType === 'create') {
 				handleNewTokenEvent(data);
 			} else if (data.txType === 'buy' || data.txType === 'sell') {
+				var ticker = TOKEMOJI_MINT_MAP[data.mint];
+				if (ticker) {
+					console.log('[PumpPortal] LIVE TRADE:', data.txType.toUpperCase(), ticker, 'mint:', data.mint.substring(0, 8) + '...');
+				}
 				handleTokenTradeEvent(data);
 			}
 		} catch (e) {
@@ -1429,7 +1433,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		const apiTokens = await fetchTokenData();
 		if (apiTokens.length === 0) return;
 
-		const delay = 120;
+		const delay = 50;
 		apiTokens.forEach((token, i) => {
 			setTimeout(() => {
 				const row = tokenList.querySelector('.token-row[data-token="' + token.ticker + '"]');
@@ -1968,7 +1972,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateTopGainers();
 		updateTopLosers();
 		updateGlobalAdoption();
-	}, 30000);
+	}, 10000);
 	
 	// Setup chart buttons
 	setupChartButtons();
