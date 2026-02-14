@@ -1062,7 +1062,12 @@ function getAllMintAddresses() {
 
 async function fetchJupiterPrices(mints) {
 	try {
-		var res = await fetch('https://api.jup.ag/price/v2?ids=' + mints.join(','));
+		var res = await fetch(SUPABASE_EDGE_URL + '/get-jupiter-prices?ids=' + mints.join(','), {
+			headers: {
+				'Authorization': 'Bearer ' + SUPABASE_EDGE_KEY,
+				'apikey': SUPABASE_EDGE_KEY
+			}
+		});
 		if (!res.ok) return {};
 		var json = await res.json();
 		var prices = {};
