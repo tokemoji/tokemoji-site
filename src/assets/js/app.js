@@ -972,6 +972,191 @@ const tokemojiData = [
 // Filter to only show tokens with graphics
 const tokemojiDataWithGraphics = tokemojiData.filter(token => token.hasGraphic);
 
+const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
+const TOKEMOJI_MINT_MAP = {
+	'vRseBFqTy9QLmmo5qGiwo74AVpdqqMTnxPqWoWMpump': 'GREED',
+	'ArUyEVWGCzZMtAxcPmNH8nDFZ4kMjxrMbpsQf3NEpump': 'FEAR',
+	'ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY': 'LOVE',
+	'FeR8VBqNRSUD5NtXAj2n3j1dAHkZHfyDktKuLXD4pump': 'HATE',
+	'DtR4D9FtVoTX2569gaL837ZgrB6wNjj6tkmnX9Rdk9B2': 'GOOD',
+	'GqXX9MfkURBZ5cFym9HDzqTL7uZkjtCSqLkUSe2xpump': 'EVIL',
+	'9PR7nCP9DpcUotnDPVLUBUZKu5WAYkwrCUx9wDnSpump': 'HAPPY',
+	'c5UUH9RTDiSpq6HKS6bp4NdU9PNJpXRXuiw6ShBTBhgH2': 'SAD',
+	'J1Wpmugrooj1yMyQKrdZ2vwRXG5rhfx3vTnYE39gpump': 'LOL',
+	'CzLSujWBLFsSjncfkh59rUFqvafWcY5tzedWJSuypump': 'OMG',
+	'CreiuhfwdWCN5mJbMJtA9bBpYQrQF2tCBuZwSPWfpump': 'MAD',
+	'Dfh5DzRgSvvCFDoYc2ciTkMrbDfRKybA4SoFbPmApump': 'LIKE'
+};
+const PUMP_FUN_TOTAL_SUPPLY = 1000000000;
+let solPriceUsd = 170;
+let pumpPortalWs = null;
+let pumpPortalReconnectTimer = null;
+let liveTradeCount = 0;
+let lastNewTokenTime = 0;
+
+async function fetchSolPrice() {
+	try {
+		var res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+		if (res.ok) {
+			var data = await res.json();
+			if (data.solana && data.solana.usd) {
+				solPriceUsd = data.solana.usd;
+				console.log('[PumpPortal] SOL price:', solPriceUsd);
+			}
+		}
+	} catch (e) {
+		console.warn('[PumpPortal] SOL price fetch failed, using:', solPriceUsd);
+	}
+}
+
+function connectPumpPortal() {
+	if (pumpPortalWs && pumpPortalWs.readyState === WebSocket.OPEN) {
+		pumpPortalWs.close();
+	}
+
+	console.log('[PumpPortal] Connecting...');
+	pumpPortalWs = new WebSocket(PUMP_PORTAL_WS_URL);
+
+	pumpPortalWs.onopen = function() {
+		console.log('[PumpPortal] Connected');
+		updateLiveIndicator(true);
+
+		var mintAddresses = Object.keys(TOKEMOJI_MINT_MAP);
+		pumpPortalWs.send(JSON.stringify({
+			method: 'subscribeTokenTrade',
+			keys: mintAddresses
+		}));
+
+		pumpPortalWs.send(JSON.stringify({
+			method: 'subscribeNewToken'
+		}));
+
+		console.log('[PumpPortal] Subscribed to', mintAddresses.length, 'tokens + new token events');
+	};
+
+	pumpPortalWs.onmessage = function(event) {
+		try {
+			var data = JSON.parse(event.data);
+
+			if (data.txType === 'create') {
+				handleNewTokenEvent(data);
+			} else if (data.txType === 'buy' || data.txType === 'sell') {
+				handleTokenTradeEvent(data);
+			}
+		} catch (e) {
+			console.warn('[PumpPortal] Parse error:', e);
+		}
+	};
+
+	pumpPortalWs.onclose = function() {
+		console.log('[PumpPortal] Disconnected, reconnecting in 3s...');
+		updateLiveIndicator(false);
+		clearTimeout(pumpPortalReconnectTimer);
+		pumpPortalReconnectTimer = setTimeout(connectPumpPortal, 3000);
+	};
+
+	pumpPortalWs.onerror = function() {
+		console.error('[PumpPortal] WebSocket error');
+		pumpPortalWs.close();
+	};
+}
+
+function handleNewTokenEvent(data) {
+	liveTradeCount++;
+	lastNewTokenTime = Date.now();
+	pulseLiveIndicator();
+
+	var counterEl = document.getElementById('live-trade-counter');
+	if (counterEl) {
+		counterEl.textContent = liveTradeCount;
+	}
+
+	var lastTradeEl = document.getElementById('live-last-trade');
+	if (lastTradeEl && data.mint) {
+		var shortMint = data.mint.substring(0, 6) + '...';
+		lastTradeEl.textContent = 'NEW: ' + shortMint;
+	}
+}
+
+function handleTokenTradeEvent(data) {
+	var ticker = TOKEMOJI_MINT_MAP[data.mint];
+	if (!ticker) return;
+
+	liveTradeCount++;
+	pulseLiveIndicator();
+
+	var priceInSol = data.vSolInBondingCurve / data.vTokensInBondingCurve;
+	var priceUsd = priceInSol * solPriceUsd;
+	var marketCapUsd = data.marketCapSol * solPriceUsd;
+
+	console.log('[PumpPortal] ' + data.txType.toUpperCase() + ' ' + ticker + ': $' + formatAPIPrice(priceUsd) + ' (mcap: $' + formatAPIMarketCap(marketCapUsd) + ')');
+
+	updateSingleTokenRow(ticker, priceUsd, marketCapUsd, data.txType);
+
+	var tokenIdx = currentTokenData.findIndex(function(t) { return t.ticker === ticker; });
+	if (tokenIdx !== -1) {
+		var oldPrice = currentTokenData[tokenIdx].priceRaw;
+		currentTokenData[tokenIdx].priceRaw = priceUsd;
+		currentTokenData[tokenIdx].price = '$' + formatAPIPrice(priceUsd);
+		currentTokenData[tokenIdx].marketCap = '$' + formatAPIMarketCap(marketCapUsd);
+		currentTokenData[tokenIdx].changeType = priceUsd >= oldPrice ? 'positive' : 'negative';
+		currentTokenData[tokenIdx].priceMovement = priceUsd > oldPrice ? 'up' : 'down';
+	}
+
+	updateMarketDominance();
+	updateGauges();
+
+	var counterEl = document.getElementById('live-trade-counter');
+	if (counterEl) {
+		counterEl.textContent = liveTradeCount;
+	}
+
+	var lastTradeEl = document.getElementById('live-last-trade');
+	if (lastTradeEl) {
+		lastTradeEl.textContent = data.txType.toUpperCase() + ' ' + ticker;
+		lastTradeEl.className = 'live-last-trade ' + (data.txType === 'buy' ? 'text-success' : 'text-danger');
+	}
+}
+
+function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType) {
+	var row = document.querySelector('.token-row[data-token="' + ticker + '"]');
+	if (!row) return;
+
+	var priceEl = row.querySelector('.token-price');
+	var mcapEl = row.querySelector('.token-marketcap');
+
+	if (priceEl) priceEl.textContent = '$' + formatAPIPrice(priceUsd);
+	if (mcapEl) mcapEl.textContent = '$' + formatAPIMarketCap(marketCapUsd);
+
+	row.classList.remove('trade-flash-buy', 'trade-flash-sell');
+	void row.offsetWidth;
+	row.classList.add(txType === 'buy' ? 'trade-flash-buy' : 'trade-flash-sell');
+
+	setTimeout(function() {
+		row.classList.remove('trade-flash-buy', 'trade-flash-sell');
+	}, 1500);
+}
+
+function updateLiveIndicator(connected) {
+	var indicator = document.getElementById('live-indicator');
+	if (!indicator) return;
+	if (connected) {
+		indicator.classList.add('connected');
+		indicator.classList.remove('disconnected');
+	} else {
+		indicator.classList.remove('connected');
+		indicator.classList.add('disconnected');
+	}
+}
+
+function pulseLiveIndicator() {
+	var dot = document.getElementById('live-dot');
+	if (!dot) return;
+	dot.classList.remove('pulse');
+	void dot.offsetWidth;
+	dot.classList.add('pulse');
+}
+
 // Mock news data (moved outside DOMContentLoaded for global access)
 const newsData = [
 		{ title: "GREED token surges 31% as market sentiment shifts", timestamp: "2m ago", emoji: "🤑" },
@@ -1568,57 +1753,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
-	// Store token data for price change detection
 	let currentTokenData = [];
 	let priceChangeTimeouts = new Map();
 
-	// Setup Realtime price updates
-	function setupRealtimePriceUpdates() {
-		const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
-		const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
-
-		// Create Supabase client with Realtime
-		const { createClient } = window.supabase || {};
-		if (!createClient) {
-			console.warn('[Tokemoji] Supabase client not available, falling back to polling');
-			// Fallback to polling every 30 seconds
-			setInterval(() => {
-				populateTokenList();
-			}, 30000);
-			return;
-		}
-
-		const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-		// Subscribe to price_ticks inserts
-		const channel = supabaseClient
-			.channel('price-updates')
-			.on('postgres_changes', {
-				event: 'INSERT',
-				schema: 'public',
-				table: 'price_ticks'
-			}, (payload) => {
-				console.log('[Tokemoji] New price tick received:', payload.new);
-				handlePriceTick(payload.new);
-			})
-			.subscribe((status) => {
-				if (status === 'SUBSCRIBED') {
-					console.log('[Tokemoji] ✓ Subscribed to real-time price updates');
-				}
-			});
-	}
-
-	// Handle incoming price tick
-	async function handlePriceTick(tick) {
-		// Refresh the token list with latest data
-		await populateTokenList();
-	}
-
-	// Initialize dashboard when DOM is ready
 	initTokemojiDashboard();
 
-	// Set up Realtime subscription to price_ticks table
-	setupRealtimePriceUpdates();
+	fetchSolPrice();
+	setInterval(fetchSolPrice, 60000);
+
+	connectPumpPortal();
 
 	// Initialize ticker news
 	initTickerNews();
@@ -1753,7 +1896,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateTopLosers();
 		updateGlobalAdoption();
 		addPriceChangeEffects();
-	}, 30000);
+	}, 120000);
 	
 	// Setup chart buttons
 	setupChartButtons();

@@ -754,6 +754,95 @@
 	}
 }
 
+/* PumpPortal Live Indicator */
+.live-indicator {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 0.6rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	padding: 2px 8px;
+	border-radius: 10px;
+	text-transform: uppercase;
+	vertical-align: middle;
+	transition: all 0.3s ease;
+
+	&.connected {
+		background: rgba(40, 167, 69, 0.15);
+		color: #28a745;
+	}
+
+	&.disconnected {
+		background: rgba(220, 53, 69, 0.15);
+		color: #dc3545;
+	}
+}
+
+.live-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: currentColor;
+	display: inline-block;
+	transition: all 0.2s ease;
+
+	.connected & {
+		background: #28a745;
+		box-shadow: 0 0 4px #28a745;
+	}
+
+	.disconnected & {
+		background: #dc3545;
+	}
+
+	&.pulse {
+		animation: dotPulse 0.6s ease-out;
+	}
+}
+
+@keyframes dotPulse {
+	0% { transform: scale(1); box-shadow: 0 0 0 0 currentColor; }
+	50% { transform: scale(1.8); box-shadow: 0 0 8px currentColor; }
+	100% { transform: scale(1); box-shadow: 0 0 4px currentColor; }
+}
+
+.live-last-trade {
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+	white-space: nowrap;
+	transition: color 0.2s ease;
+}
+
+.live-counter {
+	font-size: 0.6rem;
+	padding: 2px 6px;
+	min-width: 24px;
+	text-align: center;
+}
+
+/* Trade Flash Effects */
+.token-row.trade-flash-buy {
+	animation: flashBuy 1.5s ease-out;
+}
+
+.token-row.trade-flash-sell {
+	animation: flashSell 1.5s ease-out;
+}
+
+@keyframes flashBuy {
+	0% { background-color: rgba(40, 167, 69, 0.4); }
+	30% { background-color: rgba(40, 167, 69, 0.25); }
+	100% { background-color: transparent; }
+}
+
+@keyframes flashSell {
+	0% { background-color: rgba(220, 53, 69, 0.4); }
+	30% { background-color: rgba(220, 53, 69, 0.25); }
+	100% { background-color: transparent; }
+}
+
 /* Animation Enhancements */
 @keyframes pulse {
 	0% {

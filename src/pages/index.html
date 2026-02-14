@@ -488,7 +488,17 @@ layout: "single-page"
 											data-y="25">
 											<div class="border-bottom border-dark px-6 pt-6 pb-4">
 												<div class="d-flex justify-content-between align-items-center">
-													<h5 class="mb-0 text-heading">TOKEMOJI RANKINGS</h5>
+													<h5 class="mb-0 text-heading d-flex align-items-center gap-2">
+														TOKEMOJI RANKINGS
+														<span id="live-indicator" class="live-indicator disconnected">
+															<span id="live-dot" class="live-dot"></span>
+															LIVE
+														</span>
+													</h5>
+													<div class="d-flex align-items-center gap-2">
+														<span id="live-last-trade" class="live-last-trade text-muted"></span>
+														<span id="live-trade-counter" class="live-counter badge bg-dark">0</span>
+													</div>
 													<div class="sort-buttons d-flex gap-2">
 														<button class="btn btn-sm btn-outline-primary sort-btn active" data-sort="marketcap">M CAP</button>
 														<button class="btn btn-sm btn-outline-danger sort-btn" data-sort="losers">LOSERS</button>
