@@ -1042,7 +1042,11 @@ function flushPriceTicks() {
 
 	fetch(url, {
 		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
+		headers: {
+			'Content-Type': 'application/json',
+			'Authorization': 'Bearer ' + SUPABASE_EDGE_KEY,
+			'apikey': SUPABASE_EDGE_KEY
+		},
 		body: JSON.stringify({ ticks: ticks })
 	}).catch(function(e) {
 		console.warn('[PumpPortal] Price tick write failed:', e.message);
@@ -1936,7 +1940,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateTopGainers();
 		updateTopLosers();
 		updateGlobalAdoption();
-	}, 60000);
+	}, 10000);
 	
 	// Setup chart buttons
 	setupChartButtons();
