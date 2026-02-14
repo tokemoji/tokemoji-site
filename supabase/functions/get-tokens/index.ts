@@ -8,28 +8,7 @@ const corsHeaders = {
     "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const STALE_THRESHOLD_MS = 15_000;
-
-async function fetchPricesJupiter(
-  mints: string[]
-): Promise<Record<string, number>> {
-  const prices: Record<string, number> = {};
-  try {
-    const res = await fetch(
-      `https://api.jup.ag/price/v2?ids=${mints.join(",")}`
-    );
-    if (res.ok) {
-      const json = await res.json();
-      for (const [mint, info] of Object.entries(json.data || {})) {
-        const p = (info as any)?.price;
-        if (p) prices[mint] = parseFloat(p);
-      }
-    }
-  } catch (e) {
-    console.error("Jupiter price error:", e);
-  }
-  return prices;
-}
+const STALE_THRESHOLD_MS = 10_000;
 
 async function fetchPricesDexScreener(
   mints: string[]
@@ -103,19 +82,7 @@ Deno.serve(async (req: Request) => {
     let livePrices: Record<string, number> = {};
 
     if (lastTickAge > STALE_THRESHOLD_MS) {
-      livePrices = await fetchPricesJupiter(mintAddresses);
-
-      const jupiterMints = new Set(
-        mintAddresses.filter((m: string) => livePrices[m] && livePrices[m] > 0)
-      );
-
-      const missingMints = mintAddresses.filter(
-        (m: string) => !livePrices[m] || livePrices[m] <= 0
-      );
-      if (missingMints.length > 0) {
-        const dexPrices = await fetchPricesDexScreener(missingMints);
-        livePrices = { ...livePrices, ...dexPrices };
-      }
+      livePrices = await fetchPricesDexScreener(mintAddresses);
 
       const ticks = tokens
         .filter(
@@ -124,7 +91,7 @@ Deno.serve(async (req: Request) => {
         .map((t: any) => ({
           token_id: t.id,
           price_usd: livePrices[t.mint_address],
-          source: jupiterMints.has(t.mint_address) ? "jupiter" : "dexscreener",
+          source: "dexscreener",
           timestamp: new Date().toISOString(),
         }));
 
@@ -208,7 +175,7 @@ Deno.serve(async (req: Request) => {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
+        "Cache-Control": "public, max-age=3",
       },
     });
   } catch (error) {

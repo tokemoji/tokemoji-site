@@ -32,39 +32,21 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const SOL_MINT = "So11111111111111111111111111111111111111112";
     let fetched = false;
 
     try {
-      const jupRes = await fetch(
-        `https://api.jup.ag/price/v2?ids=${SOL_MINT}`
+      const cgRes = await fetch(
+        "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
       );
-      if (jupRes.ok) {
-        const jupData = await jupRes.json();
-        const solPrice = jupData.data?.[SOL_MINT]?.price;
-        if (solPrice) {
-          cachedPrice = parseFloat(solPrice);
+      if (cgRes.ok) {
+        const cgData = await cgRes.json();
+        if (cgData.solana?.usd) {
+          cachedPrice = cgData.solana.usd;
           lastFetchTime = now;
           fetched = true;
         }
       }
     } catch (_e) {}
-
-    if (!fetched) {
-      try {
-        const cgRes = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
-        );
-        if (cgRes.ok) {
-          const cgData = await cgRes.json();
-          if (cgData.solana?.usd) {
-            cachedPrice = cgData.solana.usd;
-            lastFetchTime = now;
-            fetched = true;
-          }
-        }
-      } catch (_e) {}
-    }
 
     if (!fetched && cachedPrice <= 0) {
       throw new Error("All SOL price sources failed");

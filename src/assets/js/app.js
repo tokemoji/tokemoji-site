@@ -1053,35 +1053,11 @@ function flushPriceTicks() {
 	});
 }
 
-const PRICE_POLL_INTERVAL_MS = 2000;
+const PRICE_POLL_INTERVAL_MS = 3000;
 let pricePollingActive = false;
 
 function getAllMintAddresses() {
 	return Object.keys(TOKEMOJI_MINT_MAP);
-}
-
-async function fetchJupiterPrices(mints) {
-	try {
-		var res = await fetch(SUPABASE_EDGE_URL + '/get-jupiter-prices?ids=' + mints.join(','), {
-			headers: {
-				'Authorization': 'Bearer ' + SUPABASE_EDGE_KEY,
-				'apikey': SUPABASE_EDGE_KEY
-			}
-		});
-		if (!res.ok) return {};
-		var json = await res.json();
-		var prices = {};
-		var data = json.data || {};
-		for (var mint in data) {
-			if (data[mint] && data[mint].price) {
-				prices[mint] = parseFloat(data[mint].price);
-			}
-		}
-		return prices;
-	} catch (e) {
-		console.warn('[Jupiter] Fetch failed:', e.message);
-		return {};
-	}
 }
 
 async function fetchDexScreenerPrices(mints) {
@@ -1162,7 +1138,7 @@ function applyLivePrices(prices) {
 
 async function pricePollCycle() {
 	var mints = getAllMintAddresses();
-	var prices = await fetchJupiterPrices(mints);
+	var prices = await fetchDexScreenerPrices(mints);
 
 	var keys = Object.keys(prices);
 	if (keys.length > 0) {
@@ -1174,10 +1150,10 @@ async function pricePollCycle() {
 	}
 }
 
-function startDexScreenerPolling() {
+function startPricePolling() {
 	if (pricePollingActive) return;
 	pricePollingActive = true;
-	console.log('[PriceFeed] Starting Jupiter+DexScreener polling every ' + (PRICE_POLL_INTERVAL_MS / 1000) + 's');
+	console.log('[PriceFeed] Starting DexScreener polling every ' + (PRICE_POLL_INTERVAL_MS / 1000) + 's');
 	pricePollCycle();
 }
 
@@ -1936,7 +1912,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 	setInterval(fetchSolPrice, 30000);
 
-	setTimeout(startDexScreenerPolling, 2000);
+	setTimeout(startPricePolling, 2000);
 
 	// Initialize ticker news
 	initTickerNews();
