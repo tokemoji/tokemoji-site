@@ -1518,6 +1518,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				var cType = (changeVal || 0) >= 0 ? 'positive' : 'negative';
 
 				return {
+					id: token.id,
 					emoji: ticker,
 					ticker: ticker,
 					price: currentPrice ? `$${formatAPIPrice(currentPrice)}` : 'N/A',
@@ -1600,7 +1601,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			<span class="token-ticker fw-bold text-heading me-2" style="min-width: 60px; flex-shrink: 0;">${token.ticker}</span>
 			<span class="token-price text-muted me-2" style="min-width: 70px; flex-shrink: 0;">${token.price}</span>
 			<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold me-2" style="min-width: 60px; flex-shrink: 0;">${token.change}</span>
-			<div class="token-mini-chart me-2" id="chart-${token.ticker}" style="width: 100px; height: 30px; flex-shrink: 0; background: white; border-radius: 4px; padding: 2px;"></div>
+			<div class="token-mini-chart me-2" id="chart-${token.ticker}" style="width: 100px; height: 30px; flex-shrink: 0;"></div>
 			<span class="token-marketcap text-muted me-2" style="min-width: 50px; flex-shrink: 0;">${token.marketCap}</span>
 			<button class="btn btn-sm btn-primary buy-btn me-1" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;">BUY</button>
 		</div>`;
@@ -2146,33 +2147,47 @@ async function loadMiniCharts(tokens) {
 		return;
 	}
 
-	const supabaseUrl = 'https://wdqmlzyqymkahksdazac.supabase.co';
+	console.log('[MiniChart] Loading charts for', tokens.length, 'tokens');
 
-	tokens.forEach(async (token) => {
+	for (const token of tokens) {
 		const tokenId = token.id;
 		const tokenTicker = token.ticker || token.symbol;
-		if (!tokenId || !tokenTicker) return;
+
+		if (!tokenId || !tokenTicker) {
+			console.warn('[MiniChart] Skipping token - missing id or ticker:', token);
+			continue;
+		}
 
 		const chartContainer = document.getElementById(`chart-${tokenTicker}`);
-		if (!chartContainer) return;
+		if (!chartContainer) {
+			console.warn('[MiniChart] Container not found for:', tokenTicker);
+			continue;
+		}
 
 		try {
+			console.log('[MiniChart] Fetching chart for', tokenTicker, '- ID:', tokenId);
+
 			const response = await fetch(
-				`${supabaseUrl}/functions/v1/get-token-chart?token_id=${tokenId}&range=24h`,
+				`${SUPABASE_URL}/functions/v1/get-token-chart?token_id=${tokenId}&range=1h`,
 				{
 					headers: {
-						'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkcW1senlxeW1rYWhrc2RhemFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzExNTU1ODgsImV4cCI6MjA0NjczMTU4OH0.Ff-i3CYYjdqFCR_HMDG9r-1RQdNSqOFePFLw5VXhYc8`,
-						'Content-Type': 'application/json'
+						'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+						'Content-Type': 'application/json',
+						'apikey': SUPABASE_ANON_KEY
 					}
 				}
 			);
 
 			if (!response.ok) {
-				throw new Error('Failed to fetch chart data');
+				const errorText = await response.text();
+				console.error('[MiniChart] API error for', tokenTicker, ':', response.status, errorText);
+				continue;
 			}
 
 			const result = await response.json();
 			const chartData = result.data || [];
+
+			console.log('[MiniChart] Data received for', tokenTicker, '- points:', chartData.length);
 
 			if (chartData.length > 0) {
 				const chart = new MiniChart(`chart-${tokenTicker}`, {
@@ -2182,11 +2197,14 @@ async function loadMiniCharts(tokens) {
 					lineColor: '#1976D2'
 				});
 				chart.render(chartData);
+				console.log('[MiniChart] Chart rendered for', tokenTicker);
+			} else {
+				console.warn('[MiniChart] No data available for', tokenTicker);
 			}
 		} catch (error) {
-			console.error(`Error loading chart for ${tokenTicker}:`, error);
+			console.error(`[MiniChart] Error loading chart for ${tokenTicker}:`, error);
 		}
-	});
+	}
 }
 
 // Setup chart buttons
