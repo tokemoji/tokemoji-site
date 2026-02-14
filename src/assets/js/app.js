@@ -1341,6 +1341,63 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
+	async function fetchJupiterPricesDirectly() {
+		if (!tokenListRendered || currentTokenData.length === 0) return;
+
+		var mintAddresses = Object.keys(TOKEMOJI_MINT_MAP);
+		try {
+			var res = await fetch('https://api.jup.ag/price/v2?ids=' + mintAddresses.join(','));
+			if (!res.ok) return;
+			var json = await res.json();
+			if (!json.data) return;
+
+			var mintToTicker = TOKEMOJI_MINT_MAP;
+			var updated = false;
+
+			for (var addr in json.data) {
+				var entry = json.data[addr];
+				if (!entry || !entry.price) continue;
+
+				var ticker = mintToTicker[addr];
+				if (!ticker) continue;
+
+				var newPrice = parseFloat(entry.price);
+				if (!newPrice || isNaN(newPrice)) continue;
+
+				var tokenIdx = currentTokenData.findIndex(function(t) { return t.ticker === ticker; });
+				if (tokenIdx === -1) continue;
+
+				var oldPrice = currentTokenData[tokenIdx].priceRaw;
+				if (oldPrice && Math.abs(newPrice - oldPrice) / oldPrice < 0.000001) continue;
+
+				var row = document.querySelector('.token-row[data-token="' + ticker + '"]');
+				if (!row) continue;
+
+				var priceEl = row.querySelector('.token-price');
+				if (priceEl && oldPrice && oldPrice !== newPrice) {
+					animatePriceGlobal(priceEl, oldPrice, newPrice, 600);
+					var direction = newPrice > oldPrice ? 'up' : 'down';
+					flashTokenRow(row, priceEl, direction);
+					updated = true;
+				} else if (priceEl) {
+					priceEl.textContent = '$' + formatAPIPrice(newPrice);
+				}
+
+				currentTokenData[tokenIdx].priceRaw = newPrice;
+				currentTokenData[tokenIdx].oldPriceRaw = oldPrice;
+				currentTokenData[tokenIdx].price = '$' + formatAPIPrice(newPrice);
+				currentTokenData[tokenIdx].priceMovement = newPrice > oldPrice ? 'up' : (newPrice < oldPrice ? 'down' : 'none');
+			}
+
+			if (updated) {
+				updateMarketDominance();
+				updateGauges();
+			}
+		} catch (e) {
+			console.warn('[Jupiter] Direct price fetch error:', e.message);
+		}
+	}
+
 	function sortTokens(tokens) {
 		const sorted = [...tokens];
 		switch(currentSortType) {
@@ -1964,6 +2021,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		}).join('');
 	}
 
+	setInterval(function() {
+		fetchJupiterPricesDirectly();
+	}, 3000);
+
 	setInterval(async () => {
 		await refreshTokenPrices();
 		updateMarketDominance();
@@ -1972,7 +2033,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		updateTopGainers();
 		updateTopLosers();
 		updateGlobalAdoption();
-	}, 10000);
+	}, 30000);
 	
 	// Setup chart buttons
 	setupChartButtons();
