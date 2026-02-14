@@ -1636,8 +1636,22 @@ document.addEventListener("DOMContentLoaded", function () {
 		const apiTokens = await fetchTokenData();
 		if (apiTokens.length === 0) return;
 
+		const sortedTokens = sortTokens(apiTokens);
+
+		const currentOrder = Array.from(tokenList.querySelectorAll('.token-row')).map(row => row.dataset.token);
+		const newOrder = sortedTokens.map(token => token.ticker);
+
+		const orderChanged = currentOrder.some((ticker, index) => ticker !== newOrder[index]);
+
+		if (orderChanged) {
+			tokenList.innerHTML = sortedTokens.map((token, index) => renderTokenRow(token, index)).join('');
+			currentTokenData = [...apiTokens];
+			loadMiniCharts(sortedTokens);
+			return;
+		}
+
 		const delay = 50;
-		apiTokens.forEach((token, i) => {
+		sortedTokens.forEach((token, i) => {
 			setTimeout(() => {
 				const row = tokenList.querySelector('.token-row[data-token="' + token.ticker + '"]');
 				if (!row) return;
