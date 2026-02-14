@@ -1586,9 +1586,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	function renderTokenRow(token, index) {
 		const videoSrc = TOKEN_WEBM_MAP[token.ticker] || 'assets/img/emojis/happy.webm';
 		return `
-		<div class="token-row d-flex align-items-center py-1 border-bottom border-light" data-token="${token.ticker}" data-token-id="${token.id || ''}">
-			<span class="token-rank me-2 fw-bold text-muted" style="min-width: 20px; flex-shrink: 0;">${index + 1}</span>
-			<div class="token-emoji me-2" style="flex-shrink: 0; width: 36px; height: 36px;">
+		<div class="token-row py-1 border-bottom border-light" data-token="${token.ticker}" data-token-id="${token.id || ''}">
+			<span class="token-rank fw-bold text-muted">${index + 1}</span>
+			<div class="token-emoji">
 				${isIOS() ?
 					`<img src="${getEmojiPath(videoSrc)}"
 						  style="width: 100%; height: 100%; object-fit: contain;">` :
@@ -1598,12 +1598,12 @@ document.addEventListener("DOMContentLoaded", function () {
 					</video>`
 				}
 			</div>
-			<span class="token-ticker fw-bold text-heading me-2" style="min-width: 60px; flex-shrink: 0;">${token.ticker}</span>
-			<span class="token-price text-muted me-2" style="min-width: 70px; flex-shrink: 0;">${token.price}</span>
-			<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold me-2" style="min-width: 60px; flex-shrink: 0;">${token.change}</span>
-			<div class="token-mini-chart me-2" id="chart-${token.ticker}" style="width: 100px; height: 30px; flex-shrink: 0;"></div>
-			<span class="token-marketcap text-muted me-2" style="min-width: 50px; flex-shrink: 0;">${token.marketCap}</span>
-			<button class="btn btn-sm btn-primary buy-btn me-1" style="font-size: 0.7rem; padding: 0.2rem 0.5rem; flex-shrink: 0;">BUY</button>
+			<span class="token-ticker fw-bold text-heading">${token.ticker}</span>
+			<span class="token-price text-muted">${token.price}</span>
+			<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold">${token.change}</span>
+			<div class="token-mini-chart" id="chart-${token.ticker}"></div>
+			<span class="token-marketcap text-muted">${token.marketCap}</span>
+			<button class="btn btn-sm btn-primary buy-btn">BUY</button>
 		</div>`;
 	}
 
