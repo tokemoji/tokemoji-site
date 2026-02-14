@@ -32,38 +32,54 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd",
-    );
+    const SOL_MINT = "So11111111111111111111111111111111111111112";
+    let fetched = false;
 
-    if (!res.ok) {
-      if (cachedPrice > 0) {
-        return new Response(
-          JSON.stringify({ solana: { usd: cachedPrice }, cached: true }),
-          {
-            headers: {
-              ...corsHeaders,
-              "Content-Type": "application/json",
-            },
-          },
-        );
+    try {
+      const jupRes = await fetch(
+        `https://api.jup.ag/price/v2?ids=${SOL_MINT}`
+      );
+      if (jupRes.ok) {
+        const jupData = await jupRes.json();
+        const solPrice = jupData.data?.[SOL_MINT]?.price;
+        if (solPrice) {
+          cachedPrice = parseFloat(solPrice);
+          lastFetchTime = now;
+          fetched = true;
+        }
       }
-      throw new Error(`CoinGecko returned ${res.status}`);
+    } catch (_e) {}
+
+    if (!fetched) {
+      try {
+        const cgRes = await fetch(
+          "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd"
+        );
+        if (cgRes.ok) {
+          const cgData = await cgRes.json();
+          if (cgData.solana?.usd) {
+            cachedPrice = cgData.solana.usd;
+            lastFetchTime = now;
+            fetched = true;
+          }
+        }
+      } catch (_e) {}
     }
 
-    const data = await res.json();
-    if (data.solana?.usd) {
-      cachedPrice = data.solana.usd;
-      lastFetchTime = now;
+    if (!fetched && cachedPrice <= 0) {
+      throw new Error("All SOL price sources failed");
     }
 
-    return new Response(JSON.stringify(data), {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=10",
-      },
-    });
+    return new Response(
+      JSON.stringify({ solana: { usd: cachedPrice }, cached: !fetched }),
+      {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json",
+          "Cache-Control": "public, max-age=10",
+        },
+      }
+    );
   } catch (error) {
     if (cachedPrice > 0) {
       return new Response(

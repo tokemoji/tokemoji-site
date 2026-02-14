@@ -1053,18 +1053,33 @@ function flushPriceTicks() {
 	});
 }
 
-const DEXSCREENER_POLL_INTERVAL_MS = 3000;
-let dexScreenerPollTimer = null;
-let dexScreenerLastPrices = {};
+const PRICE_POLL_INTERVAL_MS = 2000;
+let pricePollingActive = false;
 
 function getAllMintAddresses() {
 	return Object.keys(TOKEMOJI_MINT_MAP);
 }
 
-async function fetchDexScreenerPrices() {
-	var mints = getAllMintAddresses();
-	if (mints.length === 0) return {};
+async function fetchJupiterPrices(mints) {
+	try {
+		var res = await fetch('https://api.jup.ag/price/v2?ids=' + mints.join(','));
+		if (!res.ok) return {};
+		var json = await res.json();
+		var prices = {};
+		var data = json.data || {};
+		for (var mint in data) {
+			if (data[mint] && data[mint].price) {
+				prices[mint] = parseFloat(data[mint].price);
+			}
+		}
+		return prices;
+	} catch (e) {
+		console.warn('[Jupiter] Fetch failed:', e.message);
+		return {};
+	}
+}
 
+async function fetchDexScreenerPrices(mints) {
 	try {
 		var res = await fetch('https://api.dexscreener.com/latest/dex/tokens/' + mints.join(','));
 		if (!res.ok) return {};
@@ -1087,9 +1102,10 @@ async function fetchDexScreenerPrices() {
 	}
 }
 
-function applyDexScreenerPrices(prices) {
+function applyLivePrices(prices) {
 	if (!currentTokenData || currentTokenData.length === 0) return;
 
+	var updated = false;
 	var mints = getAllMintAddresses();
 	for (var i = 0; i < mints.length; i++) {
 		var mint = mints[i];
@@ -1102,8 +1118,9 @@ function applyDexScreenerPrices(prices) {
 
 		var token = currentTokenData[tokenIdx];
 		var oldPrice = token.priceRaw;
-		if (oldPrice && Math.abs(newPrice - oldPrice) / oldPrice < 0.000001) continue;
+		if (oldPrice && newPrice === oldPrice) continue;
 
+		updated = true;
 		var marketCapUsd = newPrice * PUMP_FUN_TOTAL_SUPPLY;
 
 		if (!baselinePrices[ticker]) {
@@ -1132,24 +1149,39 @@ function applyDexScreenerPrices(prices) {
 		writePriceTickThrottled(ticker, newPrice);
 	}
 
-	globalUpdateMarketDominance();
-	globalUpdateGauges();
+	if (updated) {
+		globalUpdateMarketDominance();
+		globalUpdateGauges();
+	}
 }
 
-async function dexScreenerPollCycle() {
-	var prices = await fetchDexScreenerPrices();
+async function pricePollCycle() {
+	var mints = getAllMintAddresses();
+	var prices = await fetchJupiterPrices(mints);
+
+	var missing = mints.filter(function(m) { return !prices[m] || prices[m] <= 0; });
+	if (missing.length > 0) {
+		var dexPrices = await fetchDexScreenerPrices(missing);
+		for (var m in dexPrices) {
+			if (!prices[m]) prices[m] = dexPrices[m];
+		}
+	}
+
 	var keys = Object.keys(prices);
 	if (keys.length > 0) {
-		dexScreenerLastPrices = prices;
-		applyDexScreenerPrices(prices);
+		applyLivePrices(prices);
+	}
+
+	if (pricePollingActive) {
+		setTimeout(pricePollCycle, PRICE_POLL_INTERVAL_MS);
 	}
 }
 
 function startDexScreenerPolling() {
-	if (dexScreenerPollTimer) return;
-	console.log('[DexScreener] Starting direct polling every ' + (DEXSCREENER_POLL_INTERVAL_MS / 1000) + 's');
-	dexScreenerPollCycle();
-	dexScreenerPollTimer = setInterval(dexScreenerPollCycle, DEXSCREENER_POLL_INTERVAL_MS);
+	if (pricePollingActive) return;
+	pricePollingActive = true;
+	console.log('[PriceFeed] Starting Jupiter+DexScreener polling every ' + (PRICE_POLL_INTERVAL_MS / 1000) + 's');
+	pricePollCycle();
 }
 
 async function fetchSolPrice() {
