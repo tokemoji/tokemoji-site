@@ -2070,7 +2070,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	initPromoTicker();
 	initPromoTicker2();
 	
-	// Initialize ticker with AI news content (front gray ticker)
+	// Initialize ticker with AI news content (front yellow ticker)
 	function initTickerNews() {
 		const tickerList = document.getElementById('ticker-news-list');
 		if (!tickerList) return;
@@ -2085,26 +2085,19 @@ document.addEventListener("DOMContentLoaded", function () {
 			'\u{1F608} EVIL | Russia assassinated Navalny with rare poison dart frog toxin, UK intelligence reveals \u2014 dystopian reality unfolds',
 			'\u{1F628} FEAR | BTC crashes with $8.7B liquidation then rockets back to $70K \u2014 dip buyers prove they are absolutely unstoppable here',
 			'\u{1F607} GOOD | Iran willing to negotiate nuclear compromises, BBC reports from Tehran \u2014 rare peace signal emerges from Middle East',
-			'\u2764\uFE0F LOVE | Physical AI dating cafes go mainstream \u2014 humans romancing AI companions in real life as future arrives early'
+			'\u{1F4D5} OMG | Physical AI dating cafes go mainstream \u2014 humans romancing AI companions in real life as future arrives early'
 		];
 
 		var tickerContent = [];
 
-		newsItems.forEach(function(text, index) {
-			tickerContent.push(
-				{ type: 'text', content: text, cls: 'text-dark' },
-				{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-3.png' : 'assets/img/icon-coin-4.png' }
-			);
+		newsItems.forEach(function(text) {
+			tickerContent.push({ type: 'text', content: text, cls: 'text-dark fw-bold' });
 		});
 
 		var duplicatedContent = tickerContent.concat(tickerContent);
 
 		tickerList.innerHTML = duplicatedContent.map(function(item) {
-			if (item.type === 'icon') {
-				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
-			} else {
-				return '<li><h4 class="mb-0 ' + item.cls + ' text-stroke text-shadow text-uppercase">' + item.content + '</h4></li>';
-			}
+			return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
 		}).join('');
 	}
 
@@ -2112,58 +2105,38 @@ document.addEventListener("DOMContentLoaded", function () {
 	function initPromoTicker() {
 		const promoList = document.getElementById('ticker-promo-list');
 		if (!promoList) return;
-		
+
 		// Create promo ticker content
-		const promoContent = [
-			// Promo items
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'GLOBAL EMOTION BAROMETER', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'LIVE NEWS FEED', class: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'REAL-TIME EMOTION TRACKING', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'MARKET SENTIMENT ANALYSIS', class: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'TOKEMOJI ECOSYSTEM', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'EMOTION-BASED TRADING', class: 'text-primary text-stroke text-shadow' },
-			
-			// Repeat for continuous scrolling
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'GLOBAL EMOTION BAROMETER', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'LIVE NEWS FEED', class: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'REAL-TIME EMOTION TRACKING', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'MARKET SENTIMENT ANALYSIS', class: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'TOKEMOJI ECOSYSTEM', class: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'EMOTION-BASED TRADING', class: 'text-primary text-stroke text-shadow' }
+		const promoTexts = [
+			'GLOBAL EMOTION BAROMETER',
+			'FEAR VS GREED INDEX',
+			'GOOD VS EVIL METER',
+			'LIVE NEWS FEED',
+			'REAL-TIME EMOTION TRACKING',
+			'MARKET SENTIMENT ANALYSIS',
+			'TOKEMOJI ECOSYSTEM',
+			'EMOTION-BASED TRADING'
 		];
-		
+
+		const promoContent = [];
+		promoTexts.forEach((text, index) => {
+			promoContent.push({
+				type: 'text',
+				content: text,
+				class: index % 2 === 0 ? 'text-light fw-bold' : 'text-warning fw-bold'
+			});
+		});
+
+		const duplicatedContent = promoContent.concat(promoContent);
+
 		// Populate promo ticker list
-		promoList.innerHTML = promoContent.map(item => {
-			if (item.type === 'icon') {
-				return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
-			} else {
-				return `<li><h4 class="mb-0 ${item.class} text-uppercase">${item.content}</h4></li>`;
-			}
+		promoList.innerHTML = duplicatedContent.map(item => {
+			return `<li><h4 class="mb-0 ${item.class} text-uppercase">${item.content}</h4></li>`;
 		}).join('');
 	}
 
 	function initTickerNews2() {
-		var tickerList = document.getElementById('ticker-promo-list-2');
+		var tickerList = document.getElementById('ticker-news-list-2');
 		if (!tickerList) return;
 
 		var newsItems = [
@@ -2171,53 +2144,45 @@ document.addEventListener("DOMContentLoaded", function () {
 			'\u{1F608} EVIL | UK confirms Russia killed Navalny with exotic dart frog toxin \u2014 spy thriller tactics turned brutal real-world murder',
 			'\u{1F628} FEAR | Bitcoin recovers to $70K after massive $8.7B wipeout \u2014 volatile bull market shows no signs of stopping yet at all',
 			'\u{1F607} GOOD | Iran signals openness to nuclear deal compromises \u2014 unexpected diplomatic breakthrough emerging after years tensions',
-			'\u2764\uFE0F LOVE | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era'
+			'\u{1F4D5} OMG | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era'
 		];
 
 		var tickerContent = [];
-		newsItems.forEach(function(text, index) {
-			tickerContent.push(
-				{ type: 'text', content: text, cls: 'text-light text-stroke text-shadow' },
-				{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-3.png' : 'assets/img/icon-coin-4.png' }
-			);
+		newsItems.forEach(function(text) {
+			tickerContent.push({ type: 'text', content: text, cls: 'text-dark fw-bold' });
 		});
 
 		var duplicatedContent = tickerContent.concat(tickerContent);
 		tickerList.innerHTML = duplicatedContent.map(function(item) {
-			if (item.type === 'icon') {
-				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
-			} else {
-				return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
-			}
+			return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
 		}).join('');
 	}
 
 	function initPromoTicker2() {
-		var promoList = document.getElementById('ticker-news-list-2');
+		var promoList = document.getElementById('ticker-promo-list-2');
 		if (!promoList) return;
 
-		var promoContent = [
-			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
-			{ type: 'text', content: 'GLOBAL EMOTION BAROMETER', cls: 'text-dark text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
-			{ type: 'text', content: 'FEAR VS GREED INDEX', cls: 'text-dark text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
-			{ type: 'text', content: 'GOOD VS EVIL METER', cls: 'text-dark text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
-			{ type: 'text', content: 'LIVE NEWS FEED', cls: 'text-dark text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
-			{ type: 'text', content: 'REAL-TIME EMOTION TRACKING', cls: 'text-dark text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
-			{ type: 'text', content: 'TOKEMOJI ECOSYSTEM', cls: 'text-dark text-stroke text-shadow' }
+		var promoTexts = [
+			'GLOBAL EMOTION BAROMETER',
+			'FEAR VS GREED INDEX',
+			'GOOD VS EVIL METER',
+			'LIVE NEWS FEED',
+			'REAL-TIME EMOTION TRACKING',
+			'TOKEMOJI ECOSYSTEM'
 		];
+
+		var promoContent = [];
+		promoTexts.forEach(function(text, index) {
+			promoContent.push({
+				type: 'text',
+				content: text,
+				cls: index % 2 === 0 ? 'text-light fw-bold' : 'text-warning fw-bold'
+			});
+		});
 
 		var duplicatedContent = promoContent.concat(promoContent);
 		promoList.innerHTML = duplicatedContent.map(function(item) {
-			if (item.type === 'icon') {
-				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
-			} else {
-				return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
-			}
+			return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
 		}).join('');
 	}
 
