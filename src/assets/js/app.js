@@ -2062,44 +2062,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	setTimeout(startPricePolling, 2000);
 
-	// Initialize ticker news
-	initTickerNews();
-	initTickerNews2();
-
 	// Initialize promo ticker
 	initPromoTicker();
 	initPromoTicker2();
-	
-	// Initialize ticker with AI news content (front yellow ticker)
-	function initTickerNews() {
-		const tickerList = document.getElementById('ticker-news-list');
-		if (!tickerList) return;
 
-		var newsItems = [
-			'\u{1F911} GREED | X launches crypto & stock trading in weeks \u2014 Elon\u2019s super app vision becomes reality faster than anyone expected',
-			'\u{1F608} EVIL | UK confirms Russia killed Navalny with exotic dart frog toxin \u2014 spy thriller tactics turned brutal real-world murder',
-			'\u{1F628} FEAR | Bitcoin recovers to $70K after massive $8.7B wipeout \u2014 volatile bull market shows no signs of stopping yet at all',
-			'\u{1F607} GOOD | Iran signals openness to nuclear deal compromises \u2014 unexpected diplomatic breakthrough emerging after years tensions',
-			'\u2764\uFE0F LOVE | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era',
-			'\u{1F911} GREED | Elon drops bombshell: X adding full crypto & stock trading within weeks \u2014 financial super app revolution accelerating',
-			'\u{1F608} EVIL | Russia assassinated Navalny with rare poison dart frog toxin, UK intelligence reveals \u2014 dystopian reality unfolds',
-			'\u{1F628} FEAR | BTC crashes with $8.7B liquidation then rockets back to $70K \u2014 dip buyers prove they are absolutely unstoppable here',
-			'\u{1F607} GOOD | Iran willing to negotiate nuclear compromises, BBC reports from Tehran \u2014 rare peace signal emerges from Middle East',
-			'\u{1F4D5} OMG | Physical AI dating cafes go mainstream \u2014 humans romancing AI companions in real life as future arrives early'
-		];
+	var GITHUB_NEWS_URL = 'https://raw.githubusercontent.com/tokemoji/tokemoji-site/main/published/current.json';
+	var NEWS_CACHE_KEY = 'tokemoji_news_cache';
 
+	var FALLBACK_NEWS = [
+		'\u{1F911} GREED | Markets surge as institutional money floods into crypto \u2014 wall street finally all in on digital assets',
+		'\u{1F608} EVIL | Global tensions escalate as cyberattacks target financial infrastructure \u2014 digital warfare enters new phase',
+		'\u{1F628} FEAR | Volatility spikes across all markets \u2014 traders brace for impact as uncertainty dominates the headlines',
+		'\u{1F607} GOOD | Breakthrough in renewable energy sends clean tech stocks soaring \u2014 green future looks closer than ever',
+		'\u2764\uFE0F LOVE | Community rallies behind open-source AI project \u2014 collaboration beats competition in the new tech era'
+	];
+
+	function getCachedNews() {
+		try {
+			var cached = localStorage.getItem(NEWS_CACHE_KEY);
+			if (cached) return JSON.parse(cached);
+		} catch (e) {}
+		return null;
+	}
+
+	function setCachedNews(newsItems) {
+		try {
+			localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(newsItems));
+		} catch (e) {}
+	}
+
+	function renderTickerList(listEl, newsItems, cls) {
 		var tickerContent = [];
-
 		newsItems.forEach(function(text) {
-			tickerContent.push({ type: 'text', content: text, cls: 'text-dark fw-bold' });
+			tickerContent.push({ type: 'text', content: text, cls: cls });
 		});
-
-		var duplicatedContent = tickerContent.concat(tickerContent);
-
-		tickerList.innerHTML = duplicatedContent.map(function(item) {
+		var duplicated = tickerContent.concat(tickerContent);
+		listEl.innerHTML = duplicated.map(function(item) {
 			return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
 		}).join('');
 	}
+
+	function renderAllTickers(newsItems) {
+		var tickerList1 = document.getElementById('ticker-news-list');
+		var tickerList2 = document.getElementById('ticker-news-list-2');
+		if (tickerList1) renderTickerList(tickerList1, newsItems, 'text-dark fw-bold');
+		if (tickerList2) renderTickerList(tickerList2, newsItems, 'text-dark fw-bold');
+	}
+
+	function loadNews() {
+		var cached = getCachedNews();
+		if (cached && cached.length) {
+			renderAllTickers(cached);
+		} else {
+			renderAllTickers(FALLBACK_NEWS);
+		}
+
+		fetch(GITHUB_NEWS_URL)
+			.then(function(res) { return res.json(); })
+			.then(function(data) {
+				if (data && data.items && data.items.length) {
+					var newsItems = data.items.map(function(item) { return item.newsfeed; });
+					setCachedNews(newsItems);
+					renderAllTickers(newsItems);
+				}
+			})
+			.catch(function() {});
+	}
+
+	loadNews();
 
 	// Initialize promo ticker with promotional information (back dark ticker)
 	function initPromoTicker() {
@@ -2135,33 +2165,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		}).join('');
 	}
 
-	function initTickerNews2() {
-		var tickerList = document.getElementById('ticker-news-list-2');
-		if (!tickerList) return;
-
-		var newsItems = [
-			'\u{1F911} GREED | X launches crypto & stock trading in weeks \u2014 Elon\u2019s super app vision becomes reality faster than anyone expected',
-			'\u{1F608} EVIL | UK confirms Russia killed Navalny with exotic dart frog toxin \u2014 spy thriller tactics turned brutal real-world murder',
-			'\u{1F628} FEAR | Bitcoin recovers to $70K after massive $8.7B wipeout \u2014 volatile bull market shows no signs of stopping yet at all',
-			'\u{1F607} GOOD | Iran signals openness to nuclear deal compromises \u2014 unexpected diplomatic breakthrough emerging after years tensions',
-			'\u2764\uFE0F LOVE | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era',
-			'\u{1F911} GREED | Elon drops bombshell: X adding full crypto & stock trading within weeks \u2014 financial super app revolution accelerating',
-			'\u{1F608} EVIL | Russia assassinated Navalny with rare poison dart frog toxin, UK intelligence reveals \u2014 dystopian reality unfolds',
-			'\u{1F628} FEAR | BTC crashes with $8.7B liquidation then rockets back to $70K \u2014 dip buyers prove they are absolutely unstoppable here',
-			'\u{1F607} GOOD | Iran willing to negotiate nuclear compromises, BBC reports from Tehran \u2014 rare peace signal emerges from Middle East',
-			'\u{1F4D5} OMG | Physical AI dating cafes go mainstream \u2014 humans romancing AI companions in real life as future arrives early'
-		];
-
-		var tickerContent = [];
-		newsItems.forEach(function(text) {
-			tickerContent.push({ type: 'text', content: text, cls: 'text-dark fw-bold' });
-		});
-
-		var duplicatedContent = tickerContent.concat(tickerContent);
-		tickerList.innerHTML = duplicatedContent.map(function(item) {
-			return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
-		}).join('');
-	}
 
 	function initPromoTicker2() {
 		var promoList = document.getElementById('ticker-promo-list-2');
