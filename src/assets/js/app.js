@@ -950,13 +950,18 @@ function formatAPIMarketCap(marketCap) {
 	}
 }
 
+var _priceAnimGen = new WeakMap();
+
 function animatePriceGlobal(element, fromVal, toVal, duration) {
 	if (!fromVal || !toVal || fromVal === toVal) {
 		element.textContent = '$' + formatAPIPrice(toVal || 0);
 		return;
 	}
+	var gen = (_priceAnimGen.get(element) || 0) + 1;
+	_priceAnimGen.set(element, gen);
 	var startTime = performance.now();
 	function tick(now) {
+		if (_priceAnimGen.get(element) !== gen) return;
 		var elapsed = now - startTime;
 		var progress = Math.min(elapsed / duration, 1);
 		var eased = 1 - Math.pow(1 - progress, 3);
@@ -1357,7 +1362,7 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 		var oldText = priceEl.textContent.replace('$', '');
 		var oldVal = parseFloat(oldText) || 0;
 		if (oldVal && priceUsd && oldVal !== priceUsd) {
-			animatePriceGlobal(priceEl, oldVal, priceUsd, 600);
+			animatePriceGlobal(priceEl, oldVal, priceUsd, 7000);
 		} else {
 			priceEl.textContent = '$' + formatAPIPrice(priceUsd);
 		}
@@ -1369,9 +1374,9 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 			setTimeout(function() {
 				priceEl.classList.remove('price-tick-up', 'price-tick-down');
 				priceEl.classList.add('breathing');
-			}, 2000);
+			}, 9000);
 		} else {
-			setTimeout(function() { priceEl.classList.add('breathing'); }, 800);
+			setTimeout(function() { priceEl.classList.add('breathing'); }, 7500);
 		}
 	}
 
@@ -1389,7 +1394,7 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 
 		setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-		}, 5000);
+		}, 9000);
 	}
 }
 
