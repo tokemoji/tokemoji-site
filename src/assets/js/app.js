@@ -2131,6 +2131,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	loadNews();
 
+	// Auto-refresh news every 2 hours
+	setInterval(loadNews, 7200000);
+
 	// Initialize promo ticker with promotional information (back dark ticker)
 	function initPromoTicker() {
 		const promoList = document.getElementById('ticker-promo-list');
