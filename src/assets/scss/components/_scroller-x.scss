@@ -13,6 +13,9 @@
 	&[data-speed="slow"] {
 		--_animation-duration: 180s;
 	}
+	&[data-speed="very-slow"] {
+		--_animation-duration: 360s;
+	}
 	&__list {
 		width: max-content;
 		flex-wrap: nowrap;
