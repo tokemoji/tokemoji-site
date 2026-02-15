@@ -951,6 +951,8 @@ function formatAPIMarketCap(marketCap) {
 }
 
 var _priceAnimGen = new WeakMap();
+var _priceTickTimeouts = {};
+var _rowFlashTimeouts = {};
 
 function animatePriceGlobal(element, fromVal, toVal, duration) {
 	if (!fromVal || !toVal || fromVal === toVal) {
@@ -977,6 +979,7 @@ let tokenListRendered = false;
 let currentTokenDataInitialized = false;
 var globalUpdateMarketDominance = function() {};
 var globalUpdateGauges = function() {};
+var globalReorderTokenRows = function() {};
 
 const baselinePrices = {};
 const lastPriceWriteTime = {};
@@ -1137,6 +1140,7 @@ function applyLivePrices(prices) {
 		}
 
 		currentTokenData[tokenIdx].priceRaw = newPrice;
+		currentTokenData[tokenIdx].marketCapRaw = marketCapUsd;
 		currentTokenData[tokenIdx].price = '$' + formatAPIPrice(newPrice);
 		currentTokenData[tokenIdx].marketCap = '$' + formatAPIMarketCap(marketCapUsd);
 		currentTokenData[tokenIdx].change = changeStr;
@@ -1150,6 +1154,7 @@ function applyLivePrices(prices) {
 	if (updated) {
 		globalUpdateMarketDominance();
 		globalUpdateGauges();
+		globalReorderTokenRows();
 	}
 }
 
@@ -1371,9 +1376,11 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 			priceEl.classList.remove('price-tick-up', 'price-tick-down');
 			void priceEl.offsetWidth;
 			priceEl.classList.add(txType === 'buy' ? 'price-tick-up' : 'price-tick-down');
-			setTimeout(function() {
+			if (_priceTickTimeouts[ticker]) clearTimeout(_priceTickTimeouts[ticker]);
+			_priceTickTimeouts[ticker] = setTimeout(function() {
 				priceEl.classList.remove('price-tick-up', 'price-tick-down');
 				priceEl.classList.add('breathing');
+				delete _priceTickTimeouts[ticker];
 			}, 22000);
 		} else {
 			setTimeout(function() { priceEl.classList.add('breathing'); }, 20500);
@@ -1391,9 +1398,10 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 		row.classList.remove('trade-flash-buy', 'trade-flash-sell');
 		void row.offsetWidth;
 		row.classList.add(txType === 'buy' ? 'trade-flash-buy' : 'trade-flash-sell');
-
-		setTimeout(function() {
+		if (_rowFlashTimeouts[ticker]) clearTimeout(_rowFlashTimeouts[ticker]);
+		_rowFlashTimeouts[ticker] = setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
+			delete _rowFlashTimeouts[ticker];
 		}, 22000);
 	}
 }
@@ -1576,7 +1584,54 @@ document.addEventListener("DOMContentLoaded", function () {
 		return sorted;
 	}
 
+	var _reorderDebounce = null;
+	function reorderTokenRows() {
+		if (_reorderDebounce) return;
+		_reorderDebounce = setTimeout(function() {
+			_reorderDebounce = null;
+			var tokenList = document.getElementById('token-list');
+			if (!tokenList || !tokenListRendered || currentTokenData.length === 0) return;
+
+			var sorted = sortTokens(currentTokenData);
+			var currentOrder = Array.from(tokenList.querySelectorAll('.token-row')).map(function(r) { return r.dataset.token; });
+			var newOrder = sorted.map(function(t) { return t.ticker; });
+			var changed = currentOrder.some(function(ticker, i) { return ticker !== newOrder[i]; });
+			if (!changed) return;
+
+			if (typeof gsap !== 'undefined' && typeof Flip !== 'undefined') {
+				var rows = tokenList.querySelectorAll('.token-row');
+				var state = Flip.getState(rows);
+				sorted.forEach(function(token, index) {
+					var row = tokenList.querySelector('.token-row[data-token="' + token.ticker + '"]');
+					if (row) {
+						tokenList.appendChild(row);
+						row.querySelector('.token-rank').textContent = index + 1;
+						var mcapEl = row.querySelector('.token-marketcap');
+						if (mcapEl) mcapEl.textContent = token.marketCap;
+					}
+				});
+				Flip.from(state, {
+					duration: 0.6,
+					ease: 'power2.inOut',
+					stagger: 0.03,
+					absolute: true,
+					onComplete: function() { applyEmojiWobbleDelays(); }
+				});
+			} else {
+				sorted.forEach(function(token, index) {
+					var row = tokenList.querySelector('.token-row[data-token="' + token.ticker + '"]');
+					if (row) {
+						tokenList.appendChild(row);
+						row.querySelector('.token-rank').textContent = index + 1;
+					}
+				});
+			}
+		}, 5000);
+	}
+	globalReorderTokenRows = reorderTokenRows;
+
 	function flashTokenRow(row, priceEl, direction) {
+		var ticker = row.dataset.token;
 		priceEl.classList.remove('price-tick-up', 'price-tick-down', 'breathing');
 		void priceEl.offsetWidth;
 		priceEl.classList.add(direction === 'up' ? 'price-tick-up' : 'price-tick-down');
@@ -1585,13 +1640,17 @@ document.addEventListener("DOMContentLoaded", function () {
 		void row.offsetWidth;
 		row.classList.add(direction === 'up' ? 'trade-flash-buy' : 'trade-flash-sell');
 
-		setTimeout(function() {
+		if (_rowFlashTimeouts[ticker]) clearTimeout(_rowFlashTimeouts[ticker]);
+		_rowFlashTimeouts[ticker] = setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-		}, 5000);
-		setTimeout(function() {
+			delete _rowFlashTimeouts[ticker];
+		}, 22000);
+		if (_priceTickTimeouts[ticker]) clearTimeout(_priceTickTimeouts[ticker]);
+		_priceTickTimeouts[ticker] = setTimeout(function() {
 			priceEl.classList.remove('price-tick-up', 'price-tick-down');
 			priceEl.classList.add('breathing');
-		}, 2000);
+			delete _priceTickTimeouts[ticker];
+		}, 22000);
 	}
 
 	function renderTokenRow(token, index) {
@@ -1671,7 +1730,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					if (priceEl && token.priceRaw) {
 						var oldPrice = token.oldPriceRaw;
 						if (oldPrice && oldPrice !== token.priceRaw) {
-							animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 800);
+							animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 20000);
 							var direction = token.priceRaw > oldPrice ? 'up' : 'down';
 							flashTokenRow(row, priceEl, direction);
 						} else {
@@ -1721,7 +1780,7 @@ document.addEventListener("DOMContentLoaded", function () {
 					const oldPrice = token.oldPriceRaw;
 					if (oldPrice && oldPrice !== token.priceRaw) {
 						priceEl.classList.remove('breathing');
-						animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 800);
+						animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 20000);
 						const direction = token.priceRaw > oldPrice ? 'up' : 'down';
 						flashTokenRow(row, priceEl, direction);
 					} else {
