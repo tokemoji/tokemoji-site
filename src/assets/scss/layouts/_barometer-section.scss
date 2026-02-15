@@ -720,24 +720,24 @@
 
 /* Trade Flash Effects */
 .token-row.trade-flash-buy {
-	animation: flashBuy 9s ease-out;
+	animation: flashBuy 12s ease-out;
 }
 
 .token-row.trade-flash-sell {
-	animation: flashSell 9s ease-out;
+	animation: flashSell 12s ease-out;
 }
 
 @keyframes flashBuy {
 	0% { background-color: rgba(40, 167, 69, 0.35); }
-	50% { background-color: rgba(40, 167, 69, 0.25); }
-	78% { background-color: rgba(40, 167, 69, 0.12); }
+	55% { background-color: rgba(40, 167, 69, 0.25); }
+	83% { background-color: rgba(40, 167, 69, 0.1); }
 	100% { background-color: transparent; }
 }
 
 @keyframes flashSell {
 	0% { background-color: rgba(220, 53, 69, 0.35); }
-	50% { background-color: rgba(220, 53, 69, 0.25); }
-	78% { background-color: rgba(220, 53, 69, 0.12); }
+	55% { background-color: rgba(220, 53, 69, 0.25); }
+	83% { background-color: rgba(220, 53, 69, 0.1); }
 	100% { background-color: transparent; }
 }
 
