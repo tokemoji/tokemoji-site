@@ -83,10 +83,21 @@ class MiniChart {
     linePath.setAttribute('stroke', this.lineColor);
     linePath.setAttribute('stroke-width', '1.5');
     linePath.setAttribute('fill', 'none');
+    linePath.classList.add('chart-line');
+    areaPath.classList.add('chart-area');
     svg.appendChild(linePath);
 
     this.container.innerHTML = '';
+    this.container.classList.add('mini-chart-animate');
     this.container.appendChild(svg);
+
+    requestAnimationFrame(function() {
+      var len = linePath.getTotalLength();
+      linePath.style.strokeDasharray = len;
+      linePath.style.strokeDashoffset = len;
+      linePath.style.setProperty('--chart-length', len);
+      linePath.style.animation = 'chartDraw 1.2s ease-out forwards';
+    });
   }
 
   static renderInline(dataPoints, width = 100, height = 30) {

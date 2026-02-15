@@ -137,3 +137,63 @@
 	animation: priceTickDown 2s ease-out !important;
 	font-weight: 600;
 }
+
+// --- Live dashboard idle animations ---
+
+// 1. Price breathing pulse (subtle opacity cycle when idle)
+@keyframes priceBreathe {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.55; }
+}
+
+.token-price.breathing {
+	animation: priceBreathe 3s ease-in-out infinite;
+}
+
+// 2. Mini-chart SVG line draw-in animation
+@keyframes chartDraw {
+	from { stroke-dashoffset: var(--chart-length); }
+	to { stroke-dashoffset: 0; }
+}
+
+@keyframes chartFadeArea {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+.mini-chart-animate .chart-line {
+	animation: chartDraw 1.2s ease-out forwards;
+}
+
+.mini-chart-animate .chart-area {
+	animation: chartFadeArea 1.4s ease-out forwards;
+	opacity: 0;
+}
+
+// 3. Staggered emoji idle wobble
+@keyframes emojiIdleWobble {
+	0%, 100% { transform: rotate(0deg) scale(1); }
+	25% { transform: rotate(-3deg) scale(1.03); }
+	75% { transform: rotate(3deg) scale(1.03); }
+}
+
+.token-emoji.wobble-idle video,
+.token-emoji.wobble-idle img {
+	animation: emojiIdleWobble 2.5s ease-in-out infinite;
+	animation-play-state: running;
+}
+
+// Pause wobble during trade flash (trade animation takes priority)
+.token-row.trade-flash-buy .token-emoji.wobble-idle video,
+.token-row.trade-flash-buy .token-emoji.wobble-idle img,
+.token-row.trade-flash-sell .token-emoji.wobble-idle video,
+.token-row.trade-flash-sell .token-emoji.wobble-idle img {
+	animation-play-state: paused;
+}
+
+// 4. Row rank-change slide (GSAP Flip handles the transform;
+//    this ensures smooth visual during the tween)
+.token-row {
+	will-change: transform;
+	backface-visibility: hidden;
+}

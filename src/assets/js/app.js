@@ -1352,6 +1352,8 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 	var changeEl = row.querySelector('.token-change');
 
 	if (priceEl) {
+		priceEl.classList.remove('breathing');
+
 		var oldText = priceEl.textContent.replace('$', '');
 		var oldVal = parseFloat(oldText) || 0;
 		if (oldVal && priceUsd && oldVal !== priceUsd) {
@@ -1366,7 +1368,10 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 			priceEl.classList.add(txType === 'buy' ? 'price-tick-up' : 'price-tick-down');
 			setTimeout(function() {
 				priceEl.classList.remove('price-tick-up', 'price-tick-down');
+				priceEl.classList.add('breathing');
 			}, 2000);
+		} else {
+			setTimeout(function() { priceEl.classList.add('breathing'); }, 800);
 		}
 	}
 
@@ -1567,7 +1572,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function flashTokenRow(row, priceEl, direction) {
-		priceEl.classList.remove('price-tick-up', 'price-tick-down');
+		priceEl.classList.remove('price-tick-up', 'price-tick-down', 'breathing');
 		void priceEl.offsetWidth;
 		priceEl.classList.add(direction === 'up' ? 'price-tick-up' : 'price-tick-down');
 
@@ -1580,15 +1585,16 @@ document.addEventListener("DOMContentLoaded", function () {
 		}, 1500);
 		setTimeout(function() {
 			priceEl.classList.remove('price-tick-up', 'price-tick-down');
+			priceEl.classList.add('breathing');
 		}, 2000);
 	}
 
 	function renderTokenRow(token, index) {
 		const videoSrc = TOKEN_WEBM_MAP[token.ticker] || 'assets/img/emojis/happy.webm';
 		return `
-		<div class="token-row py-1 border-bottom border-light" data-token="${token.ticker}" data-token-id="${token.id || ''}">
+		<div class="token-row py-1 border-bottom border-light" data-token="${token.ticker}" data-token-id="${token.id || ''}" data-flip-id="${token.ticker}">
 			<span class="token-rank fw-bold text-muted">${index + 1}</span>
-			<div class="token-emoji">
+			<div class="token-emoji wobble-idle" style="animation-delay: ${index * 0.2}s">
 				${isIOS() ?
 					`<img src="${getEmojiPath(videoSrc)}"
 						  style="width: 100%; height: 100%; object-fit: contain;">` :
@@ -1599,7 +1605,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				}
 			</div>
 			<span class="token-ticker fw-bold text-heading">${token.ticker}</span>
-			<span class="token-price text-muted">${token.price}</span>
+			<span class="token-price text-muted breathing">${token.price}</span>
 			<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold">${token.change}</span>
 			<div class="token-mini-chart" id="chart-${token.ticker}"></div>
 			<span class="token-marketcap text-muted">${token.marketCap}</span>
@@ -1643,6 +1649,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		const orderChanged = currentOrder.some((ticker, index) => ticker !== newOrder[index]);
 
+		if (orderChanged && typeof gsap !== 'undefined' && typeof Flip !== 'undefined') {
+			var rows = tokenList.querySelectorAll('.token-row');
+			var state = Flip.getState(rows);
+
+			sortedTokens.forEach(function(token, index) {
+				var row = tokenList.querySelector('.token-row[data-token="' + token.ticker + '"]');
+				if (row) {
+					tokenList.appendChild(row);
+					row.querySelector('.token-rank').textContent = index + 1;
+
+					var priceEl = row.querySelector('.token-price');
+					var changeEl = row.querySelector('.token-change');
+					var mcapEl = row.querySelector('.token-marketcap');
+
+					if (priceEl && token.priceRaw) {
+						var oldPrice = token.oldPriceRaw;
+						if (oldPrice && oldPrice !== token.priceRaw) {
+							animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 800);
+							var direction = token.priceRaw > oldPrice ? 'up' : 'down';
+							flashTokenRow(row, priceEl, direction);
+						} else {
+							priceEl.textContent = token.price;
+						}
+					}
+					if (changeEl) {
+						changeEl.textContent = token.change;
+						changeEl.className = 'token-change ' + (token.changeType === 'positive' ? 'text-success' : 'text-danger') + ' fw-bold me-2';
+					}
+					if (mcapEl) mcapEl.textContent = token.marketCap;
+				}
+			});
+
+			Flip.from(state, {
+				duration: 0.6,
+				ease: 'power2.inOut',
+				stagger: 0.03,
+				absolute: true,
+				onComplete: function() {
+					applyEmojiWobbleDelays();
+				}
+			});
+
+			currentTokenData = [...apiTokens];
+			return;
+		}
+
 		if (orderChanged) {
 			tokenList.innerHTML = sortedTokens.map((token, index) => renderTokenRow(token, index)).join('');
 			currentTokenData = [...apiTokens];
@@ -1663,6 +1715,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				if (priceEl && token.priceRaw) {
 					const oldPrice = token.oldPriceRaw;
 					if (oldPrice && oldPrice !== token.priceRaw) {
+						priceEl.classList.remove('breathing');
 						animatePriceGlobal(priceEl, oldPrice, token.priceRaw, 800);
 						const direction = token.priceRaw > oldPrice ? 'up' : 'down';
 						flashTokenRow(row, priceEl, direction);
@@ -2636,5 +2689,17 @@ function initContractCopy() {
 
 // Initialize contract copy functionality
 initContractCopy();
+
+// Staggered emoji wobble delays
+function applyEmojiWobbleDelays() {
+	var emojis = document.querySelectorAll('.token-emoji.wobble-idle');
+	emojis.forEach(function(el, i) {
+		var child = el.querySelector('video, img');
+		if (child) {
+			child.style.animationDelay = (i * 0.2) + 's';
+		}
+	});
+}
+applyEmojiWobbleDelays();
 
 }); // End of DOMContentLoaded event listener
