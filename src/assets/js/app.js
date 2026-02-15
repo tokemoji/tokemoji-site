@@ -2070,7 +2070,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	initPromoTicker();
 	initPromoTicker2();
 	
-	// Initialize ticker with AI news content
+	// Initialize ticker with AI news content (front gray ticker)
 	function initTickerNews() {
 		const tickerList = document.getElementById('ticker-news-list');
 		if (!tickerList) return;
@@ -2092,7 +2092,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		newsItems.forEach(function(text, index) {
 			tickerContent.push(
-				{ type: 'text', content: text, cls: 'text-warning' },
+				{ type: 'text', content: text, cls: 'text-dark' },
 				{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-3.png' : 'assets/img/icon-coin-4.png' }
 			);
 		});
@@ -2107,8 +2107,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		}).join('');
 	}
-	
-	// Initialize promo ticker with promotional information
+
+	// Initialize promo ticker with promotional information (back dark ticker)
 	function initPromoTicker() {
 		const promoList = document.getElementById('ticker-promo-list');
 		if (!promoList) return;
@@ -2163,7 +2163,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function initTickerNews2() {
-		var tickerList = document.getElementById('ticker-news-list-2');
+		var tickerList = document.getElementById('ticker-promo-list-2');
 		if (!tickerList) return;
 
 		var newsItems = [
@@ -2177,7 +2177,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		var tickerContent = [];
 		newsItems.forEach(function(text, index) {
 			tickerContent.push(
-				{ type: 'text', content: text, cls: 'text-dark' },
+				{ type: 'text', content: text, cls: 'text-light text-stroke text-shadow' },
 				{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-3.png' : 'assets/img/icon-coin-4.png' }
 			);
 		});
@@ -2187,28 +2187,28 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (item.type === 'icon') {
 				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
 			} else {
-				return '<li><h4 class="mb-0 ' + item.cls + ' text-stroke text-shadow text-uppercase">' + item.content + '</h4></li>';
+				return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
 			}
 		}).join('');
 	}
 
 	function initPromoTicker2() {
-		var promoList = document.getElementById('ticker-promo-list-2');
+		var promoList = document.getElementById('ticker-news-list-2');
 		if (!promoList) return;
 
 		var promoContent = [
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'GLOBAL EMOTION BAROMETER', cls: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'FEAR VS GREED INDEX', cls: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'GOOD VS EVIL METER', cls: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'LIVE NEWS FEED', cls: 'text-primary text-stroke text-shadow' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'REAL-TIME EMOTION TRACKING', cls: 'text-light' },
-			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
-			{ type: 'text', content: 'TOKEMOJI ECOSYSTEM', cls: 'text-primary text-stroke text-shadow' }
+			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
+			{ type: 'text', content: 'GLOBAL EMOTION BAROMETER', cls: 'text-dark text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
+			{ type: 'text', content: 'FEAR VS GREED INDEX', cls: 'text-dark text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
+			{ type: 'text', content: 'GOOD VS EVIL METER', cls: 'text-dark text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
+			{ type: 'text', content: 'LIVE NEWS FEED', cls: 'text-dark text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
+			{ type: 'text', content: 'REAL-TIME EMOTION TRACKING', cls: 'text-dark text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-3.png' },
+			{ type: 'text', content: 'TOKEMOJI ECOSYSTEM', cls: 'text-dark text-stroke text-shadow' }
 		];
 
 		var duplicatedContent = promoContent.concat(promoContent);
