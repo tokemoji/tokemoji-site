@@ -2064,84 +2064,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Initialize ticker news
 	initTickerNews();
-	
+	initTickerNews2();
+
 	// Initialize promo ticker
 	initPromoTicker();
+	initPromoTicker2();
 	
-	// Initialize ticker with AI news content from GitHub
-	async function initTickerNews() {
+	// Initialize ticker with AI news content
+	function initTickerNews() {
 		const tickerList = document.getElementById('ticker-news-list');
 		if (!tickerList) return;
 
-		try {
-			// Fetch news from published/current.json
-			const response = await fetch('published/current.json');
-			const data = await response.json();
+		var newsItems = [
+			'\u{1F911} GREED | X launches crypto & stock trading in weeks \u2014 Elon\u2019s super app vision becomes reality faster than anyone expected',
+			'\u{1F608} EVIL | UK confirms Russia killed Navalny with exotic dart frog toxin \u2014 spy thriller tactics turned brutal real-world murder',
+			'\u{1F628} FEAR | Bitcoin recovers to $70K after massive $8.7B wipeout \u2014 volatile bull market shows no signs of stopping yet at all',
+			'\u{1F607} GOOD | Iran signals openness to nuclear deal compromises \u2014 unexpected diplomatic breakthrough emerging after years tensions',
+			'\u2764\uFE0F LOVE | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era',
+			'\u{1F911} GREED | Elon drops bombshell: X adding full crypto & stock trading within weeks \u2014 financial super app revolution accelerating',
+			'\u{1F608} EVIL | Russia assassinated Navalny with rare poison dart frog toxin, UK intelligence reveals \u2014 dystopian reality unfolds',
+			'\u{1F628} FEAR | BTC crashes with $8.7B liquidation then rockets back to $70K \u2014 dip buyers prove they are absolutely unstoppable here',
+			'\u{1F607} GOOD | Iran willing to negotiate nuclear compromises, BBC reports from Tehran \u2014 rare peace signal emerges from Middle East',
+			'\u2764\uFE0F LOVE | Physical AI dating cafes go mainstream \u2014 humans romancing AI companions in real life as future arrives early'
+		];
 
-			// Extract unique news items (remove duplicates)
-			const uniqueItems = [];
-			const seenNewsfeed = new Set();
+		var tickerContent = [];
 
-			for (const item of data.items) {
-				if (item.newsfeed && !seenNewsfeed.has(item.newsfeed)) {
-					uniqueItems.push(item);
-					seenNewsfeed.add(item.newsfeed);
-				}
-			}
-
-			// Create ticker content with news feed items
-			const tickerContent = [];
-
-			// Add market indicators at the start
+		newsItems.forEach(function(text, index) {
 			tickerContent.push(
-				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-				{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-secondary' },
-				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-				{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-primary' },
-				{ type: 'icon', src: 'assets/img/icon-coin-2.png' }
+				{ type: 'text', content: text, cls: 'text-warning' },
+				{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-3.png' : 'assets/img/icon-coin-4.png' }
 			);
+		});
 
-			// Add news items from GitHub
-			uniqueItems.forEach((item, index) => {
-				tickerContent.push(
-					{ type: 'text', content: item.newsfeed, class: 'text-warning' },
-					{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-1.png' : 'assets/img/icon-coin-2.png' }
-				);
-			});
+		var duplicatedContent = tickerContent.concat(tickerContent);
 
-			// Duplicate content for continuous scrolling
-			const duplicatedContent = [...tickerContent, ...tickerContent];
-
-			// Populate ticker list
-			tickerList.innerHTML = duplicatedContent.map(item => {
-				if (item.type === 'icon') {
-					return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
-				} else {
-					return `<li><h4 class="mb-0 ${item.class} text-stroke text-shadow text-uppercase">${item.content}</h4></li>`;
-				}
-			}).join('');
-
-		} catch (error) {
-			console.error('Error fetching news feed:', error);
-
-			// Fallback to default content if fetch fails
-			const fallbackContent = [
-				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-				{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-secondary' },
-				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-				{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-primary' },
-				{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-				{ type: 'text', content: '📰 LIVE NEWS FEED LOADING...', class: 'text-warning' }
-			];
-
-			tickerList.innerHTML = fallbackContent.map(item => {
-				if (item.type === 'icon') {
-					return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
-				} else {
-					return `<li><h4 class="mb-0 ${item.class} text-stroke text-shadow text-uppercase">${item.content}</h4></li>`;
-				}
-			}).join('');
-		}
+		tickerList.innerHTML = duplicatedContent.map(function(item) {
+			if (item.type === 'icon') {
+				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
+			} else {
+				return '<li><h4 class="mb-0 ' + item.cls + ' text-stroke text-shadow text-uppercase">' + item.content + '</h4></li>';
+			}
+		}).join('');
 	}
 	
 	// Initialize promo ticker with promotional information
@@ -2194,6 +2158,65 @@ document.addEventListener("DOMContentLoaded", function () {
 				return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
 			} else {
 				return `<li><h4 class="mb-0 ${item.class} text-uppercase">${item.content}</h4></li>`;
+			}
+		}).join('');
+	}
+
+	function initTickerNews2() {
+		var tickerList = document.getElementById('ticker-news-list-2');
+		if (!tickerList) return;
+
+		var newsItems = [
+			'\u{1F911} GREED | X launches crypto & stock trading in weeks \u2014 Elon\u2019s super app vision becomes reality faster than anyone expected',
+			'\u{1F608} EVIL | UK confirms Russia killed Navalny with exotic dart frog toxin \u2014 spy thriller tactics turned brutal real-world murder',
+			'\u{1F628} FEAR | Bitcoin recovers to $70K after massive $8.7B wipeout \u2014 volatile bull market shows no signs of stopping yet at all',
+			'\u{1F607} GOOD | Iran signals openness to nuclear deal compromises \u2014 unexpected diplomatic breakthrough emerging after years tensions',
+			'\u2764\uFE0F LOVE | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era'
+		];
+
+		var tickerContent = [];
+		newsItems.forEach(function(text, index) {
+			tickerContent.push(
+				{ type: 'text', content: text, cls: 'text-dark' },
+				{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-3.png' : 'assets/img/icon-coin-4.png' }
+			);
+		});
+
+		var duplicatedContent = tickerContent.concat(tickerContent);
+		tickerList.innerHTML = duplicatedContent.map(function(item) {
+			if (item.type === 'icon') {
+				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
+			} else {
+				return '<li><h4 class="mb-0 ' + item.cls + ' text-stroke text-shadow text-uppercase">' + item.content + '</h4></li>';
+			}
+		}).join('');
+	}
+
+	function initPromoTicker2() {
+		var promoList = document.getElementById('ticker-promo-list-2');
+		if (!promoList) return;
+
+		var promoContent = [
+			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
+			{ type: 'text', content: 'GLOBAL EMOTION BAROMETER', cls: 'text-light' },
+			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
+			{ type: 'text', content: 'FEAR VS GREED INDEX', cls: 'text-primary text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
+			{ type: 'text', content: 'GOOD VS EVIL METER', cls: 'text-light' },
+			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
+			{ type: 'text', content: 'LIVE NEWS FEED', cls: 'text-primary text-stroke text-shadow' },
+			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
+			{ type: 'text', content: 'REAL-TIME EMOTION TRACKING', cls: 'text-light' },
+			{ type: 'icon', src: 'assets/img/icon-coin-4.png' },
+			{ type: 'text', content: 'TOKEMOJI ECOSYSTEM', cls: 'text-primary text-stroke text-shadow' }
+		];
+
+		var duplicatedContent = promoContent.concat(promoContent);
+		promoList.innerHTML = duplicatedContent.map(function(item) {
+			if (item.type === 'icon') {
+				return '<li><img src="' + item.src + '" alt="image" class="img-fluid" /></li>';
+			} else {
+				return '<li><h4 class="mb-0 ' + item.cls + ' text-uppercase">' + item.content + '</h4></li>';
 			}
 		}).join('');
 	}
