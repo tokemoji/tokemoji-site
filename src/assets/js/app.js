@@ -992,17 +992,17 @@ const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
 let pumpPortalHeartbeatTimer = null;
 const TOKEMOJI_MINT_MAP = {
-	'FVvsVkTQ8cgtzX9dnzZwVh353TZ3k88KVC8eymtqpump': 'GREED',
-	'3pWZBTJFByDh7Zojv3PL5FD18CGuvRamRGhKDMiMpump': 'FEAR',
+	'DXqVrNxf8xTwXjTs6PvQrGfaMP6PRXYvtsX21wdPpump': 'GREED',
+	'4J9hAjPcQKv8fHPYbXzBwfifXSVfftueVfqs5o53pump': 'FEAR',
 	'ESto2cvLsywSvZeyqaQSu5rTkk6PNudPRDjDqcPo47Gc': 'LOVE',
-	'HJXKDhXAkHegzyHpoJ3G2riL6HTbTfz3HNX7o6mRpump': 'HATE',
+	'Bymdy3wnEeLjnzVu14Fvx8p2mtJ7iEN8G6Gm1zkwpump': 'HATE',
 	'EzRooYJ3yDsS5paSQdb8eW66mMdK3u6yFH8Bvoi4pump': 'GOOD',
-	'C7V47ci5u2Ak3VYb62a1obLTY74BLFxLB7d2NLKRpump': 'EVIL',
-	'XrJE4Dc7thUMdeox4yULE9KrHcSLU7Pcn92v5YJpump': 'HAPPY',
+	'8wenEPaJw5TW4JRSYHwnmAaYc9Gr9Leh8d7pV4sQpump': 'EVIL',
+	'6TQkjP9e4XGYwb3dzgMf7ojuBG99YSxKSKNqNGYVpump': 'HAPPY',
 	'BVrR1uUneY7UWJMggsHA1EUX8bftcMj3XEiGBt5Kpump': 'SAD',
-	'EirpkRcuj7oQvTZZgWXuCmQtGvbdHt7hx6Gk5n1Jpump': 'LOL',
-	'9HZVe4X2NS7SMUEahVcKbBnxZJzCZUy1UENXd6mppump': 'OMG',
-	'A1Z23YRk937wWLnnVi86oj7ykDdMGYuE28ekzpsQpump': 'MAD',
+	'NV2RYH954cTJ3ckFUpvfqaQXU4ARqqDH3562nFSpump': 'LOL',
+	'DD4jtnKdyPakShSx1JRwHu7Sk1UouM6Yn9vwtQJGpump': 'OMG',
+	'6s9Q8odvxfTciGqNGDSof6gc3sX4ravwvJxKzw8Gpump': 'MAD',
 	'9y4nMHKQCMgjHE1UU1pbhykRXG5Xp75Y6B4MxdZapump': 'LIKE'
 };
 const TOKEMOJI_TOKEN_IDS = {
