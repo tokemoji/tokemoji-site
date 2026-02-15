@@ -2068,68 +2068,80 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Initialize promo ticker
 	initPromoTicker();
 	
-	// Initialize ticker with AI news content
-	function initTickerNews() {
+	// Initialize ticker with AI news content from GitHub
+	async function initTickerNews() {
 		const tickerList = document.getElementById('ticker-news-list');
 		if (!tickerList) return;
-		
-		// Create ticker content with news and market data
-		const tickerContent = [
-			// Market indicators
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-secondary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-primary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			
-			// AI News items
-			{ type: 'text', content: '📰 GREED token surges 31% as market sentiment shifts', class: 'text-warning' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '🚀 MOON token reaches new ATH with 45% gains', class: 'text-success' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '📊 Market analysis: Fear & Greed index shows extreme greed', class: 'text-info' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '⚡ New Tokemoji protocol upgrade goes live', class: 'text-primary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '🗳️ Community votes on next emotion token launch', class: 'text-secondary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '💕 Technical analysis: LOVE vs HATE token battle', class: 'text-danger' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '🔗 DeFi integration brings new utility to emotion tokens', class: 'text-warning' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '🎉 Market cap milestone: Tokemoji ecosystem hits $25M', class: 'text-success' },
-			
-			// Repeat for continuous scrolling
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-secondary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-primary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '📰 GREED token surges 31% as market sentiment shifts', class: 'text-warning' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '🚀 MOON token reaches new ATH with 45% gains', class: 'text-success' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '📊 Market analysis: Fear & Greed index shows extreme greed', class: 'text-info' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '⚡ New Tokemoji protocol upgrade goes live', class: 'text-primary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '🗳️ Community votes on next emotion token launch', class: 'text-secondary' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '💕 Technical analysis: LOVE vs HATE token battle', class: 'text-danger' },
-			{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
-			{ type: 'text', content: '🔗 DeFi integration brings new utility to emotion tokens', class: 'text-warning' },
-			{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
-			{ type: 'text', content: '🎉 Market cap milestone: Tokemoji ecosystem hits $25M', class: 'text-success' }
-		];
-		
-		// Populate ticker list
-		tickerList.innerHTML = tickerContent.map(item => {
-			if (item.type === 'icon') {
-				return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
-			} else {
-				return `<li><h4 class="mb-0 ${item.class} text-stroke text-shadow text-uppercase">${item.content}</h4></li>`;
+
+		try {
+			// Fetch news from published/current.json
+			const response = await fetch('published/current.json');
+			const data = await response.json();
+
+			// Extract unique news items (remove duplicates)
+			const uniqueItems = [];
+			const seenNewsfeed = new Set();
+
+			for (const item of data.items) {
+				if (item.newsfeed && !seenNewsfeed.has(item.newsfeed)) {
+					uniqueItems.push(item);
+					seenNewsfeed.add(item.newsfeed);
+				}
 			}
-		}).join('');
+
+			// Create ticker content with news feed items
+			const tickerContent = [];
+
+			// Add market indicators at the start
+			tickerContent.push(
+				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
+				{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-secondary' },
+				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
+				{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-primary' },
+				{ type: 'icon', src: 'assets/img/icon-coin-2.png' }
+			);
+
+			// Add news items from GitHub
+			uniqueItems.forEach((item, index) => {
+				tickerContent.push(
+					{ type: 'text', content: item.newsfeed, class: 'text-warning' },
+					{ type: 'icon', src: index % 2 === 0 ? 'assets/img/icon-coin-1.png' : 'assets/img/icon-coin-2.png' }
+				);
+			});
+
+			// Duplicate content for continuous scrolling
+			const duplicatedContent = [...tickerContent, ...tickerContent];
+
+			// Populate ticker list
+			tickerList.innerHTML = duplicatedContent.map(item => {
+				if (item.type === 'icon') {
+					return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
+				} else {
+					return `<li><h4 class="mb-0 ${item.class} text-stroke text-shadow text-uppercase">${item.content}</h4></li>`;
+				}
+			}).join('');
+
+		} catch (error) {
+			console.error('Error fetching news feed:', error);
+
+			// Fallback to default content if fetch fails
+			const fallbackContent = [
+				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
+				{ type: 'text', content: 'FEAR VS GREED INDEX', class: 'text-secondary' },
+				{ type: 'icon', src: 'assets/img/icon-coin-1.png' },
+				{ type: 'text', content: 'GOOD VS EVIL METER', class: 'text-primary' },
+				{ type: 'icon', src: 'assets/img/icon-coin-2.png' },
+				{ type: 'text', content: '📰 LIVE NEWS FEED LOADING...', class: 'text-warning' }
+			];
+
+			tickerList.innerHTML = fallbackContent.map(item => {
+				if (item.type === 'icon') {
+					return `<li><img src="${item.src}" alt="image" class="img-fluid" /></li>`;
+				} else {
+					return `<li><h4 class="mb-0 ${item.class} text-stroke text-shadow text-uppercase">${item.content}</h4></li>`;
+				}
+			}).join('');
+		}
 	}
 	
 	// Initialize promo ticker with promotional information
