@@ -2144,7 +2144,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			'\u{1F608} EVIL | UK confirms Russia killed Navalny with exotic dart frog toxin \u2014 spy thriller tactics turned brutal real-world murder',
 			'\u{1F628} FEAR | Bitcoin recovers to $70K after massive $8.7B wipeout \u2014 volatile bull market shows no signs of stopping yet at all',
 			'\u{1F607} GOOD | Iran signals openness to nuclear deal compromises \u2014 unexpected diplomatic breakthrough emerging after years tensions',
-			'\u{1F4D5} OMG | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era'
+			'\u2764\uFE0F LOVE | AI dating cafes open worldwide \u2014 people now dating AI companions in physical spaces as romance enters new era',
+			'\u{1F911} GREED | Elon drops bombshell: X adding full crypto & stock trading within weeks \u2014 financial super app revolution accelerating',
+			'\u{1F608} EVIL | Russia assassinated Navalny with rare poison dart frog toxin, UK intelligence reveals \u2014 dystopian reality unfolds',
+			'\u{1F628} FEAR | BTC crashes with $8.7B liquidation then rockets back to $70K \u2014 dip buyers prove they are absolutely unstoppable here',
+			'\u{1F607} GOOD | Iran willing to negotiate nuclear compromises, BBC reports from Tehran \u2014 rare peace signal emerges from Middle East',
+			'\u{1F4D5} OMG | Physical AI dating cafes go mainstream \u2014 humans romancing AI companions in real life as future arrives early'
 		];
 
 		var tickerContent = [];
