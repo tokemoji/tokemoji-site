@@ -720,11 +720,11 @@
 
 /* Trade Flash Effects */
 .token-row.trade-flash-buy {
-	animation: flashBuy 3s ease-out;
+	animation: flashBuy 5s ease-out;
 }
 
 .token-row.trade-flash-sell {
-	animation: flashSell 3s ease-out;
+	animation: flashSell 5s ease-out;
 }
 
 @keyframes flashBuy {
@@ -770,6 +770,32 @@
 	60% { background-color: rgba(220, 53, 69, 0.08); }
 	80% { background-color: rgba(220, 53, 69, 0.03); }
 	100% { background-color: transparent; }
+}
+
+/* Per-side gauge label flash */
+.gauge-label {
+	border-radius: 8px;
+	transition: background-color 1.5s ease-out;
+}
+
+@keyframes gaugeSideGreen {
+	0% { background-color: rgba(40, 167, 69, 0.35); }
+	30% { background-color: rgba(40, 167, 69, 0.2); }
+	100% { background-color: transparent; }
+}
+
+@keyframes gaugeSideRed {
+	0% { background-color: rgba(220, 53, 69, 0.35); }
+	30% { background-color: rgba(220, 53, 69, 0.2); }
+	100% { background-color: transparent; }
+}
+
+.gauge-label.gauge-side-gaining {
+	animation: gaugeSideGreen 5s ease-out forwards;
+}
+
+.gauge-label.gauge-side-losing {
+	animation: gaugeSideRed 5s ease-out forwards;
 }
 
 /* Animation Enhancements */

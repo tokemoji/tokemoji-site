@@ -88,15 +88,20 @@ class MiniChart {
     svg.appendChild(linePath);
 
     this.container.innerHTML = '';
-    this.container.classList.add('mini-chart-animate');
     this.container.appendChild(svg);
 
+    var len = linePath.getTotalLength();
+    linePath.style.strokeDasharray = len;
+    linePath.style.strokeDashoffset = len;
+    areaPath.style.opacity = '0';
+
     requestAnimationFrame(function() {
-      var len = linePath.getTotalLength();
-      linePath.style.strokeDasharray = len;
-      linePath.style.strokeDashoffset = len;
-      linePath.style.setProperty('--chart-length', len);
-      linePath.style.animation = 'chartDraw 1.2s ease-out forwards';
+      requestAnimationFrame(function() {
+        linePath.style.transition = 'stroke-dashoffset 1.2s ease-out';
+        linePath.style.strokeDashoffset = '0';
+        areaPath.style.transition = 'opacity 1.4s ease-out';
+        areaPath.style.opacity = '1';
+      });
     });
   }
 

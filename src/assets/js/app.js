@@ -1389,7 +1389,7 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 
 		setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-		}, 3000);
+		}, 5000);
 	}
 }
 
@@ -1582,7 +1582,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-		}, 1500);
+		}, 5000);
 		setTimeout(function() {
 			priceEl.classList.remove('price-tick-up', 'price-tick-down');
 			priceEl.classList.add('breathing');
@@ -1594,7 +1594,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		return `
 		<div class="token-row py-1 border-bottom border-light" data-token="${token.ticker}" data-token-id="${token.id || ''}" data-flip-id="${token.ticker}">
 			<span class="token-rank fw-bold text-muted">${index + 1}</span>
-			<div class="token-emoji wobble-idle" style="animation-delay: ${index * 0.2}s">
+			<div class="token-emoji wobble-idle" style="--wobble-delay: ${(index * 0.2).toFixed(1)}s">
 				${isIOS() ?
 					`<img src="${getEmojiPath(videoSrc)}"
 						  style="width: 100%; height: 100%; object-fit: contain;">` :
@@ -1839,20 +1839,35 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	function applyGaugeFlash(resultId, isPositive) {
+	function applyGaugeFlash(resultId, leftGaining) {
 		const resultEl = document.getElementById(resultId);
 		if (!resultEl) return;
 
 		const gaugeContainer = resultEl.closest('.border');
 		if (!gaugeContainer) return;
 
-		gaugeContainer.classList.remove('gauge-flash-positive', 'gauge-flash-negative');
-		void gaugeContainer.offsetWidth;
-		gaugeContainer.classList.add(isPositive ? 'gauge-flash-positive' : 'gauge-flash-negative');
+		const labels = gaugeContainer.querySelectorAll('.gauge-label');
+		if (labels.length < 2) return;
+
+		var leftLabel = labels[0];
+		var rightLabel = labels[1];
+
+		leftLabel.classList.remove('gauge-side-gaining', 'gauge-side-losing');
+		rightLabel.classList.remove('gauge-side-gaining', 'gauge-side-losing');
+		void leftLabel.offsetWidth;
+
+		if (leftGaining) {
+			leftLabel.classList.add('gauge-side-gaining');
+			rightLabel.classList.add('gauge-side-losing');
+		} else {
+			leftLabel.classList.add('gauge-side-losing');
+			rightLabel.classList.add('gauge-side-gaining');
+		}
 
 		setTimeout(function() {
-			gaugeContainer.classList.remove('gauge-flash-positive', 'gauge-flash-negative');
-		}, 3000);
+			leftLabel.classList.remove('gauge-side-gaining', 'gauge-side-losing');
+			rightLabel.classList.remove('gauge-side-gaining', 'gauge-side-losing');
+		}, 5000);
 	}
 
 	function updateGauges() {
@@ -1898,23 +1913,26 @@ document.addEventListener("DOMContentLoaded", function () {
 			loveHateGauge.style.strokeDashoffset = loveOffset;
 		}
 
-		// Apply flash effects when values change
+		// Apply flash effects when dominance ratio shifts
 		if (lastGaugeValues.greedMarketCap > 0 || lastGaugeValues.fearMarketCap > 0) {
-			if (greedMarketCap !== lastGaugeValues.greedMarketCap || fearMarketCap !== lastGaugeValues.fearMarketCap) {
-				const greedIncreased = greedMarketCap > lastGaugeValues.greedMarketCap;
-				applyGaugeFlash('greed-fear-result', greedIncreased);
+			var oldTotal = lastGaugeValues.greedMarketCap + lastGaugeValues.fearMarketCap;
+			var oldGreedRatio = oldTotal > 0 ? lastGaugeValues.greedMarketCap / oldTotal : 0.5;
+			if (Math.abs(greedRatio / 100 - oldGreedRatio) > 0.001) {
+				applyGaugeFlash('greed-fear-result', greedRatio / 100 > oldGreedRatio);
 			}
 		}
 		if (lastGaugeValues.goodMarketCap > 0 || lastGaugeValues.evilMarketCap > 0) {
-			if (goodMarketCap !== lastGaugeValues.goodMarketCap || evilMarketCap !== lastGaugeValues.evilMarketCap) {
-				const goodIncreased = goodMarketCap > lastGaugeValues.goodMarketCap;
-				applyGaugeFlash('good-evil-result', goodIncreased);
+			var oldTotalMoral = lastGaugeValues.goodMarketCap + lastGaugeValues.evilMarketCap;
+			var oldGoodRatio = oldTotalMoral > 0 ? lastGaugeValues.goodMarketCap / oldTotalMoral : 0.5;
+			if (Math.abs(goodRatio / 100 - oldGoodRatio) > 0.001) {
+				applyGaugeFlash('good-evil-result', goodRatio / 100 > oldGoodRatio);
 			}
 		}
 		if (lastGaugeValues.loveMarketCap > 0 || lastGaugeValues.hateMarketCap > 0) {
-			if (loveMarketCap !== lastGaugeValues.loveMarketCap || hateMarketCap !== lastGaugeValues.hateMarketCap) {
-				const loveIncreased = loveMarketCap > lastGaugeValues.loveMarketCap;
-				applyGaugeFlash('love-hate-result', loveIncreased);
+			var oldTotalLH = lastGaugeValues.loveMarketCap + lastGaugeValues.hateMarketCap;
+			var oldLoveRatio = oldTotalLH > 0 ? lastGaugeValues.loveMarketCap / oldTotalLH : 0.5;
+			if (Math.abs(loveRatio / 100 - oldLoveRatio) > 0.001) {
+				applyGaugeFlash('love-hate-result', loveRatio / 100 > oldLoveRatio);
 			}
 		}
 
@@ -2694,10 +2712,7 @@ initContractCopy();
 function applyEmojiWobbleDelays() {
 	var emojis = document.querySelectorAll('.token-emoji.wobble-idle');
 	emojis.forEach(function(el, i) {
-		var child = el.querySelector('video, img');
-		if (child) {
-			child.style.animationDelay = (i * 0.2) + 's';
-		}
+		el.style.setProperty('--wobble-delay', (i * 0.2).toFixed(1) + 's');
 	});
 }
 applyEmojiWobbleDelays();

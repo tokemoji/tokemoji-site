@@ -173,22 +173,24 @@
 // 3. Staggered emoji idle wobble
 @keyframes emojiIdleWobble {
 	0%, 100% { transform: rotate(0deg) scale(1); }
-	25% { transform: rotate(-3deg) scale(1.03); }
-	75% { transform: rotate(3deg) scale(1.03); }
+	25% { transform: rotate(-3deg) scale(1.04); }
+	75% { transform: rotate(3deg) scale(1.04); }
 }
 
-.token-emoji.wobble-idle video,
-.token-emoji.wobble-idle img {
-	animation: emojiIdleWobble 2.5s ease-in-out infinite;
-	animation-play-state: running;
+.token-emoji.wobble-idle {
+	video, img {
+		animation: emojiIdleWobble 2.5s ease-in-out infinite;
+		animation-delay: var(--wobble-delay, 0s);
+		transform-origin: center center;
+	}
 }
 
 // Pause wobble during trade flash (trade animation takes priority)
-.token-row.trade-flash-buy .token-emoji.wobble-idle video,
-.token-row.trade-flash-buy .token-emoji.wobble-idle img,
-.token-row.trade-flash-sell .token-emoji.wobble-idle video,
-.token-row.trade-flash-sell .token-emoji.wobble-idle img {
-	animation-play-state: paused;
+.token-row.trade-flash-buy .token-emoji.wobble-idle,
+.token-row.trade-flash-sell .token-emoji.wobble-idle {
+	video, img {
+		animation-play-state: paused;
+	}
 }
 
 // 4. Row rank-change slide (GSAP Flip handles the transform;
