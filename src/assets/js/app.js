@@ -1362,7 +1362,7 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 		var oldText = priceEl.textContent.replace('$', '');
 		var oldVal = parseFloat(oldText) || 0;
 		if (oldVal && priceUsd && oldVal !== priceUsd) {
-			animatePriceGlobal(priceEl, oldVal, priceUsd, 10000);
+			animatePriceGlobal(priceEl, oldVal, priceUsd, 20000);
 		} else {
 			priceEl.textContent = '$' + formatAPIPrice(priceUsd);
 		}
@@ -1374,9 +1374,9 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 			setTimeout(function() {
 				priceEl.classList.remove('price-tick-up', 'price-tick-down');
 				priceEl.classList.add('breathing');
-			}, 12000);
+			}, 22000);
 		} else {
-			setTimeout(function() { priceEl.classList.add('breathing'); }, 10500);
+			setTimeout(function() { priceEl.classList.add('breathing'); }, 20500);
 		}
 	}
 
@@ -1394,7 +1394,7 @@ function updateSingleTokenRow(ticker, priceUsd, marketCapUsd, txType, changeStr,
 
 		setTimeout(function() {
 			row.classList.remove('trade-flash-buy', 'trade-flash-sell');
-		}, 12000);
+		}, 22000);
 	}
 }
 
