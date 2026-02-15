@@ -26,6 +26,7 @@ const route = {
 		fontStyle: "dist/assets/css/",
 		img: "dist/assets/img/",
 		fonts: "dist/assets/fonts/",
+		published: "dist/published/",
 	},
 	src: {
 		html: "src/pages/**/*.html",
@@ -46,6 +47,7 @@ const route = {
 		img: "src/assets/img/**/*.{jpg,png,gif,svg,webp,mp4,webm}",
 		fonts: "src/assets/fonts/**/*.*",
 		fontStyle: "src/assets/scss/fonts/*.*",
+		published: "published/**/*.*",
 	},
 	watch: {
 		html: ["src/pages/**/*", "src/layouts/**/*", "src/partials/**/*"],
@@ -61,6 +63,7 @@ const route = {
 		img: "src/assets/img/**/*.{jpg,png,gif,svg,webp}",
 		fonts: "src/assets/fonts/**/*.*",
 		bs: "src/assets/scss/bootstrap/*.*",
+		published: "published/**/*.*",
 	},
 	clean: {
 		dist: "dist/*",
@@ -247,6 +250,16 @@ const fontsTask = () => {
 		.pipe(touch());
 };
 
+// Transfer Published folder
+const publishedTask = () => {
+	return gulp
+		.src(route.src.published)
+		.pipe(newer(route.dist.published))
+		.pipe(gulp.dest(route.dist.published))
+		.pipe(touch())
+		.on("end", () => reload());
+};
+
 // Clean task
 const cleanTask = () => del(route.clean.dist);
 
@@ -272,6 +285,7 @@ const watchTask = () => {
 	gulp.watch(route.watch.img, imageTask);
 	gulp.watch(route.watch.fonts, fontsTask);
 	gulp.watch(route.src.bsScript, bsScriptCompile);
+	gulp.watch(route.watch.published, publishedTask);
 };
 
 // Update build task to include new tasks
@@ -290,7 +304,8 @@ const buildTask = gulp.series(
 			vendorScript,
 			imageTask,
 			fontsTask,
-			bsScriptCompile
+			bsScriptCompile,
+			publishedTask
 		)
 	)
 );
@@ -315,6 +330,7 @@ export {
 	vendorScript,
 	fontsTask,
 	fontStyleTask,
+	publishedTask,
 	buildTask as build,
 	defaultTask as default,
 };
