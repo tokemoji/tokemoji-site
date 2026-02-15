@@ -2,10 +2,10 @@
 .scroller-x {
 	overflow: hidden;
 	&[data-direction="right"] {
-		--_animation-direction: reverse;
+		--_animation-direction: forwards;
 	}
 	&[data-direction="left"] {
-		--_animation-direction: forwards;
+		--_animation-direction: reverse;
 	}
 	&[data-speed="fast"] {
 		--_animation-duration: 30s;
