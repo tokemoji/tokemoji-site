@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-02-15T20:25:00+02:00",
+  "updatedAt": "2026-02-16T10:00:00+02:00",
   "items": [
+    {
+      "headline": "Elon Musk's X to launch crypto and stock trading in 'couple weeks'",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/business/2026/02/14/elon-musk-s-x-to-launch-crypto-and-stock-trading-in-couple-weeks",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "OMG",
+      "commentary": "🤑 GREED never sleeps, and neither does Elon",
+      "newsfeed": "🤑 GREED | X to launch crypto & stock trading in weeks — Elon turns timeline into trading floor",
+      "publishedAt": "2026-02-16T10:00:00+02:00"
+    },
+    {
+      "headline": "Russia killed opposition leader Alexei Navalny using dart frog toxin, UK says",
+      "source": "BBC",
+      "url": "https://www.bbc.com/news/articles/cwyk4lz4e3eo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "EVIL",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😈 EVIL energy is off the charts — toxicology tells a dark story",
+      "newsfeed": "😈 EVIL | UK: Russia killed Navalny with rare dart frog toxin — escalating tensions over opposition death",
+      "publishedAt": "2026-02-16T10:00:00+02:00"
+    },
+    {
+      "headline": "Bitcoin claws back to $70,000 on cooling inflation after $8.7 billion wipeout",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/markets/2026/02/14/bitcoin-claws-back-to-usd70-000-on-cooling-inflation-after-usd8-7-billion-wipeout",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "HAPPY",
+      "commentary": "😨 FEAR printed hard, then 😊 HAPPY came back swinging",
+      "newsfeed": "😨 FEAR | Bitcoin recovers to $70K after volatile $8.7B wipeout — bulls showing resilience despite chaos",
+      "publishedAt": "2026-02-16T10:00:00+02:00"
+    },
+    {
+      "headline": "Iran ready to discuss compromises to reach nuclear deal, minister tells BBC in Tehran",
+      "source": "BBC",
+      "url": "https://www.bbc.com/news/articles/clyz4y3zwz5o?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "GOOD",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😇 GOOD vibes from diplomacy, but 😨 FEAR lingers in the background",
+      "newsfeed": "😇 GOOD | Iran signals openness to nuclear compromises — ball now in US court for diplomacy",
+      "publishedAt": "2026-02-16T10:00:00+02:00"
+    },
+    {
+      "headline": "Eleven killed in Israeli strikes on Gaza, rescuers say",
+      "source": "BBC",
+      "url": "https://www.bbc.com/news/articles/c8r15eyvk2do?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "SAD",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😢 SAD dominates as civilian casualties mount",
+      "newsfeed": "😢 SAD | Eleven killed in Gaza strikes — rescuers respond to ongoing violence",
+      "publishedAt": "2026-02-16T10:00:00+02:00"
+    },
     {
       "headline": "🧪 TEST NEWS #1 - Dashboard działa jak trzeba, dane live z GitHuba!",
       "source": "Tokemoji Labs",
