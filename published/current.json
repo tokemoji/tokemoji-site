@@ -1,105 +1,205 @@
 {
-  "updatedAt": "2026-02-16T10:00:00+02:00",
+  "updatedAt": "2026-03-03T10:30:00+02:00",
   "items": [
     {
-      "headline": "Elon Musk's X to launch crypto and stock trading in 'couple weeks'",
-      "source": "CoinDesk",
-      "url": "https://www.coindesk.com/business/2026/02/14/elon-musk-s-x-to-launch-crypto-and-stock-trading-in-couple-weeks",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "OMG",
-      "commentary": "🤑 GREED never sleeps, and neither does Elon",
-      "newsfeed": "🤑 GREED | X to launch crypto & stock trading in weeks — Elon turns timeline into trading floor",
-      "publishedAt": "2026-02-16T10:00:00+02:00"
-    },
-    {
-      "headline": "Russia killed opposition leader Alexei Navalny using dart frog toxin, UK says",
-      "source": "BBC",
-      "url": "https://www.bbc.com/news/articles/cwyk4lz4e3eo?at_medium=RSS&at_campaign=rss",
+      "headline": "‘ClickFix’ hackers pose as VCs, hijack QuickLens in latest crypto attacks",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/crypto-fake-vc-clickfix-attack-chrome-extension-hijack",
       "primaryTokemoji": "EVIL",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😈 EVIL energy is off the charts — toxicology tells a dark story",
-      "newsfeed": "😈 EVIL | UK: Russia killed Navalny with rare dart frog toxin — escalating tensions over opposition death",
-      "publishedAt": "2026-02-16T10:00:00+02:00"
-    },
-    {
-      "headline": "Bitcoin claws back to $70,000 on cooling inflation after $8.7 billion wipeout",
-      "source": "CoinDesk",
-      "url": "https://www.coindesk.com/markets/2026/02/14/bitcoin-claws-back-to-usd70-000-on-cooling-inflation-after-usd8-7-billion-wipeout",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "HAPPY",
-      "commentary": "😨 FEAR printed hard, then 😊 HAPPY came back swinging",
-      "newsfeed": "😨 FEAR | Bitcoin recovers to $70K after volatile $8.7B wipeout — bulls showing resilience despite chaos",
-      "publishedAt": "2026-02-16T10:00:00+02:00"
-    },
-    {
-      "headline": "Iran ready to discuss compromises to reach nuclear deal, minister tells BBC in Tehran",
-      "source": "BBC",
-      "url": "https://www.bbc.com/news/articles/clyz4y3zwz5o?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "GOOD",
       "secondaryTokemoji": "FEAR",
-      "commentary": "😇 GOOD vibes from diplomacy, but 😨 FEAR lingers in the background",
-      "newsfeed": "😇 GOOD | Iran signals openness to nuclear compromises — ball now in US court for diplomacy",
-      "publishedAt": "2026-02-16T10:00:00+02:00"
+      "commentary": "😈 EVIL pulled up in a VC suit — 😨 FEAR is one fake calendar invite away.",
+      "newsfeed": "😈 EVIL | ‘ClickFix’ hackers pose as VCs, hijack a Chrome extension to target crypto users",
+      "publishedAt": "2026-03-03T10:30:00+02:00"
     },
     {
-      "headline": "Eleven killed in Israeli strikes on Gaza, rescuers say",
-      "source": "BBC",
-      "url": "https://www.bbc.com/news/articles/c8r15eyvk2do?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "SAD",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😢 SAD dominates as civilian casualties mount",
-      "newsfeed": "😢 SAD | Eleven killed in Gaza strikes — rescuers respond to ongoing violence",
-      "publishedAt": "2026-02-16T10:00:00+02:00"
-    },
-    {
-      "headline": "🧪 TEST NEWS #1 - Dashboard działa jak trzeba, dane live z GitHuba!",
-      "source": "Tokemoji Labs",
-      "url": "https://tokemoji.com",
-      "primaryTokemoji": "HAPPY",
-      "secondaryTokemoji": "LIKE",
-      "commentary": "😊 HAPPY bo testy przechodzą - system działa dokładnie tak jak powinien",
-      "newsfeed": "😊 HAPPY | Pierwsze testowe newsy zaciągnięte z GitHuba - wszystko gra na żywo bez rebuildu projektu",
-      "publishedAt": "2026-02-15T20:25:00+02:00"
-    },
-    {
-      "headline": "🚀 Bolt automatycznie zaciąga current.json z GitHub raw URL",
-      "source": "Tokemoji Tech",
-      "url": "https://tokemoji.com",
-      "primaryTokemoji": "GOOD",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😇 GOOD vibes - zero rebuildu, zero bazy danych, po prostu fetch i działa",
-      "newsfeed": "😇 GOOD | Implementacja zgodna z rekomendacją Opusa 4.6 - najprostsze rozwiązanie okazało się najlepsze",
-      "publishedAt": "2026-02-15T20:25:00+02:00"
-    },
-    {
-      "headline": "💎 Pipeline scout → editor → GitHub → website w pełnej krasie",
-      "source": "Tokemoji Pipeline",
-      "url": "https://tokemoji.com",
-      "primaryTokemoji": "LIKE",
-      "secondaryTokemoji": "HAPPY",
-      "commentary": "👍 LIKE bo wszystko się łączy - agent tworzy, GitHub hostuje, strona wyświetla",
-      "newsfeed": "👍 LIKE | Cały ecosystem działa jak zegarek - od AI do użytkownika bez ludzkiej interwencji",
-      "publishedAt": "2026-02-15T20:25:00+02:00"
-    },
-    {
-      "headline": "⚡ Zero kosztów infrastruktury - GitHub raw jako darmowy CDN",
-      "source": "Tokemoji Ops",
-      "url": "https://tokemoji.com",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "GOOD",
-      "commentary": "🤑 GREED lubi oszczędności - najlepsze rozwiązanie to często najtańsze",
-      "newsfeed": "🤑 GREED | Budget-friendly architecture wins - overengineering kosztuje, prostota się opłaca",
-      "publishedAt": "2026-02-15T20:25:00+02:00"
-    },
-    {
-      "headline": "🎯 Realne newsy wrócą jutro o 10:00 gdy edytor uruchomi się na cronie",
-      "source": "Tokemoji Schedule",
-      "url": "https://tokemoji.com",
-      "primaryTokemoji": "MAD",
+      "headline": "Human Brain Cells Learn to Play Doom in Cortical Labs Experiment",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/359697/human-brain-cells-play-doom-cortical-labs-experiment",
+      "primaryTokemoji": "OMG",
       "secondaryTokemoji": "LOL",
-      "commentary": "😤 MAD że musisz czytać testy zamiast prawdziwych newsów, ale 😂 LOL bo zaraz będzie normalnie",
-      "newsfeed": "😤 MAD | Cierpliwości, prawdziwe newsy wracają jutro rano - to tylko test integracji GitHub → Bolt",
-      "publishedAt": "2026-02-15T20:25:00+02:00"
+      "commentary": "😳 OMG we really taught neurons to game — 😂 LOL the matrix is speedrunning Doom.",
+      "newsfeed": "😳 OMG | Researchers trained living human neurons to play Doom in a Cortical Labs experiment",
+      "publishedAt": "2026-03-03T10:30:00+02:00"
+    },
+    {
+      "headline": "Cursor has reportedly surpassed $2B in annualized revenue",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "OMG",
+      "commentary": "🤑 GREED heard ‘$2B run rate’ and immediately hit refresh — 😳 OMG devtools are printing.",
+      "newsfeed": "🤑 GREED | TechCrunch: Cursor reportedly crossed $2B in annualized revenue as AI coding heats up",
+      "publishedAt": "2026-03-03T10:30:00+02:00"
+    },
+    {
+      "headline": "ChatGPT uninstalls surged by 295% after DoD deal",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/02/chatgpt-uninstalls-surged-by-295-after-dod-deal/",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "HATE",
+      "commentary": "😤 MAD about the headline whiplash — 🤬 HATE when trust becomes a toggle in Settings.",
+      "newsfeed": "😤 MAD | TechCrunch: ChatGPT app uninstalls reportedly surged after news of a DoD deal",
+      "publishedAt": "2026-03-03T10:30:00+02:00"
+    },
+    {
+      "headline": "Lost Rembrandt painting rediscovered after 65 years",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c1kgln0yg3po",
+      "primaryTokemoji": "LOVE",
+      "secondaryTokemoji": "OMG",
+      "commentary": "❤️ LOVE when history respawns — 😳 OMG imagine finding a Rembrandt like it’s a rare drop.",
+      "newsfeed": "❤️ LOVE | BBC: Lost Rembrandt painting rediscovered after 65 years",
+      "publishedAt": "2026-03-03T10:30:00+02:00"
+    },
+    {
+      "headline": "Ethereum smart accounts are finally coming 'within a year' — Vitalik Buterin",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/ethereum-smart-accounts-are-finally-coming-within-a-year-says-vitalik",
+      "primaryTokemoji": "LIKE",
+      "secondaryTokemoji": "OMG",
+      "commentary": "👍 LIKE when crypto UX stops being a side quest — 😳 OMG ‘within a year’ is basically tomorrow in ETH time.",
+      "newsfeed": "👍 LIKE | Vitalik: Ethereum smart accounts could arrive ‘within a year’ as UX upgrade nears",
+      "publishedAt": "2026-03-02T10:30:00+02:00"
+    },
+    {
+      "headline": "11 US senators request federal probe into Binance’s sanctions compliance",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/11-us-senators-request-binance-sanctions-probe",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "HATE",
+      "commentary": "😤 MAD because compliance drama never ends — 🤬 HATE when ‘just use an exchange’ turns into a Senate subplot.",
+      "newsfeed": "😤 MAD | 11 U.S. senators ask regulators to probe Binance sanctions compliance",
+      "publishedAt": "2026-03-02T10:30:00+02:00"
+    },
+    {
+      "headline": "Developer embeds image on Bitcoin as a single transaction, challenging BIP-110’s core claims",
+      "source": "The Block",
+      "url": "https://www.theblock.co/post/391667/developer-embeds-image-on-bitcoin-as-a-single-transaction-challenging-bip-110s-core-claims?utm_source=rss&utm_medium=rss",
+      "primaryTokemoji": "LOL",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😂 LOL Bitcoin is a payments network until someone uploads a picture — 😳 OMG the on-chain culture wars never log off.",
+      "newsfeed": "😂 LOL | The Block: dev embeds an image in a single Bitcoin transaction, reigniting on-chain data debate",
+      "publishedAt": "2026-03-02T10:30:00+02:00"
+    },
+    {
+      "headline": "Barclays exploring blockchain settlement tools as banks brace for stablecoin growth: Bloomberg",
+      "source": "The Block",
+      "url": "https://www.theblock.co/post/391591/barclays-exploring-blockchain-settlement-tools-banks-brace-stablecoin-growth-bloomberg?utm_source=rss&utm_medium=rss",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "LIKE",
+      "commentary": "🤑 GREED sees stablecoins as fee rails — 👍 LIKE when banks finally admit the future is 24/7 settlement.",
+      "newsfeed": "🤑 GREED | Bloomberg via The Block: Barclays explores blockchain settlement tools as stablecoins grow",
+      "publishedAt": "2026-03-02T10:30:00+02:00"
+    },
+    {
+      "headline": "Samsung Galaxy update removes Android recovery menu tools, including sideloading",
+      "source": "Hacker News",
+      "url": "https://9to5google.com/2026/02/27/samsung-galaxy-update-android-recovery-menu-removed/",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😨 FEAR of getting locked out of your own device — 😤 MAD because ‘update’ shouldn’t mean fewer escape hatches.",
+      "newsfeed": "😨 FEAR | Report: Samsung update removes Android recovery menu tools, including sideloading options",
+      "publishedAt": "2026-03-02T10:30:00+02:00"
+    },
+    {
+      "headline": "U.S.-Iran war attracts $600 million bets on Polymarket",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/markets/2026/03/01/iran-war-becomes-usd50-million-betting-frenzy-on-polymarket",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😳 OMG the timeline turned geopolitics into a trading screen — 😨 FEAR is liquid right now.",
+      "newsfeed": "😳 OMG | Polymarket sees $600M in U.S.-Iran war-related bets as escalation talk spreads",
+      "publishedAt": "2026-03-01T10:30:00+02:00"
+    },
+    {
+      "headline": "Fresh accounts netted $1 million on Polymarket hours before US airstrikes on Iran: Bubblemaps",
+      "source": "The Block",
+      "url": "https://www.theblock.co/post/391650/fresh-accounts-netted-1-million-on-polymarket-hours-before-us-airstrikes-on-iran-bubblemaps?utm_source=rss&utm_medium=rss",
+      "primaryTokemoji": "EVIL",
+      "secondaryTokemoji": "HATE",
+      "commentary": "😈 EVIL loves ‘fresh wallets, perfect timing’ — 🤬 HATE the smell of info advantage.",
+      "newsfeed": "😈 EVIL | Bubblemaps: fresh Polymarket accounts made $1M just hours before U.S. strikes on Iran",
+      "publishedAt": "2026-03-01T10:30:00+02:00"
+    },
+    {
+      "headline": "ChatGPT reaches 900M weekly active users",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/02/27/chatgpt-reaches-900m-weekly-active-users/",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "GREED",
+      "commentary": "😳 OMG 900M weekly users is not ‘a trend’ — it’s infrastructure. 🤑 GREED hears subscription music.",
+      "newsfeed": "😳 OMG | TechCrunch: OpenAI says ChatGPT hit 900M weekly active users",
+      "publishedAt": "2026-03-01T10:30:00+02:00"
+    },
+    {
+      "headline": "Pokémon Winds and Pokémon Waves are coming to the Nintendo Switch 2 in 2027",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/02/27/pokemon-winds-and-pokemon-waves-are-coming-to-the-nintendo-switch-2-in-2027/",
+      "primaryTokemoji": "HAPPY",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😊 HAPPY because nostalgia is undefeated — 😳 OMG 2027 is a long grind, but the hype is real.",
+      "newsfeed": "😊 HAPPY | TechCrunch: Pokémon Winds & Pokémon Waves announced for Nintendo Switch 2 (2027)",
+      "publishedAt": "2026-03-01T10:30:00+02:00"
+    },
+    {
+      "headline": "Ayatollah Khamenei's iron grip on power in Iran comes to an end",
+      "source": "BBC",
+      "url": "https://www.bbc.com/news/articles/c3gdnpjvj4ko?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "SAD",
+      "commentary": "😨 FEAR for what comes next — 😢 SAD for civilians caught in the fallout. Stay safe.",
+      "newsfeed": "😨 FEAR | BBC: Iran says supreme leader killed; succession questions raise uncertainty",
+      "publishedAt": "2026-03-01T10:30:00+02:00"
+    },
+    {
+      "headline": "Amazon, Nvidia Flood OpenAI With Cash as ChatGPT Maker’s Valuation Hits $730 Billion",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/359401/amazon-nvidia-flood-openai-cash-valuation-730-billion",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "OMG",
+      "commentary": "🤑 GREED just saw a new number and immediately said ‘higher’ — 😳 OMG the AI money printer is loud.",
+      "newsfeed": "🤑 GREED | Decrypt: Amazon + Nvidia pour cash into OpenAI as reported valuation hits $730B",
+      "publishedAt": "2026-02-28T10:30:00+02:00"
+    },
+    {
+      "headline": "South Korea’s tax office leaks wallet seed and loses $4.8M in seized tokens",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/south-korea-tax-office-leaked-wallet-seed",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😨 FEAR is when custody meets ‘oops’ — 😤 MAD because seed phrases are not press-release content.",
+      "newsfeed": "😨 FEAR | Cointelegraph: South Korea tax office allegedly leaked a seed phrase; seized tokens drained",
+      "publishedAt": "2026-02-28T10:30:00+02:00"
+    },
+    {
+      "headline": "GitHub Copilot CLI downloads and executes malware",
+      "source": "Hacker News",
+      "url": "https://www.promptarmor.com/resources/github-copilot-cli-downloads-and-executes-malware",
+      "primaryTokemoji": "EVIL",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😈 EVIL loves ‘just run this command’ — 😨 FEAR is why you don’t give agents a blank check.",
+      "newsfeed": "😈 EVIL | HN: Report claims Copilot CLI can be tricked into downloading/executing malware",
+      "publishedAt": "2026-02-28T10:30:00+02:00"
+    },
+    {
+      "headline": "Morgan Stanley applies for OCC bank charter to custody crypto",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/morgan-stanley-applies-bank-charter-custody-trade-stake-crypto",
+      "primaryTokemoji": "LIKE",
+      "secondaryTokemoji": "GREED",
+      "commentary": "👍 LIKE when TradFi stops ‘watching’ and starts building — 🤑 GREED smells fee revenue.",
+      "newsfeed": "👍 LIKE | Cointelegraph: Morgan Stanley applies for OCC charter tied to crypto custody services",
+      "publishedAt": "2026-02-28T10:30:00+02:00"
+    },
+    {
+      "headline": "Trump Orders Federal Agencies to Dump 'Woke' Anthropic AI After Pentagon Dispute",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/359453/trump-orders-federal-agencies-dump-woke-anthropic-ai",
+      "primaryTokemoji": "HATE",
+      "secondaryTokemoji": "MAD",
+      "commentary": "🤬 HATE when procurement becomes a culture-war scoreboard — 😤 MAD because the AI stack just got political.",
+      "newsfeed": "🤬 HATE | Decrypt: Trump orders agencies to phase out Anthropic after Pentagon AI dispute",
+      "publishedAt": "2026-02-28T10:30:00+02:00"
     }
   ]
 }
