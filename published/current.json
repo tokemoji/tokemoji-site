@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-03T10:30:00+02:00",
+  "updatedAt": "2026-03-04T10:30:00+02:00",
   "items": [
+    {
+      "headline": "Trump threatens to halt trade with Spain over military base access",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c8r1mzd8vygo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😤 MAD just slammed market-sell diplomacy — 😨 FEAR bids show up when trade turns into leverage.",
+      "newsfeed": "😤 MAD | Trump threatens to halt trade with Spain over base access — 😨 $FEAR vol back on the tape.",
+      "publishedAt": "2026-03-04T10:30:00+02:00"
+    },
+    {
+      "headline": "A suite of government hacking tools targeting iPhones is now being used by cybercriminals",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/03/a-suite-of-government-hacking-tools-targeting-iphones-is-now-being-used-by-cybercriminals/",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "EVIL",
+      "commentary": "😈 EVIL loves a leaked toolbox — 😨 FEAR is what it feels like when exploits go secondary-market.",
+      "newsfeed": "😨 FEAR | Govt iPhone hacking tools reportedly in criminal hands — 😈 $EVIL liquidity widens.",
+      "publishedAt": "2026-03-04T10:30:00+02:00"
+    },
+    {
+      "headline": "Polymarket Pulls Nuclear Detonation Market Following Public Backlash",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/359897/polymarket-pulls-nuclear-detonation-market-following-public-backlash",
+      "primaryTokemoji": "HATE",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "🤬 HATE the idea of catastrophe markets — 😨 FEAR is what happens when “just a market” meets real-world lines.",
+      "newsfeed": "🤬 HATE | Polymarket pulls nuclear detonation market after backlash — 😨 $FEAR stays elevated.",
+      "publishedAt": "2026-03-04T10:30:00+02:00"
+    },
+    {
+      "headline": "ChatGPT’s new GPT-5.3 Instant model will stop telling you to calm down",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/03/chatgpts-new-gpt-5-3-instant-model-will-stop-telling-you-to-calm-down/",
+      "primaryTokemoji": "LOL",
+      "secondaryTokemoji": "LIKE",
+      "commentary": "😂 LOL we finally shipped “less condescending” — 👍 LIKE is bidding basic human vibes.",
+      "newsfeed": "😂 LOL | ChatGPT GPT-5.3 Instant “stops telling you to calm down” — 👍 $LIKE candles approved.",
+      "publishedAt": "2026-03-04T10:30:00+02:00"
+    },
+    {
+      "headline": "Why AI startups are selling the same equity at two different prices",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/03/why-ai-startups-are-selling-the-same-equity-at-two-different-prices/",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "EVIL",
+      "commentary": "🤑 GREED loves a valuation narrative — 😈 EVIL loves a pricing structure you need a lawyer to decode.",
+      "newsfeed": "🤑 GREED | AI startups reportedly sell same equity at 2 prices — 😈 $EVIL spread-trading vibes.",
+      "publishedAt": "2026-03-04T10:30:00+02:00"
+    },
     {
       "headline": "‘ClickFix’ hackers pose as VCs, hijack QuickLens in latest crypto attacks",
       "source": "Cointelegraph",
@@ -150,56 +200,6 @@
       "commentary": "😨 FEAR for what comes next — 😢 SAD for civilians caught in the fallout. Stay safe.",
       "newsfeed": "😨 FEAR | BBC: Iran says supreme leader killed; succession questions raise uncertainty",
       "publishedAt": "2026-03-01T10:30:00+02:00"
-    },
-    {
-      "headline": "Amazon, Nvidia Flood OpenAI With Cash as ChatGPT Maker’s Valuation Hits $730 Billion",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/359401/amazon-nvidia-flood-openai-cash-valuation-730-billion",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "OMG",
-      "commentary": "🤑 GREED just saw a new number and immediately said ‘higher’ — 😳 OMG the AI money printer is loud.",
-      "newsfeed": "🤑 GREED | Decrypt: Amazon + Nvidia pour cash into OpenAI as reported valuation hits $730B",
-      "publishedAt": "2026-02-28T10:30:00+02:00"
-    },
-    {
-      "headline": "South Korea’s tax office leaks wallet seed and loses $4.8M in seized tokens",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/south-korea-tax-office-leaked-wallet-seed",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "MAD",
-      "commentary": "😨 FEAR is when custody meets ‘oops’ — 😤 MAD because seed phrases are not press-release content.",
-      "newsfeed": "😨 FEAR | Cointelegraph: South Korea tax office allegedly leaked a seed phrase; seized tokens drained",
-      "publishedAt": "2026-02-28T10:30:00+02:00"
-    },
-    {
-      "headline": "GitHub Copilot CLI downloads and executes malware",
-      "source": "Hacker News",
-      "url": "https://www.promptarmor.com/resources/github-copilot-cli-downloads-and-executes-malware",
-      "primaryTokemoji": "EVIL",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😈 EVIL loves ‘just run this command’ — 😨 FEAR is why you don’t give agents a blank check.",
-      "newsfeed": "😈 EVIL | HN: Report claims Copilot CLI can be tricked into downloading/executing malware",
-      "publishedAt": "2026-02-28T10:30:00+02:00"
-    },
-    {
-      "headline": "Morgan Stanley applies for OCC bank charter to custody crypto",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/morgan-stanley-applies-bank-charter-custody-trade-stake-crypto",
-      "primaryTokemoji": "LIKE",
-      "secondaryTokemoji": "GREED",
-      "commentary": "👍 LIKE when TradFi stops ‘watching’ and starts building — 🤑 GREED smells fee revenue.",
-      "newsfeed": "👍 LIKE | Cointelegraph: Morgan Stanley applies for OCC charter tied to crypto custody services",
-      "publishedAt": "2026-02-28T10:30:00+02:00"
-    },
-    {
-      "headline": "Trump Orders Federal Agencies to Dump 'Woke' Anthropic AI After Pentagon Dispute",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/359453/trump-orders-federal-agencies-dump-woke-anthropic-ai",
-      "primaryTokemoji": "HATE",
-      "secondaryTokemoji": "MAD",
-      "commentary": "🤬 HATE when procurement becomes a culture-war scoreboard — 😤 MAD because the AI stack just got political.",
-      "newsfeed": "🤬 HATE | Decrypt: Trump orders agencies to phase out Anthropic after Pentagon AI dispute",
-      "publishedAt": "2026-02-28T10:30:00+02:00"
     }
   ]
 }
