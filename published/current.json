@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-05T08:20:00+02:00",
+  "updatedAt": "2026-03-06T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Construction begins at quantum facility big enough to break Bitcoin",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/construction-quantum-facility-1m-qubits-begins?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😨 $FEAR volatility is getting marked up — and 😳 $OMG candles are twitching on every ‘quantum’ headline.",
+      "newsfeed": "😨 FEAR | Mega-scale quantum facility breaks ground — traders are repricing $FEAR vol as 😳 $OMG candles twitch.",
+      "publishedAt": "2026-03-06T08:20:00+02:00"
+    },
+    {
+      "headline": "A GitHub Issue Title Compromised 4k Developer Machines",
+      "source": "Hacker News",
+      "url": "https://grith.ai/blog/clinejection-when-your-ai-tool-installs-another",
+      "primaryTokemoji": "EVIL",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😈 $EVIL just found fresh liquidity in the prompt layer — 😨 $FEAR bids rise when a title can become an attack.",
+      "newsfeed": "😈 EVIL | Report: GitHub issue title led to AI-tool compromise — 😨 $FEAR bids rise as prompt-layer risk hits orderflow.",
+      "publishedAt": "2026-03-06T08:20:00+02:00"
+    },
+    {
+      "headline": "Britney Spears arrested in California on suspicion of driving under the influence",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c4gjjn41l7no?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "SAD",
+      "commentary": "😳 $OMG gaps on celebrity headlines — but 😢 $SAD is heavy when it’s about safety and consequences.",
+      "newsfeed": "😳 OMG | BBC: Britney Spears arrested on suspicion of DUI — 😢 $SAD stays heavy as the headline hits.",
+      "publishedAt": "2026-03-06T08:20:00+02:00"
+    },
+    {
+      "headline": "Ecuadorean troops find 35m-long 'narco-sub' hidden in nature reserve",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cd6zz65vg0qo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "GOOD",
+      "commentary": "😳 $OMG just printed a wild candle — and 😇 $GOOD finds bids when enforcement actually shows up on the tape.",
+      "newsfeed": "😳 OMG | Ecuador finds 35m ‘narco-sub’ in nature reserve — 😇 $GOOD finds bids as enforcement hits orderflow.",
+      "publishedAt": "2026-03-06T08:20:00+02:00"
+    },
+    {
+      "headline": "Lyn Alden tips Bitcoin outperforming gold over next ‘two to three years’",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/bitcoin-gold-outperform-prediction-macroeconomist-lyn-alden?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "LIKE",
+      "commentary": "🤑 $GREED is quietly stacking bids — and 👍 $LIKE holds the trend when the thesis is ‘BTC > gold’.",
+      "newsfeed": "🤑 GREED | Lyn Alden: Bitcoin could outperform gold — traders see $GREED bids build as 👍 $LIKE holds the trend.",
+      "publishedAt": "2026-03-06T08:20:00+02:00"
+    },
     {
       "headline": "A new video from the White House mixes Call of Duty footage with actual video of Iran strikes",
       "source": "The Verge",
@@ -51,7 +101,6 @@
       "newsfeed": "❤️ LOVE | Bitwise donates BTC ETF profits to open-source devs — 😇 $GOOD holds bids as builders get funded.",
       "publishedAt": "2026-03-05T08:20:00+02:00"
     },
-
     {
       "headline": "Trump threatens to halt trade with Spain over military base access",
       "source": "BBC News",
@@ -151,56 +200,6 @@
       "commentary": "❤️ LOVE when history respawns — 😳 OMG imagine finding a Rembrandt like it’s a rare drop.",
       "newsfeed": "❤️ LOVE | BBC: Lost Rembrandt painting rediscovered after 65 years",
       "publishedAt": "2026-03-03T10:30:00+02:00"
-    },
-    {
-      "headline": "Ethereum smart accounts are finally coming 'within a year' — Vitalik Buterin",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/ethereum-smart-accounts-are-finally-coming-within-a-year-says-vitalik",
-      "primaryTokemoji": "LIKE",
-      "secondaryTokemoji": "OMG",
-      "commentary": "👍 LIKE when crypto UX stops being a side quest — 😳 OMG ‘within a year’ is basically tomorrow in ETH time.",
-      "newsfeed": "👍 LIKE | Vitalik: Ethereum smart accounts could arrive ‘within a year’ as UX upgrade nears",
-      "publishedAt": "2026-03-02T10:30:00+02:00"
-    },
-    {
-      "headline": "11 US senators request federal probe into Binance’s sanctions compliance",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/11-us-senators-request-binance-sanctions-probe",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "HATE",
-      "commentary": "😤 MAD because compliance drama never ends — 🤬 HATE when ‘just use an exchange’ turns into a Senate subplot.",
-      "newsfeed": "😤 MAD | 11 U.S. senators ask regulators to probe Binance sanctions compliance",
-      "publishedAt": "2026-03-02T10:30:00+02:00"
-    },
-    {
-      "headline": "Developer embeds image on Bitcoin as a single transaction, challenging BIP-110’s core claims",
-      "source": "The Block",
-      "url": "https://www.theblock.co/post/391667/developer-embeds-image-on-bitcoin-as-a-single-transaction-challenging-bip-110s-core-claims?utm_source=rss&utm_medium=rss",
-      "primaryTokemoji": "LOL",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😂 LOL Bitcoin is a payments network until someone uploads a picture — 😳 OMG the on-chain culture wars never log off.",
-      "newsfeed": "😂 LOL | The Block: dev embeds an image in a single Bitcoin transaction, reigniting on-chain data debate",
-      "publishedAt": "2026-03-02T10:30:00+02:00"
-    },
-    {
-      "headline": "Barclays exploring blockchain settlement tools as banks brace for stablecoin growth: Bloomberg",
-      "source": "The Block",
-      "url": "https://www.theblock.co/post/391591/barclays-exploring-blockchain-settlement-tools-banks-brace-stablecoin-growth-bloomberg?utm_source=rss&utm_medium=rss",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "LIKE",
-      "commentary": "🤑 GREED sees stablecoins as fee rails — 👍 LIKE when banks finally admit the future is 24/7 settlement.",
-      "newsfeed": "🤑 GREED | Bloomberg via The Block: Barclays explores blockchain settlement tools as stablecoins grow",
-      "publishedAt": "2026-03-02T10:30:00+02:00"
-    },
-    {
-      "headline": "Samsung Galaxy update removes Android recovery menu tools, including sideloading",
-      "source": "Hacker News",
-      "url": "https://9to5google.com/2026/02/27/samsung-galaxy-update-android-recovery-menu-removed/",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "MAD",
-      "commentary": "😨 FEAR of getting locked out of your own device — 😤 MAD because ‘update’ shouldn’t mean fewer escape hatches.",
-      "newsfeed": "😨 FEAR | Report: Samsung update removes Android recovery menu tools, including sideloading options",
-      "publishedAt": "2026-03-02T10:30:00+02:00"
     }
   ]
 }
