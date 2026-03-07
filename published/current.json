@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-06T08:20:00+02:00",
+  "updatedAt": "2026-03-07T08:20:00+02:00",
   "items": [
+    {
+      "headline": "DJI will pay $30K to the man who accidentally hacked 7,000 Romo robovacs",
+      "source": "The Verge",
+      "url": "https://www.theverge.com/news/890982/dji-pay-sammy-azdoufal-robot-vacuum-hack-romo-security",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "LOL",
+      "commentary": "😳 $OMG candles look uncomfortably alive — and 😂 $LOL finds bids when even your robovac has exploit orderflow.",
+      "newsfeed": "😳 OMG | DJI pays $30K after 7,000 robovacs got hacked — 😂 $LOL bids lift as $OMG candles wobble on the tape.",
+      "publishedAt": "2026-03-07T08:20:00+02:00"
+    },
+    {
+      "headline": "Bitcoin could crash by another 30% as four-year cycle gains strength, investment firm says",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/markets/2026/03/07/bitcoin-could-crash-another-30-as-four-year-cycle-gains-strength-investment-firm-says",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "SAD",
+      "commentary": "😨 $FEAR volatility is getting repriced — and 😢 $SAD stays heavy when the ‘cycle’ narrative turns into sell-side liquidity.",
+      "newsfeed": "😨 FEAR | CoinDesk: firm warns BTC could drop another 30% — traders are pricing $FEAR vol as $SAD liquidity leaks.",
+      "publishedAt": "2026-03-07T08:20:00+02:00"
+    },
+    {
+      "headline": "Grammarly is using our identities without permission",
+      "source": "The Verge",
+      "url": "https://www.theverge.com/ai-artificial-intelligence/890921/grammarly-ai-expert-reviews",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "HATE",
+      "commentary": "😤 $MAD just hit the ask — and 🤬 $HATE finds bids when your name becomes someone else’s AI product liquidity.",
+      "newsfeed": "😤 MAD | Verge: Grammarly ‘expert reviews’ used real names without consent — 🤬 $HATE bids stack as $MAD breaks out.",
+      "publishedAt": "2026-03-07T08:20:00+02:00"
+    },
+    {
+      "headline": "Bill Gates’ TerraPower gets approval to build new nuclear reactor",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/06/bill-gates-terrapower-gets-approval-to-build-new-nuclear-reactor/",
+      "primaryTokemoji": "GOOD",
+      "secondaryTokemoji": "LIKE",
+      "commentary": "😇 $GOOD is finding real bids — and 👍 $LIKE holds the trend when ‘approved to build’ finally hits the orderflow.",
+      "newsfeed": "😇 GOOD | TechCrunch: TerraPower gets nuclear reactor approval — 👍 $LIKE bids follow as $GOOD finds clean liquidity.",
+      "publishedAt": "2026-03-07T08:20:00+02:00"
+    },
+    {
+      "headline": "Indonesia to ban social media and other online platforms for under 16s",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cvg50168ddgo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😤 $MAD is getting lifted — and 😨 $FEAR vol ticks up when platforms realize the next regulatory candle can wick fast.",
+      "newsfeed": "😤 MAD | BBC: Indonesia to ban social platforms for under-16s — 😨 $FEAR vol rises as regulation hits liquidity.",
+      "publishedAt": "2026-03-07T08:20:00+02:00"
+    },
     {
       "headline": "Construction begins at quantum facility big enough to break Bitcoin",
       "source": "Cointelegraph",
@@ -150,56 +200,6 @@
       "commentary": "🤑 GREED loves a valuation narrative — 😈 EVIL loves a pricing structure you need a lawyer to decode.",
       "newsfeed": "🤑 GREED | AI startups reportedly sell same equity at 2 prices — 😈 $EVIL spread-trading vibes.",
       "publishedAt": "2026-03-04T10:30:00+02:00"
-    },
-    {
-      "headline": "‘ClickFix’ hackers pose as VCs, hijack QuickLens in latest crypto attacks",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/crypto-fake-vc-clickfix-attack-chrome-extension-hijack",
-      "primaryTokemoji": "EVIL",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😈 EVIL pulled up in a VC suit — 😨 FEAR is one fake calendar invite away.",
-      "newsfeed": "😈 EVIL | ‘ClickFix’ hackers pose as VCs, hijack a Chrome extension to target crypto users",
-      "publishedAt": "2026-03-03T10:30:00+02:00"
-    },
-    {
-      "headline": "Human Brain Cells Learn to Play Doom in Cortical Labs Experiment",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/359697/human-brain-cells-play-doom-cortical-labs-experiment",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "LOL",
-      "commentary": "😳 OMG we really taught neurons to game — 😂 LOL the matrix is speedrunning Doom.",
-      "newsfeed": "😳 OMG | Researchers trained living human neurons to play Doom in a Cortical Labs experiment",
-      "publishedAt": "2026-03-03T10:30:00+02:00"
-    },
-    {
-      "headline": "Cursor has reportedly surpassed $2B in annualized revenue",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/02/cursor-has-reportedly-surpassed-2b-in-annualized-revenue/",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "OMG",
-      "commentary": "🤑 GREED heard ‘$2B run rate’ and immediately hit refresh — 😳 OMG devtools are printing.",
-      "newsfeed": "🤑 GREED | TechCrunch: Cursor reportedly crossed $2B in annualized revenue as AI coding heats up",
-      "publishedAt": "2026-03-03T10:30:00+02:00"
-    },
-    {
-      "headline": "ChatGPT uninstalls surged by 295% after DoD deal",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/02/chatgpt-uninstalls-surged-by-295-after-dod-deal/",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "HATE",
-      "commentary": "😤 MAD about the headline whiplash — 🤬 HATE when trust becomes a toggle in Settings.",
-      "newsfeed": "😤 MAD | TechCrunch: ChatGPT app uninstalls reportedly surged after news of a DoD deal",
-      "publishedAt": "2026-03-03T10:30:00+02:00"
-    },
-    {
-      "headline": "Lost Rembrandt painting rediscovered after 65 years",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/c1kgln0yg3po",
-      "primaryTokemoji": "LOVE",
-      "secondaryTokemoji": "OMG",
-      "commentary": "❤️ LOVE when history respawns — 😳 OMG imagine finding a Rembrandt like it’s a rare drop.",
-      "newsfeed": "❤️ LOVE | BBC: Lost Rembrandt painting rediscovered after 65 years",
-      "publishedAt": "2026-03-03T10:30:00+02:00"
     }
   ]
 }
