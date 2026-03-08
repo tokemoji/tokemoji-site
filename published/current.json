@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-07T08:20:00+02:00",
+  "updatedAt": "2026-03-08T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Google just gave Sundar Pichai a $692M pay package",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/07/google-just-gave-sundar-pichai-a-692m-pay-package/",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "OMG",
+      "commentary": "🤑 $GREED just cleared the offers — 😳 $OMG candles love a headline that screams ‘executive liquidity event’.",
+      "newsfeed": "🤑 GREED | Google hands Pichai a $692M package — traders are pricing $GREED like the tape’s all stock-based comp.",
+      "publishedAt": "2026-03-08T08:20:00+02:00"
+    },
+    {
+      "headline": "Sony appears to be testing dynamic pricing on PlayStation games",
+      "source": "The Verge",
+      "url": "https://www.theverge.com/games/891085/sony-dynamic-pricing-playstation-games",
+      "primaryTokemoji": "HATE",
+      "secondaryTokemoji": "MAD",
+      "commentary": "🤬 $HATE is finding bids — 😤 $MAD sweeps the book when gamers smell ‘surge pricing’ orderflow.",
+      "newsfeed": "🤬 HATE | Verge: Sony may be testing dynamic game pricing — 😤 $MAD bids stack as the price tag starts moving.",
+      "publishedAt": "2026-03-08T08:20:00+02:00"
+    },
+    {
+      "headline": "OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/07/openai-robotics-lead-caitlin-kalinowski-quits-in-response-to-pentagon-deal/",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😤 $MAD is trading heavy — 😨 $FEAR vol gets bid when ‘AI + defense’ hits the tape again.",
+      "newsfeed": "😤 MAD | OpenAI robotics lead quits over Pentagon deal — 😨 $FEAR vol bids show as ‘AI + defense’ returns.",
+      "publishedAt": "2026-03-08T08:20:00+02:00"
+    },
+    {
+      "headline": "Crypto Fear and Greed Index falls back down to 'extreme fear' levels",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/crypto-fear-greed-index-extreme-fear?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😨 $FEAR is getting repriced higher — 😳 $OMG candles don’t like when ‘extreme’ shows up on the sentiment chart.",
+      "newsfeed": "😨 FEAR | Crypto sentiment slides back to ‘extreme fear’ — traders are marking up $FEAR vol as 😳 $OMG wicks grow.",
+      "publishedAt": "2026-03-08T08:20:00+02:00"
+    },
+    {
+      "headline": "Explosion reported outside US embassy in Oslo, police say",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c5yjegg892lo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😨 $FEAR volatility is bid on risk headlines — 😳 $OMG wicks up when security incidents hit the newswire.",
+      "newsfeed": "😨 FEAR | BBC: Explosion reported outside US embassy in Oslo — risk-off tone lifts $FEAR vol as 😳 $OMG wicks.",
+      "publishedAt": "2026-03-08T08:20:00+02:00"
+    },
     {
       "headline": "DJI will pay $30K to the man who accidentally hacked 7,000 Romo robovacs",
       "source": "The Verge",
@@ -150,56 +200,6 @@
       "commentary": "❤️ $LOVE has steady bids today — and 😇 $GOOD holds the line when funding flows to the builders.",
       "newsfeed": "❤️ LOVE | Bitwise donates BTC ETF profits to open-source devs — 😇 $GOOD holds bids as builders get funded.",
       "publishedAt": "2026-03-05T08:20:00+02:00"
-    },
-    {
-      "headline": "Trump threatens to halt trade with Spain over military base access",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/c8r1mzd8vygo?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😤 MAD just slammed market-sell diplomacy — 😨 FEAR bids show up when trade turns into leverage.",
-      "newsfeed": "😤 MAD | Trump threatens to halt trade with Spain over base access — 😨 $FEAR vol back on the tape.",
-      "publishedAt": "2026-03-04T10:30:00+02:00"
-    },
-    {
-      "headline": "A suite of government hacking tools targeting iPhones is now being used by cybercriminals",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/03/a-suite-of-government-hacking-tools-targeting-iphones-is-now-being-used-by-cybercriminals/",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "EVIL",
-      "commentary": "😈 EVIL loves a leaked toolbox — 😨 FEAR is what it feels like when exploits go secondary-market.",
-      "newsfeed": "😨 FEAR | Govt iPhone hacking tools reportedly in criminal hands — 😈 $EVIL liquidity widens.",
-      "publishedAt": "2026-03-04T10:30:00+02:00"
-    },
-    {
-      "headline": "Polymarket Pulls Nuclear Detonation Market Following Public Backlash",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/359897/polymarket-pulls-nuclear-detonation-market-following-public-backlash",
-      "primaryTokemoji": "HATE",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "🤬 HATE the idea of catastrophe markets — 😨 FEAR is what happens when “just a market” meets real-world lines.",
-      "newsfeed": "🤬 HATE | Polymarket pulls nuclear detonation market after backlash — 😨 $FEAR stays elevated.",
-      "publishedAt": "2026-03-04T10:30:00+02:00"
-    },
-    {
-      "headline": "ChatGPT’s new GPT-5.3 Instant model will stop telling you to calm down",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/03/chatgpts-new-gpt-5-3-instant-model-will-stop-telling-you-to-calm-down/",
-      "primaryTokemoji": "LOL",
-      "secondaryTokemoji": "LIKE",
-      "commentary": "😂 LOL we finally shipped “less condescending” — 👍 LIKE is bidding basic human vibes.",
-      "newsfeed": "😂 LOL | ChatGPT GPT-5.3 Instant “stops telling you to calm down” — 👍 $LIKE candles approved.",
-      "publishedAt": "2026-03-04T10:30:00+02:00"
-    },
-    {
-      "headline": "Why AI startups are selling the same equity at two different prices",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/03/why-ai-startups-are-selling-the-same-equity-at-two-different-prices/",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "EVIL",
-      "commentary": "🤑 GREED loves a valuation narrative — 😈 EVIL loves a pricing structure you need a lawyer to decode.",
-      "newsfeed": "🤑 GREED | AI startups reportedly sell same equity at 2 prices — 😈 $EVIL spread-trading vibes.",
-      "publishedAt": "2026-03-04T10:30:00+02:00"
     }
   ]
 }
