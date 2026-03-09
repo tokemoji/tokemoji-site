@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-08T08:20:00+02:00",
+  "updatedAt": "2026-03-09T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Living human brain cells play DOOM on a CL1 [video]",
+      "source": "Hacker News",
+      "url": "https://www.youtube.com/watch?v=yRV8fSw6HaE",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "LOL",
+      "commentary": "😳 $OMG just printed a biotech candle — and 😂 $LOL bids keep stacking because the orderflow says ‘brain cells gaming’.",
+      "newsfeed": "😳 OMG | Brain cells reportedly play DOOM — 😂 $LOL bids stack as $OMG candles go full sci-fi on the tape.",
+      "publishedAt": "2026-03-09T08:20:00+02:00"
+    },
+    {
+      "headline": "Oil shorts on Hyperliquid get wiped out as crude surges 30% on Iran escalation",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/markets/2026/03/09/oil-shorts-on-hyperliquid-get-wiped-out-as-crude-surges-30-on-iran-escalation-triggering-usd40-million-in-liquidations",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "GREED",
+      "commentary": "😨 $FEAR vol looks bid into the unwind — while 🤑 $GREED keeps lifting offers on anything that even smells like a liquidation cascade.",
+      "newsfeed": "😨 FEAR | Hyperliquid oil shorts reportedly get wiped — 🤑 $GREED lifts offers as $FEAR vol spikes on liquidation orderflow.",
+      "publishedAt": "2026-03-09T08:20:00+02:00"
+    },
+    {
+      "headline": "Oil prices surge above $100 and shares slide over Iran war",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c79542n0grwo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "SAD",
+      "commentary": "Risk-off tape: 😨 $FEAR volatility is getting bid — and 😢 $SAD stays heavy as liquidity pulls back on war headlines.",
+      "newsfeed": "😨 FEAR | Oil jumps above $100 on Iran war, stocks slide — risk-off tone bids $FEAR vol as 😢 $SAD weighs on liquidity.",
+      "publishedAt": "2026-03-09T08:20:00+02:00"
+    },
+    {
+      "headline": "Microscopes can see video on a laserdisc",
+      "source": "Hacker News",
+      "url": "https://www.youtube.com/watch?v=qZuR-772cks",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "LOL",
+      "commentary": "😳 $OMG just printed a nerd-snipe candle — and 😂 $LOL liquidity shows up when the timeline learns you can ‘watch’ a laserdisc with a microscope.",
+      "newsfeed": "😳 OMG | Microscopes can ‘see’ laserdisc video — 😂 $LOL bids lift as $OMG candles turn pure nerd magic.",
+      "publishedAt": "2026-03-09T08:20:00+02:00"
+    },
+    {
+      "headline": "Australians must prove they are over 18 to access porn under new laws",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cwy92qpv424o?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😤 $MAD just swept the book — and 😳 $OMG candles wick when the internet realizes ‘age gate’ means real KYC-style friction.",
+      "newsfeed": "😤 MAD | Australia passes porn age-verification laws — 😳 $OMG wicks as $MAD orderflow hits on ‘prove you’re 18’.",
+      "publishedAt": "2026-03-09T08:20:00+02:00"
+    },
     {
       "headline": "Google just gave Sundar Pichai a $692M pay package",
       "source": "TechCrunch",
@@ -150,56 +200,6 @@
       "commentary": "🤑 $GREED is quietly stacking bids — and 👍 $LIKE holds the trend when the thesis is ‘BTC > gold’.",
       "newsfeed": "🤑 GREED | Lyn Alden: Bitcoin could outperform gold — traders see $GREED bids build as 👍 $LIKE holds the trend.",
       "publishedAt": "2026-03-06T08:20:00+02:00"
-    },
-    {
-      "headline": "A new video from the White House mixes Call of Duty footage with actual video of Iran strikes",
-      "source": "The Verge",
-      "url": "https://www.theverge.com/games/889701/trump-white-house-call-of-duty-footage-iran",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "HATE",
-      "commentary": "😳 $OMG just gapped on the open — the candle’s wobbling while 🤬 $HATE bids creep in on the optics.",
-      "newsfeed": "😳 OMG | WH video mixes CoD with Iran strike footage — 🤬 $HATE bids show up as $OMG candles wobble.",
-      "publishedAt": "2026-03-05T08:20:00+02:00"
-    },
-    {
-      "headline": "TikTok won’t add end-to-end encryption to direct messages, report says",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/04/tiktok-wont-add-end-to-end-encryption-to-direct-messages-report-says/",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "MAD",
-      "commentary": "😨 $FEAR vol is getting repriced — and 😤 $MAD has market-buys stacked when DMs stay non-E2E.",
-      "newsfeed": "😨 FEAR | Report: TikTok won’t add E2E encryption to DMs — 😤 $MAD market-buys stack; $FEAR vol reprices.",
-      "publishedAt": "2026-03-05T08:20:00+02:00"
-    },
-    {
-      "headline": "Dogecoin Pumps as Bitcoin Pops, Reversing Recent DOGE Losing Streak",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/359967/dogecoin-pumps-bitcoin-pops-reversing-doge-losing-streak",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "HAPPY",
-      "commentary": "🤑 $GREED just grabbed the offer — and 😊 $HAPPY is chasing the candle like it’s a meme season re-run.",
-      "newsfeed": "🤑 GREED | DOGE pumps as BTC pops — 😊 $HAPPY chases; $GREED grabs the offer on the candle.",
-      "publishedAt": "2026-03-05T08:20:00+02:00"
-    },
-    {
-      "headline": "US and EU police shut down LeakBase, a site accused of sharing stolen passwords and hacking tools",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/04/u-s-and-eu-police-shut-down-leakbase-a-site-accused-of-sharing-stolen-passwords-and-hacking-tools/",
-      "primaryTokemoji": "GOOD",
-      "secondaryTokemoji": "EVIL",
-      "commentary": "😇 $GOOD just found real bids — and 😈 $EVIL liquidity thins when the forum lights go out.",
-      "newsfeed": "😇 GOOD | US/EU police shut down LeakBase — 😈 $EVIL liquidity thins; $GOOD finds bids.",
-      "publishedAt": "2026-03-05T08:20:00+02:00"
-    },
-    {
-      "headline": "Bitwise Donates $233K of Bitcoin ETF Profits to Open-Source BTC Developers",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/360028/bitwise-donates-233k-bitcoin-etf-profits-open-source-btc-developers",
-      "primaryTokemoji": "LOVE",
-      "secondaryTokemoji": "GOOD",
-      "commentary": "❤️ $LOVE has steady bids today — and 😇 $GOOD holds the line when funding flows to the builders.",
-      "newsfeed": "❤️ LOVE | Bitwise donates BTC ETF profits to open-source devs — 😇 $GOOD holds bids as builders get funded.",
-      "publishedAt": "2026-03-05T08:20:00+02:00"
     }
   ]
 }
