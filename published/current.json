@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-09T08:20:00+02:00",
+  "updatedAt": "2026-03-10T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Strategy Drops $1.28 Billion on Bitcoin, Issues $377 Million in Preferred Shares",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360411/strategy-drops-1-28-billion-bitcoin-377-million-preferred-shares",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "OMG",
+      "commentary": "🤑 $GREED just lifted every offer — 😳 $OMG candles don’t care about your ‘valuation’ when the bid is Saylor-sized.",
+      "newsfeed": "🤑 GREED | Strategy buys another $1.28B BTC — traders are pricing $GREED like the bid has infinite liquidity.",
+      "publishedAt": "2026-03-10T08:20:00+02:00"
+    },
+    {
+      "headline": "Trump's DOJ Seeks October Retrial for Tornado Cash Developer Roman Storm",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360521/trumps-doj-seeks-october-retrial-tornado-cash-developer",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😨 $FEAR vol is getting bid into October — 😤 $MAD sweeps the book when devs realize the retrial is still on the tape.",
+      "newsfeed": "😨 FEAR | DOJ seeks Oct retrial for Tornado Cash dev — $FEAR vol looks bid as $MAD orderflow returns.",
+      "publishedAt": "2026-03-10T08:20:00+02:00"
+    },
+    {
+      "headline": "Nasdaq Partners With Kraken for Tokenized Stocks, Launching 2027",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360403/nasdaq-partners-with-kraken-for-tokenized-stocks-launching-2027",
+      "primaryTokemoji": "LIKE",
+      "secondaryTokemoji": "GOOD",
+      "commentary": "👍 $LIKE is finding clean bids — 😇 $GOOD holds the trend when TradFi talks tokenized settlement with real liquidity behind it.",
+      "newsfeed": "👍 LIKE | Nasdaq + Kraken plan tokenized stocks (2027) — traders see $LIKE bids build as liquidity goes on-chain.",
+      "publishedAt": "2026-03-10T08:20:00+02:00"
+    },
+    {
+      "headline": "OpenAI is walking away from expanding its Stargate data center with Oracle",
+      "source": "Hacker News",
+      "url": "https://www.cnbc.com/2026/03/09/oracle-is-building-yesterdays-data-centers-with-tomorrows-debt.html",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😳 $OMG just printed a data-center wick — 😤 $MAD sells the rip when ‘walking away’ hits the orderflow.",
+      "newsfeed": "😳 OMG | CNBC: OpenAI steps back from Oracle data-center expansion — $OMG wicks as $MAD hits on capex whiplash.",
+      "publishedAt": "2026-03-10T08:20:00+02:00"
+    },
+    {
+      "headline": "G7 to take 'necessary measures' to support energy supplies",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c79542n0grwo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "Risk-off tape: 😨 $FEAR volatility stays bid as energy headlines keep liquidity cautious.",
+      "newsfeed": "😨 FEAR | G7 pledges measures to support energy supplies — traders keep $FEAR vol bid as oil stays jumpy.",
+      "publishedAt": "2026-03-10T08:20:00+02:00"
+    },
     {
       "headline": "Living human brain cells play DOOM on a CL1 [video]",
       "source": "Hacker News",
@@ -150,56 +200,6 @@
       "commentary": "😤 $MAD is getting lifted — and 😨 $FEAR vol ticks up when platforms realize the next regulatory candle can wick fast.",
       "newsfeed": "😤 MAD | BBC: Indonesia to ban social platforms for under-16s — 😨 $FEAR vol rises as regulation hits liquidity.",
       "publishedAt": "2026-03-07T08:20:00+02:00"
-    },
-    {
-      "headline": "Construction begins at quantum facility big enough to break Bitcoin",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/construction-quantum-facility-1m-qubits-begins?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😨 $FEAR volatility is getting marked up — and 😳 $OMG candles are twitching on every ‘quantum’ headline.",
-      "newsfeed": "😨 FEAR | Mega-scale quantum facility breaks ground — traders are repricing $FEAR vol as 😳 $OMG candles twitch.",
-      "publishedAt": "2026-03-06T08:20:00+02:00"
-    },
-    {
-      "headline": "A GitHub Issue Title Compromised 4k Developer Machines",
-      "source": "Hacker News",
-      "url": "https://grith.ai/blog/clinejection-when-your-ai-tool-installs-another",
-      "primaryTokemoji": "EVIL",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😈 $EVIL just found fresh liquidity in the prompt layer — 😨 $FEAR bids rise when a title can become an attack.",
-      "newsfeed": "😈 EVIL | Report: GitHub issue title led to AI-tool compromise — 😨 $FEAR bids rise as prompt-layer risk hits orderflow.",
-      "publishedAt": "2026-03-06T08:20:00+02:00"
-    },
-    {
-      "headline": "Britney Spears arrested in California on suspicion of driving under the influence",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/c4gjjn41l7no?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "SAD",
-      "commentary": "😳 $OMG gaps on celebrity headlines — but 😢 $SAD is heavy when it’s about safety and consequences.",
-      "newsfeed": "😳 OMG | BBC: Britney Spears arrested on suspicion of DUI — 😢 $SAD stays heavy as the headline hits.",
-      "publishedAt": "2026-03-06T08:20:00+02:00"
-    },
-    {
-      "headline": "Ecuadorean troops find 35m-long 'narco-sub' hidden in nature reserve",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/cd6zz65vg0qo?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "GOOD",
-      "commentary": "😳 $OMG just printed a wild candle — and 😇 $GOOD finds bids when enforcement actually shows up on the tape.",
-      "newsfeed": "😳 OMG | Ecuador finds 35m ‘narco-sub’ in nature reserve — 😇 $GOOD finds bids as enforcement hits orderflow.",
-      "publishedAt": "2026-03-06T08:20:00+02:00"
-    },
-    {
-      "headline": "Lyn Alden tips Bitcoin outperforming gold over next ‘two to three years’",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/bitcoin-gold-outperform-prediction-macroeconomist-lyn-alden?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "LIKE",
-      "commentary": "🤑 $GREED is quietly stacking bids — and 👍 $LIKE holds the trend when the thesis is ‘BTC > gold’.",
-      "newsfeed": "🤑 GREED | Lyn Alden: Bitcoin could outperform gold — traders see $GREED bids build as 👍 $LIKE holds the trend.",
-      "publishedAt": "2026-03-06T08:20:00+02:00"
     }
   ]
 }
