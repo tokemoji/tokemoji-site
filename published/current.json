@@ -1,6 +1,57 @@
 {
-  "updatedAt": "2026-03-10T08:20:00+02:00",
+  "updatedAt": "2026-03-11T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Dogecoin zooms as Elon Musk announces X Money launch date for April",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/markets/2026/03/11/dogecoin-zooms-as-elon-musk-announces-x-money-launch-date-for-april",
+      "primaryTokemoji": "LOL",
+      "secondaryTokemoji": "GREED",
+      "commentary": "😂 $LOL just caught a clean bid — and 🤑 $GREED is lifting offers because the X Money candle brought meme liquidity back.",
+      "newsfeed": "😂 LOL | Musk drops an April date for X Money — traders are bidding $LOL while $GREED lifts offers on meme liquidity.",
+      "publishedAt": "2026-03-11T08:20:00+02:00"
+    },
+    {
+      "headline": "DOGE employee stole Social Security data and put it on a thumb drive, report says",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/10/doge-employee-stole-social-security-data-and-put-it-on-a-thumb-drive-report-says/",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "EVIL",
+      "commentary": "Risk-off tape: 😨 $FEAR volatility looks bid — and 😈 $EVIL prints when data handling turns into thumb-drive liquidity.",
+      "newsfeed": "😨 FEAR | Report: Social Security data taken on a thumb drive — risk-off tone bids $FEAR vol as 😈 $EVIL prints.",
+      "publishedAt": "2026-03-11T08:20:00+02:00"
+    },
+    {
+      "headline": "DeFi lending platform Aave sees a rare $27 million liquidations after a price glitch",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/business/2026/03/10/defi-lending-platform-aave-sees-a-rare-usd27-million-liquidations-after-a-price-glitch",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😳 $OMG just printed an oracle-wick candle — and 😤 $MAD is sweeping liquidity because ‘price glitch’ is never a chill headline.",
+      "newsfeed": "😳 OMG | Aave hit with rare $27M liquidations after a glitch — $OMG wicks as $MAD sweeps on thin oracle liquidity.",
+      "publishedAt": "2026-03-11T08:20:00+02:00"
+    },
+    {
+      "headline": "Quantum Computing Isn't Just Coming for Bitcoin—It Threatens Messaging Apps Too",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360639/quantum-computing-bitcoin-threatens-messaging-apps",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "Risk-off vibes: 😨 $FEAR volatility is getting marked up — and 😳 $OMG candles stand up when ‘decrypt later’ hits the orderflow.",
+      "newsfeed": "😨 FEAR | Quantum risk talk spreads beyond Bitcoin to messaging — traders mark up $FEAR vol as $OMG wicks.",
+      "publishedAt": "2026-03-11T08:20:00+02:00"
+    },
+    {
+      "headline": "Democrats Introduce Bill to Ban Prediction Market Contracts on War and Death",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360647/democrats-bill-ban-prediction-market-contracts-war-death",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😤 $MAD is trading heavy — while 😨 $FEAR vol stays bid as regulators tighten liquidity around sensitive contracts.",
+      "newsfeed": "😤 MAD | Bill targets prediction markets tied to war/death — traders see $MAD orderflow as $FEAR vol stays bid.",
+      "publishedAt": "2026-03-11T08:20:00+02:00"
+    },
+
     {
       "headline": "Strategy Drops $1.28 Billion on Bitcoin, Issues $377 Million in Preferred Shares",
       "source": "Decrypt",
@@ -150,56 +201,6 @@
       "commentary": "😨 $FEAR volatility is bid on risk headlines — 😳 $OMG wicks up when security incidents hit the newswire.",
       "newsfeed": "😨 FEAR | BBC: Explosion reported outside US embassy in Oslo — risk-off tone lifts $FEAR vol as 😳 $OMG wicks.",
       "publishedAt": "2026-03-08T08:20:00+02:00"
-    },
-    {
-      "headline": "DJI will pay $30K to the man who accidentally hacked 7,000 Romo robovacs",
-      "source": "The Verge",
-      "url": "https://www.theverge.com/news/890982/dji-pay-sammy-azdoufal-robot-vacuum-hack-romo-security",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "LOL",
-      "commentary": "😳 $OMG candles look uncomfortably alive — and 😂 $LOL finds bids when even your robovac has exploit orderflow.",
-      "newsfeed": "😳 OMG | DJI pays $30K after 7,000 robovacs got hacked — 😂 $LOL bids lift as $OMG candles wobble on the tape.",
-      "publishedAt": "2026-03-07T08:20:00+02:00"
-    },
-    {
-      "headline": "Bitcoin could crash by another 30% as four-year cycle gains strength, investment firm says",
-      "source": "CoinDesk",
-      "url": "https://www.coindesk.com/markets/2026/03/07/bitcoin-could-crash-another-30-as-four-year-cycle-gains-strength-investment-firm-says",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "SAD",
-      "commentary": "😨 $FEAR volatility is getting repriced — and 😢 $SAD stays heavy when the ‘cycle’ narrative turns into sell-side liquidity.",
-      "newsfeed": "😨 FEAR | CoinDesk: firm warns BTC could drop another 30% — traders are pricing $FEAR vol as $SAD liquidity leaks.",
-      "publishedAt": "2026-03-07T08:20:00+02:00"
-    },
-    {
-      "headline": "Grammarly is using our identities without permission",
-      "source": "The Verge",
-      "url": "https://www.theverge.com/ai-artificial-intelligence/890921/grammarly-ai-expert-reviews",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "HATE",
-      "commentary": "😤 $MAD just hit the ask — and 🤬 $HATE finds bids when your name becomes someone else’s AI product liquidity.",
-      "newsfeed": "😤 MAD | Verge: Grammarly ‘expert reviews’ used real names without consent — 🤬 $HATE bids stack as $MAD breaks out.",
-      "publishedAt": "2026-03-07T08:20:00+02:00"
-    },
-    {
-      "headline": "Bill Gates’ TerraPower gets approval to build new nuclear reactor",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/06/bill-gates-terrapower-gets-approval-to-build-new-nuclear-reactor/",
-      "primaryTokemoji": "GOOD",
-      "secondaryTokemoji": "LIKE",
-      "commentary": "😇 $GOOD is finding real bids — and 👍 $LIKE holds the trend when ‘approved to build’ finally hits the orderflow.",
-      "newsfeed": "😇 GOOD | TechCrunch: TerraPower gets nuclear reactor approval — 👍 $LIKE bids follow as $GOOD finds clean liquidity.",
-      "publishedAt": "2026-03-07T08:20:00+02:00"
-    },
-    {
-      "headline": "Indonesia to ban social media and other online platforms for under 16s",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/cvg50168ddgo?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😤 $MAD is getting lifted — and 😨 $FEAR vol ticks up when platforms realize the next regulatory candle can wick fast.",
-      "newsfeed": "😤 MAD | BBC: Indonesia to ban social platforms for under-16s — 😨 $FEAR vol rises as regulation hits liquidity.",
-      "publishedAt": "2026-03-07T08:20:00+02:00"
     }
   ]
 }
