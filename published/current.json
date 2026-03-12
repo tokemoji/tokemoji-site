@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-11T08:20:00+02:00",
+  "updatedAt": "2026-03-12T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Bitcoin is back in ‘FOMO territory’ after crossing $70K: Santiment",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/bitcoin-sentiment-jumps-back-into-fomo-territory-santiment?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "HAPPY",
+      "commentary": "🤑 $GREED is lifting offers again — and 😊 $HAPPY keeps the candle green while FOMO orderflow takes the wheel.",
+      "newsfeed": "🤑 GREED | Bitcoin sentiment back in ‘FOMO territory’ over $70K — traders are lifting $GREED offers as the candle stays green.",
+      "publishedAt": "2026-03-12T08:20:00+02:00"
+    },
+    {
+      "headline": "ChatGPT can now create interactive visuals to help you understand math and science concepts",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/10/chatgpt-can-now-create-interactive-visuals-to-help-you-understand-math-and-science-concepts/",
+      "primaryTokemoji": "LIKE",
+      "secondaryTokemoji": "OMG",
+      "commentary": "👍 $LIKE is catching steady bids — and 😳 $OMG wicks up when the product ships something people instantly want to share.",
+      "newsfeed": "👍 LIKE | ChatGPT adds interactive learning visuals — traders are bidding $LIKE as 😳 $OMG candles pop on shareable demos.",
+      "publishedAt": "2026-03-12T08:20:00+02:00"
+    },
+    {
+      "headline": "Amazon Wins Court Order Blocking Perplexity AI Shopping Agent",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360629/amazon-perplexity-comet-court-order-agentic-commerce",
+      "primaryTokemoji": "MAD",
+      "secondaryTokemoji": "HATE",
+      "commentary": "😤 $MAD is sweeping liquidity — and 🤬 $HATE prints when Big Tech gates the orderflow behind ‘account-protected’ walls.",
+      "newsfeed": "😤 MAD | Amazon gets order blocking Perplexity’s shopping agent — $MAD sweeps liquidity as 🤬 $HATE prints on access fights.",
+      "publishedAt": "2026-03-12T08:20:00+02:00"
+    },
+    {
+      "headline": "Large parts of Dresden to be evacuated after 250kg WW2 bomb found",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/c1781gr5n9go?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "Risk-off mood: 😨 $FEAR volatility looks bid — and 😳 $OMG wicks higher as authorities evacuate and liquidity turns cautious.",
+      "newsfeed": "😨 FEAR | Dresden evacuates areas after 250kg WW2 bomb found — risk-off bids $FEAR vol as 😳 $OMG wicks on the alert.",
+      "publishedAt": "2026-03-12T08:20:00+02:00"
+    },
+    {
+      "headline": "Stablecoin boom could eat into traditional banks' profits, warn Jefferies analysts",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/business/2026/03/10/stablecoin-boom-could-eat-into-traditional-banks-profits-warn-jefferies-analysts",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😳 $OMG just printed a TradFi wake-up candle — and 😨 $FEAR gets bid as stablecoin liquidity threatens the deposit stack.",
+      "newsfeed": "😳 OMG | Jefferies warns stablecoins could pressure bank profits — traders eye 😨 $FEAR vol as liquidity leaks from deposits.",
+      "publishedAt": "2026-03-12T08:20:00+02:00"
+    },
     {
       "headline": "Dogecoin zooms as Elon Musk announces X Money launch date for April",
       "source": "CoinDesk",
@@ -51,7 +101,6 @@
       "newsfeed": "😤 MAD | Bill targets prediction markets tied to war/death — traders see $MAD orderflow as $FEAR vol stays bid.",
       "publishedAt": "2026-03-11T08:20:00+02:00"
     },
-
     {
       "headline": "Strategy Drops $1.28 Billion on Bitcoin, Issues $377 Million in Preferred Shares",
       "source": "Decrypt",
@@ -123,16 +172,6 @@
       "publishedAt": "2026-03-09T08:20:00+02:00"
     },
     {
-      "headline": "Oil prices surge above $100 and shares slide over Iran war",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/c79542n0grwo?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "SAD",
-      "commentary": "Risk-off tape: 😨 $FEAR volatility is getting bid — and 😢 $SAD stays heavy as liquidity pulls back on war headlines.",
-      "newsfeed": "😨 FEAR | Oil jumps above $100 on Iran war, stocks slide — risk-off tone bids $FEAR vol as 😢 $SAD weighs on liquidity.",
-      "publishedAt": "2026-03-09T08:20:00+02:00"
-    },
-    {
       "headline": "Microscopes can see video on a laserdisc",
       "source": "Hacker News",
       "url": "https://www.youtube.com/watch?v=qZuR-772cks",
@@ -160,46 +199,6 @@
       "secondaryTokemoji": "OMG",
       "commentary": "🤑 $GREED just cleared the offers — 😳 $OMG candles love a headline that screams ‘executive liquidity event’.",
       "newsfeed": "🤑 GREED | Google hands Pichai a $692M package — traders are pricing $GREED like the tape’s all stock-based comp.",
-      "publishedAt": "2026-03-08T08:20:00+02:00"
-    },
-    {
-      "headline": "Sony appears to be testing dynamic pricing on PlayStation games",
-      "source": "The Verge",
-      "url": "https://www.theverge.com/games/891085/sony-dynamic-pricing-playstation-games",
-      "primaryTokemoji": "HATE",
-      "secondaryTokemoji": "MAD",
-      "commentary": "🤬 $HATE is finding bids — 😤 $MAD sweeps the book when gamers smell ‘surge pricing’ orderflow.",
-      "newsfeed": "🤬 HATE | Verge: Sony may be testing dynamic game pricing — 😤 $MAD bids stack as the price tag starts moving.",
-      "publishedAt": "2026-03-08T08:20:00+02:00"
-    },
-    {
-      "headline": "OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/07/openai-robotics-lead-caitlin-kalinowski-quits-in-response-to-pentagon-deal/",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "FEAR",
-      "commentary": "😤 $MAD is trading heavy — 😨 $FEAR vol gets bid when ‘AI + defense’ hits the tape again.",
-      "newsfeed": "😤 MAD | OpenAI robotics lead quits over Pentagon deal — 😨 $FEAR vol bids show as ‘AI + defense’ returns.",
-      "publishedAt": "2026-03-08T08:20:00+02:00"
-    },
-    {
-      "headline": "Crypto Fear and Greed Index falls back down to 'extreme fear' levels",
-      "source": "Cointelegraph",
-      "url": "https://cointelegraph.com/news/crypto-fear-greed-index-extreme-fear?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😨 $FEAR is getting repriced higher — 😳 $OMG candles don’t like when ‘extreme’ shows up on the sentiment chart.",
-      "newsfeed": "😨 FEAR | Crypto sentiment slides back to ‘extreme fear’ — traders are marking up $FEAR vol as 😳 $OMG wicks grow.",
-      "publishedAt": "2026-03-08T08:20:00+02:00"
-    },
-    {
-      "headline": "Explosion reported outside US embassy in Oslo, police say",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/c5yjegg892lo?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😨 $FEAR volatility is bid on risk headlines — 😳 $OMG wicks up when security incidents hit the newswire.",
-      "newsfeed": "😨 FEAR | BBC: Explosion reported outside US embassy in Oslo — risk-off tone lifts $FEAR vol as 😳 $OMG wicks.",
       "publishedAt": "2026-03-08T08:20:00+02:00"
     }
   ]
