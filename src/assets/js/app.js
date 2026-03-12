@@ -994,8 +994,12 @@ const lastGaugeValues = {
 	hateMarketCap: 0
 };
 
-const SUPABASE_EDGE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1';
-const SUPABASE_EDGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+// Public runtime config injection (avoid hardcoding keys in repo).
+// Security relies on RLS; never put secret/service-role keys in the browser.
+const __TOKEMOJI_CFG__ = (typeof window !== 'undefined' && window.__TOKEMOJI__) ? window.__TOKEMOJI__ : {};
+const SUPABASE_EDGE_URL = __TOKEMOJI_CFG__.SUPABASE_EDGE_URL || 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1';
+const SUPABASE_EDGE_KEY = __TOKEMOJI_CFG__.SUPABASE_ANON_KEY || '';
+
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
 let pumpPortalHeartbeatTimer = null;
@@ -1500,8 +1504,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		'LIKE': 'assets/img/emojis/like.webm'
 	};
 
-	const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
-	const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+	const SUPABASE_URL = __TOKEMOJI_CFG__.SUPABASE_URL || 'https://zhiebsuyfexsxtpekakn.supabase.co';
+	const SUPABASE_ANON_KEY = __TOKEMOJI_CFG__.SUPABASE_ANON_KEY || '';
 	const API_BASE = `${SUPABASE_URL}/functions/v1`;
 	const API_HEADERS = {
 		'Content-Type': 'application/json',
