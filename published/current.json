@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-12T08:20:00+02:00",
+  "updatedAt": "2026-03-13T08:20:00+02:00",
   "items": [
+    {
+      "headline": "MEV bot makes $10M in $50M crypto swap gone wrong",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/mev-bot-makes-10-million-in-crypto-swap-gone-wrong?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😳 $OMG just printed the nastiest slippage candle — and 😤 $MAD is sweeping the orderflow after the warnings got ignored.",
+      "newsfeed": "😳 OMG | MEV bot nets $10M on a $50M swap with wild slippage — traders are pricing $OMG on thin orderflow after ignored warnings.",
+      "publishedAt": "2026-03-13T08:20:00+02:00"
+    },
+    {
+      "headline": "Pi rallies more than 30% after Kraken announces listing",
+      "source": "CoinDesk",
+      "url": "https://www.coindesk.com/markets/2026/03/13/pi-rallies-more-than-30-after-kraken-announces-listing",
+      "primaryTokemoji": "GREED",
+      "secondaryTokemoji": "HAPPY",
+      "commentary": "🤑 $GREED is lifting offers on the listing headline — and 😊 $HAPPY holds the bid while the candle tries to trend.",
+      "newsfeed": "🤑 GREED | Pi jumps after Kraken listing announcement — traders are lifting $GREED offers as 😊 $HAPPY keeps the candle supported.",
+      "publishedAt": "2026-03-13T08:20:00+02:00"
+    },
+    {
+      "headline": "Iran's new supreme leader vows to block Strait of Hormuz in first statement",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cdxg599655vo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "Risk-off tone: 😨 $FEAR volatility looks bid — and 😳 $OMG wicks higher as headlines hit liquidity-sensitive chokepoints.",
+      "newsfeed": "😨 FEAR | Iran leader vows to block Strait of Hormuz — risk-off bids $FEAR vol as 😳 $OMG wicks on escalation risk.",
+      "publishedAt": "2026-03-13T08:20:00+02:00"
+    },
+    {
+      "headline": "US Treasury sanctions enablers of North Korea IT worker fraud ring",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/us-treasury-sanctions-north-korea-it-worker-crypto-fraud-network?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "EVIL",
+      "secondaryTokemoji": "FEAR",
+      "commentary": "😈 $EVIL is getting marked up — and 😨 $FEAR stays bid as compliance headlines tighten liquidity across the space.",
+      "newsfeed": "😈 EVIL | US Treasury sanctions enablers of NK IT worker fraud ring — traders see 😨 $FEAR vol stay bid as liquidity gets stricter.",
+      "publishedAt": "2026-03-13T08:20:00+02:00"
+    },
+    {
+      "headline": "Nvidia Drops Nemotron 3 Super Amid $26 Billion Open-Model AI Bet—America's Answer to Qwen?",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360929/nvidia-drops-nemotron-3-super-26-billion-open-model-ai-bet",
+      "primaryTokemoji": "OMG",
+      "secondaryTokemoji": "LIKE",
+      "commentary": "😳 $OMG candles perk up on open-model drops — and 👍 $LIKE catches bids when devs feel the liquidity of ‘open weights’.",
+      "newsfeed": "😳 OMG | Nvidia drops Nemotron 3 Super + talks big open-model bet — 👍 $LIKE catches bids as open-weight liquidity hits the timeline.",
+      "publishedAt": "2026-03-13T08:20:00+02:00"
+    },
     {
       "headline": "Bitcoin is back in ‘FOMO territory’ after crossing $70K: Santiment",
       "source": "Cointelegraph",
@@ -150,56 +200,6 @@
       "commentary": "Risk-off tape: 😨 $FEAR volatility stays bid as energy headlines keep liquidity cautious.",
       "newsfeed": "😨 FEAR | G7 pledges measures to support energy supplies — traders keep $FEAR vol bid as oil stays jumpy.",
       "publishedAt": "2026-03-10T08:20:00+02:00"
-    },
-    {
-      "headline": "Living human brain cells play DOOM on a CL1 [video]",
-      "source": "Hacker News",
-      "url": "https://www.youtube.com/watch?v=yRV8fSw6HaE",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "LOL",
-      "commentary": "😳 $OMG just printed a biotech candle — and 😂 $LOL bids keep stacking because the orderflow says ‘brain cells gaming’.",
-      "newsfeed": "😳 OMG | Brain cells reportedly play DOOM — 😂 $LOL bids stack as $OMG candles go full sci-fi on the tape.",
-      "publishedAt": "2026-03-09T08:20:00+02:00"
-    },
-    {
-      "headline": "Oil shorts on Hyperliquid get wiped out as crude surges 30% on Iran escalation",
-      "source": "CoinDesk",
-      "url": "https://www.coindesk.com/markets/2026/03/09/oil-shorts-on-hyperliquid-get-wiped-out-as-crude-surges-30-on-iran-escalation-triggering-usd40-million-in-liquidations",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "GREED",
-      "commentary": "😨 $FEAR vol looks bid into the unwind — while 🤑 $GREED keeps lifting offers on anything that even smells like a liquidation cascade.",
-      "newsfeed": "😨 FEAR | Hyperliquid oil shorts reportedly get wiped — 🤑 $GREED lifts offers as $FEAR vol spikes on liquidation orderflow.",
-      "publishedAt": "2026-03-09T08:20:00+02:00"
-    },
-    {
-      "headline": "Microscopes can see video on a laserdisc",
-      "source": "Hacker News",
-      "url": "https://www.youtube.com/watch?v=qZuR-772cks",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "LOL",
-      "commentary": "😳 $OMG just printed a nerd-snipe candle — and 😂 $LOL liquidity shows up when the timeline learns you can ‘watch’ a laserdisc with a microscope.",
-      "newsfeed": "😳 OMG | Microscopes can ‘see’ laserdisc video — 😂 $LOL bids lift as $OMG candles turn pure nerd magic.",
-      "publishedAt": "2026-03-09T08:20:00+02:00"
-    },
-    {
-      "headline": "Australians must prove they are over 18 to access porn under new laws",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/cwy92qpv424o?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "MAD",
-      "secondaryTokemoji": "OMG",
-      "commentary": "😤 $MAD just swept the book — and 😳 $OMG candles wick when the internet realizes ‘age gate’ means real KYC-style friction.",
-      "newsfeed": "😤 MAD | Australia passes porn age-verification laws — 😳 $OMG wicks as $MAD orderflow hits on ‘prove you’re 18’.",
-      "publishedAt": "2026-03-09T08:20:00+02:00"
-    },
-    {
-      "headline": "Google just gave Sundar Pichai a $692M pay package",
-      "source": "TechCrunch",
-      "url": "https://techcrunch.com/2026/03/07/google-just-gave-sundar-pichai-a-692m-pay-package/",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "OMG",
-      "commentary": "🤑 $GREED just cleared the offers — 😳 $OMG candles love a headline that screams ‘executive liquidity event’.",
-      "newsfeed": "🤑 GREED | Google hands Pichai a $692M package — traders are pricing $GREED like the tape’s all stock-based comp.",
-      "publishedAt": "2026-03-08T08:20:00+02:00"
     }
   ]
 }
