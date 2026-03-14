@@ -1,6 +1,56 @@
 {
-  "updatedAt": "2026-03-13T08:20:00+02:00",
+  "updatedAt": "2026-03-14T08:20:00+02:00",
   "items": [
+    {
+      "headline": "Dems say they will oversee reported DOJ probe into Binance",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/democrats-oversee-doj-probe-binance?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "FEAR",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😨 $FEAR is getting bid on the regulatory tape — and 😳 $OMG keeps wicking as the liquidity reads ‘investigation risk’.",
+      "newsfeed": "😨 FEAR | Senators vow oversight of reported DOJ probe into Binance — traders bid $FEAR vol as 😳 $OMG wicks on investigation risk.",
+      "publishedAt": "2026-03-14T08:20:00+02:00"
+    },
+    {
+      "headline": "Trump offers memecoin holders another gala to boost token from lows",
+      "source": "Cointelegraph",
+      "url": "https://cointelegraph.com/news/donald-trump-memecoin-holders-annual-dinner-price-low?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound",
+      "primaryTokemoji": "LOL",
+      "secondaryTokemoji": "GREED",
+      "commentary": "😂 $LOL just caught a clean bid — and 🤑 $GREED is lifting offers because the chart apparently needed… a gala catalyst.",
+      "newsfeed": "😂 LOL | Trump announces another gala for memecoin holders — traders bid $LOL as 🤑 $GREED lifts offers on pure headline liquidity.",
+      "publishedAt": "2026-03-14T08:20:00+02:00"
+    },
+    {
+      "headline": "Atlassian follows Block’s footsteps and cuts staff in the name of AI",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/03/12/atlassian-follows-blocks-footsteps-and-cuts-staff-in-the-name-of-ai/",
+      "primaryTokemoji": "SAD",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😢 $SAD stays heavy when layoffs hit the feed — and 😤 $MAD sweeps the orderflow the moment ‘in the name of AI’ shows up.",
+      "newsfeed": "😢 SAD | Atlassian cuts staff as it pivots spending toward AI — traders keep $SAD heavy as 😤 $MAD sweeps on the phrasing.",
+      "publishedAt": "2026-03-14T08:20:00+02:00"
+    },
+    {
+      "headline": "Google's New AI Tool Predicts Flash Floods Up to 24 Hours in Advance",
+      "source": "Decrypt",
+      "url": "https://decrypt.co/360946/google-gemini-groundsource-flash-flood-prediction-24-hours",
+      "primaryTokemoji": "GOOD",
+      "secondaryTokemoji": "OMG",
+      "commentary": "😇 $GOOD is catching steady bids — and 😳 $OMG candles perk up when AI ships something that’s actually useful IRL.",
+      "newsfeed": "😇 GOOD | Google AI tool predicts flash floods up to 24h ahead — traders bid $GOOD as 😳 $OMG perks up on real-world utility.",
+      "publishedAt": "2026-03-14T08:20:00+02:00"
+    },
+    {
+      "headline": "France's ghost car scandal that allowed one million illegal vehicles onto the roads",
+      "source": "BBC News",
+      "url": "https://www.bbc.com/news/articles/cpqw0jgn5xgo?at_medium=RSS&at_campaign=rss",
+      "primaryTokemoji": "EVIL",
+      "secondaryTokemoji": "MAD",
+      "commentary": "😈 $EVIL just printed a fraud wick — and 😤 $MAD is lifting bids as the tape digests how deep the paperwork liquidity got gamed.",
+      "newsfeed": "😈 EVIL | France ‘ghost car’ scandal put huge numbers of illegal vehicles on roads — traders bid $EVIL as 😤 $MAD lifts on fraud orderflow.",
+      "publishedAt": "2026-03-14T08:20:00+02:00"
+    },
     {
       "headline": "MEV bot makes $10M in $50M crypto swap gone wrong",
       "source": "Cointelegraph",
@@ -150,56 +200,6 @@
       "commentary": "😤 $MAD is trading heavy — while 😨 $FEAR vol stays bid as regulators tighten liquidity around sensitive contracts.",
       "newsfeed": "😤 MAD | Bill targets prediction markets tied to war/death — traders see $MAD orderflow as $FEAR vol stays bid.",
       "publishedAt": "2026-03-11T08:20:00+02:00"
-    },
-    {
-      "headline": "Strategy Drops $1.28 Billion on Bitcoin, Issues $377 Million in Preferred Shares",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/360411/strategy-drops-1-28-billion-bitcoin-377-million-preferred-shares",
-      "primaryTokemoji": "GREED",
-      "secondaryTokemoji": "OMG",
-      "commentary": "🤑 $GREED just lifted every offer — 😳 $OMG candles don’t care about your ‘valuation’ when the bid is Saylor-sized.",
-      "newsfeed": "🤑 GREED | Strategy buys another $1.28B BTC — traders are pricing $GREED like the bid has infinite liquidity.",
-      "publishedAt": "2026-03-10T08:20:00+02:00"
-    },
-    {
-      "headline": "Trump's DOJ Seeks October Retrial for Tornado Cash Developer Roman Storm",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/360521/trumps-doj-seeks-october-retrial-tornado-cash-developer",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "MAD",
-      "commentary": "😨 $FEAR vol is getting bid into October — 😤 $MAD sweeps the book when devs realize the retrial is still on the tape.",
-      "newsfeed": "😨 FEAR | DOJ seeks Oct retrial for Tornado Cash dev — $FEAR vol looks bid as $MAD orderflow returns.",
-      "publishedAt": "2026-03-10T08:20:00+02:00"
-    },
-    {
-      "headline": "Nasdaq Partners With Kraken for Tokenized Stocks, Launching 2027",
-      "source": "Decrypt",
-      "url": "https://decrypt.co/360403/nasdaq-partners-with-kraken-for-tokenized-stocks-launching-2027",
-      "primaryTokemoji": "LIKE",
-      "secondaryTokemoji": "GOOD",
-      "commentary": "👍 $LIKE is finding clean bids — 😇 $GOOD holds the trend when TradFi talks tokenized settlement with real liquidity behind it.",
-      "newsfeed": "👍 LIKE | Nasdaq + Kraken plan tokenized stocks (2027) — traders see $LIKE bids build as liquidity goes on-chain.",
-      "publishedAt": "2026-03-10T08:20:00+02:00"
-    },
-    {
-      "headline": "OpenAI is walking away from expanding its Stargate data center with Oracle",
-      "source": "Hacker News",
-      "url": "https://www.cnbc.com/2026/03/09/oracle-is-building-yesterdays-data-centers-with-tomorrows-debt.html",
-      "primaryTokemoji": "OMG",
-      "secondaryTokemoji": "MAD",
-      "commentary": "😳 $OMG just printed a data-center wick — 😤 $MAD sells the rip when ‘walking away’ hits the orderflow.",
-      "newsfeed": "😳 OMG | CNBC: OpenAI steps back from Oracle data-center expansion — $OMG wicks as $MAD hits on capex whiplash.",
-      "publishedAt": "2026-03-10T08:20:00+02:00"
-    },
-    {
-      "headline": "G7 to take 'necessary measures' to support energy supplies",
-      "source": "BBC News",
-      "url": "https://www.bbc.com/news/articles/c79542n0grwo?at_medium=RSS&at_campaign=rss",
-      "primaryTokemoji": "FEAR",
-      "secondaryTokemoji": "OMG",
-      "commentary": "Risk-off tape: 😨 $FEAR volatility stays bid as energy headlines keep liquidity cautious.",
-      "newsfeed": "😨 FEAR | G7 pledges measures to support energy supplies — traders keep $FEAR vol bid as oil stays jumpy.",
-      "publishedAt": "2026-03-10T08:20:00+02:00"
     }
   ]
 }
