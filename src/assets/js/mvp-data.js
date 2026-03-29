@@ -62,12 +62,13 @@ function generateSampleLeaderboard(count) {
   for (let i = 0; i < count; i++) {
     const activity = Math.floor(Math.random() * 10000);
     const holder = Math.floor(Math.random() * 10000);
+    const weeklyScore = Math.round((activity + holder) / 2);
     arr.push({
       rank: 0,
       username: names[i % names.length] + (i > 9 ? i : ""),
       activityScore: activity,
       holderScore: holder,
-      total: 0.5*activity + 0.5*holder
+      total: weeklyScore // WeeklyScore = average(Activity, Holder)
     });
   }
   arr.sort((a,b) => b.total - a.total);
