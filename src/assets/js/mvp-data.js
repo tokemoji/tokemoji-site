@@ -5,7 +5,7 @@ const TOKENS = ["EVIL","LIKE","FEAR","LOVE","HATE","HAPPY","MAD","GOOD","OMG","G
 const DEFAULT_STATE = {
   season: 1,
   week: 1,
-  rewardPool: 100000, // demo number for UI; paid in winning emotion token later
+  rewardPool: 1000000, // Season 1: 1,000,000 tokens pool (paid in winning emotion token later)
 
   postOfTheDay: {
     date: new Date().toISOString().split('T')[0],

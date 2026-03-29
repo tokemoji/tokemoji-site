@@ -1,6 +1,8 @@
 // MVP Pre-Launch section renderer for index.html
 document.addEventListener('DOMContentLoaded', function () {
   const state = loadState();
+  // expose for prize schedule without reloading/losing pool
+  window.__TOKEMOJI_STATE_FOR_PRIZES = state;
 
   // Season/Week
   document.getElementById('mvp-season').textContent = state.season;
@@ -126,15 +128,38 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 
-function prizeForRank(rank) {
-  // MVP/demo schedule. Replace with real payouts before launch.
-  if (rank === 1) return 1000;
-  if (rank === 2) return 500;
-  if (rank === 3) return 300;
-  if (rank <= 10) return 100;
-  if (rank <= 50) return 25;
-  if (rank <= 100) return 10;
-  return 0;
+function generatePrizeSchedule(pool, places, power) {
+  // Top-heavy payout curve: weight_r = 1/(r^power)
+  const weights = [];
+  for (let r = 1; r <= places; r++) weights.push(1 / Math.pow(r, power));
+  const sum = weights.reduce((a,b) => a + b, 0);
+  const raw = weights.map(w => (w / sum) * pool);
+
+  // Round while preserving total
+  const rounded = raw.map(x => Math.floor(x));
+  let remainder = pool - rounded.reduce((a,b) => a + b, 0);
+  // Distribute remainder from top ranks down
+  let i = 0;
+  while (remainder > 0) {
+    rounded[i % places] += 1;
+    remainder -= 1;
+    i += 1;
+  }
+  return rounded;
+}
+
+function getPrizeSchedule(state) {
+  // Cache per page load
+  if (window.__TOKEMOJI_PRIZE_SCHEDULE) return window.__TOKEMOJI_PRIZE_SCHEDULE;
+  const pool = Number(state.rewardPool || 1000000);
+  const schedule = generatePrizeSchedule(pool, 100, 1.15);
+  window.__TOKEMOJI_PRIZE_SCHEDULE = schedule;
+  return schedule;
+}
+
+function prizeForRank(rank, state) {
+  const schedule = getPrizeSchedule(state);
+  return schedule[rank - 1] || 0;
 }
 
 function renderLeaderboard(list, tbody) {
@@ -142,7 +167,7 @@ function renderLeaderboard(list, tbody) {
   tbody.innerHTML = '';
   list.forEach(u => {
     const tr = document.createElement('tr');
-    const prize = prizeForRank(u.rank);
+    const prize = prizeForRank(u.rank, window.__TOKEMOJI_STATE_FOR_PRIZES || loadState());
     // Support both layouts: old (Activity/Holder/WeeklyScore) and new (WeeklyScore/Prize)
     const wantsPrizeOnly = tbody.closest('table')?.querySelectorAll('thead th').length === 4;
 
