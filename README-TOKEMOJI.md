@@ -35,6 +35,33 @@ This system provides:
 - Automatic sorting (Market Cap, Gainers, Losers)
 - Live gauge widgets for emotion comparisons
 
+## Pre-launch MVP (Week/Season + Quests + Leaderboard + Secret Vote)
+
+This repo now includes a **pre-launch MVP skeleton** on the homepage (`#mvp-prelaunch-section`).
+
+What it does (MVP):
+- Shows **Season N / Week N** (no “next week” copy)
+- “Post of the Day” card (stub link)
+- **3 daily quests** with **Activity XP**
+  - Core quest: **RT/Quote** requires the user to enter their **X @handle** + paste a **link** (verification is manual in MVP)
+- Public **Leaderboard** (demo data + your local score)
+  - Top100 / Full (demo) + search
+- **Secret prediction vote** (weekly) — **totals are hidden** until reveal (reveal not implemented yet)
+
+What’s stubbed / coming soon:
+- Wallet connect, HolderScore, on-chain scoring, claim flow
+- Global/public leaderboard backend (currently **local-only** + deterministic demo rows)
+- Auto-verification of RT/Quote on X
+
+Local storage:
+- All MVP state is stored in the browser under key: `tokemoji_mvp_v1`
+
+Configuration:
+- You can override defaults by defining `window.TOKEMOJI_MVP_CONFIG` before `assets/js/app.js`.
+- Default epoch date (Week/Season counter start): `2026-03-29`
+
+---
+
 ## Setup Instructions
 
 ### 1. Install Dependencies

@@ -1,0 +1,27 @@
+.mvp-quest-card {
+	border: 1px solid var(--bs-dark);
+	border-radius: 1rem;
+	background: var(--bs-white);
+	box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.9);
+}
+
+.mvp-quest-card__title {
+	font-weight: 700;
+	color: var(--bs-heading-color);
+}
+
+.mvp-quest-card__meta {
+	font-size: 0.85rem;
+	color: var(--bs-secondary-color);
+}
+
+.mvp-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.1rem 0.5rem;
+	border-radius: 999px;
+	border: 1px solid var(--bs-dark);
+	background: var(--bs-light);
+	font-size: 0.8rem;
+}
