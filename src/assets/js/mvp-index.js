@@ -4,7 +4,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Season/Week
   document.getElementById('mvp-season').textContent = state.season;
+  const seasonBadge = document.getElementById('mvp-season-badge');
+  if (seasonBadge) seasonBadge.textContent = state.season;
   document.getElementById('mvp-week').textContent = state.week;
+
+  // Marketing bits (optional, only on prelaunch page)
+  const eowTitle = document.getElementById('mvp-eow-title');
+  if (eowTitle) eowTitle.textContent = `Emotion of the Week #${state.week}`;
+  const rewardPoolEl = document.getElementById('mvp-reward-pool');
+  if (rewardPoolEl) rewardPoolEl.textContent = (state.rewardPool || 100000).toLocaleString() + " (winner token)";
 
   // Post of the Day
   const post = state.postOfTheDay;
@@ -75,12 +83,17 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Leaderboard
-  renderLeaderboard(state.leaderboard, document.getElementById('mvp-leaderboard-body'));
-  document.getElementById('mvp-leaderboard-search').addEventListener('input', function () {
-    const term = this.value.toLowerCase();
-    const filtered = state.leaderboard.filter(u => u.username.toLowerCase().includes(term));
-    renderLeaderboard(filtered, document.getElementById('mvp-leaderboard-body'));
-  });
+  const leaderboardBody = document.getElementById('mvp-leaderboard-body');
+  renderLeaderboard(state.leaderboard, leaderboardBody);
+
+  const searchEl = document.getElementById('mvp-leaderboard-search');
+  if (searchEl) {
+    searchEl.addEventListener('input', function () {
+      const term = this.value.toLowerCase();
+      const filtered = state.leaderboard.filter(u => u.username.toLowerCase().includes(term));
+      renderLeaderboard(filtered, leaderboardBody);
+    });
+  }
 
   // Expose functions
   window.submitProof = function(questId) {
@@ -113,11 +126,42 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 });
 
+function prizeForRank(rank) {
+  // MVP/demo schedule. Replace with real payouts before launch.
+  if (rank === 1) return 1000;
+  if (rank === 2) return 500;
+  if (rank === 3) return 300;
+  if (rank <= 10) return 100;
+  if (rank <= 50) return 25;
+  if (rank <= 100) return 10;
+  return 0;
+}
+
 function renderLeaderboard(list, tbody) {
+  if (!tbody) return;
   tbody.innerHTML = '';
   list.forEach(u => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.rank}</td><td>${u.username}</td><td class="text-end">${u.activityScore.toLocaleString()}</td><td class="text-end">${u.holderScore.toLocaleString()}</td><td class="text-end"><strong>${u.total.toLocaleString()}</strong></td>`;
+    const prize = prizeForRank(u.rank);
+    // Support both layouts: old (Activity/Holder/WeeklyScore) and new (WeeklyScore/Prize)
+    const wantsPrizeOnly = tbody.closest('table')?.querySelectorAll('thead th').length === 4;
+
+    if (wantsPrizeOnly) {
+      tr.innerHTML = `
+        <td>${u.rank}</td>
+        <td>${u.username}</td>
+        <td class="text-end"><strong>${u.total.toLocaleString()}</strong></td>
+        <td class="text-end">${prize ? prize.toLocaleString() : '—'}</td>
+      `;
+    } else {
+      tr.innerHTML = `
+        <td>${u.rank}</td>
+        <td>${u.username}</td>
+        <td class="text-end">${u.activityScore.toLocaleString()}</td>
+        <td class="text-end">${u.holderScore.toLocaleString()}</td>
+        <td class="text-end"><strong>${u.total.toLocaleString()}</strong></td>
+      `;
+    }
     tbody.appendChild(tr);
   });
 }

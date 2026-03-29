@@ -48,5 +48,8 @@ coverage/
 tmp/
 temp/
 
+# here.now publish state
+.herenow/
+
 
 
