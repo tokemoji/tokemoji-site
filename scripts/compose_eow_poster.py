@@ -17,7 +17,7 @@ Usage:
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageEnhance
 
 
 def load_font(size: int) -> ImageFont.FreeTypeFont:
@@ -33,13 +33,32 @@ def load_font(size: int) -> ImageFont.FreeTypeFont:
 
 
 def paste_coin(canvas: Image.Image, coin_path: Path, center_xy: tuple[int, int], size: int, tilt_deg: float = 0.0):
+    """Paste coin with soft shadow + subtle highlight for a more 3D look."""
     coin = Image.open(coin_path).convert("RGBA")
     coin = coin.resize((size, size), Image.Resampling.LANCZOS)
+
     if tilt_deg:
         coin = coin.rotate(tilt_deg, resample=Image.Resampling.BICUBIC, expand=True)
+
+    # Shadow
+    shadow = Image.new("RGBA", coin.size, (0, 0, 0, 0))
+    shadow_draw = ImageDraw.Draw(shadow)
+    shadow_draw.ellipse([8, 10, coin.size[0] - 8, coin.size[1] - 6], fill=(0, 0, 0, 170))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(radius=14))
+
+    # Highlight overlay
+    highlight = Image.new("RGBA", coin.size, (0, 0, 0, 0))
+    hdraw = ImageDraw.Draw(highlight)
+    hdraw.ellipse([12, 12, coin.size[0] - 40, coin.size[1] - 40], fill=(255, 255, 255, 55))
+    highlight = highlight.filter(ImageFilter.GaussianBlur(radius=6))
+
+    coin3d = Image.alpha_composite(coin, highlight)
+
     x = center_xy[0] - coin.size[0] // 2
     y = center_xy[1] - coin.size[1] // 2
-    canvas.alpha_composite(coin, (x, y))
+
+    canvas.alpha_composite(shadow, (x + 10, y + 16))
+    canvas.alpha_composite(coin3d, (x, y))
 
 
 def draw_badge(draw: ImageDraw.ImageDraw, xywh, text: str, bg, fg, radius=18, font=None):
