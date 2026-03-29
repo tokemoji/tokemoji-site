@@ -2793,3 +2793,466 @@ function applyEmojiWobbleDelays() {
 applyEmojiWobbleDelays();
 
 }); // End of DOMContentLoaded event listener
+
+/* -------------------------------------------------------------------------- */
+/* Tokemoji MVP (pre-launch skeleton)
+/* - Local-only state in localStorage
+/* - No wallet / on-chain holdings integration yet
+/* -------------------------------------------------------------------------- */
+
+window.addEventListener('DOMContentLoaded', function () {
+	var root = document.getElementById('mvp-prelaunch-section');
+	if (!root) return;
+
+	var CONFIG = Object.assign(
+		{
+			// Change this date to reset Week/Season counting.
+			// Format: YYYY-MM-DD (interpreted as local time).
+			epochDate: '2026-03-29',
+			weeksPerSeason: 4,
+			podXUrl: 'https://x.com/tokemoji',
+			emotions: [
+				{ ticker: 'EVIL', emoji: '😈' },
+				{ ticker: 'LIKE', emoji: '👍' },
+				{ ticker: 'FEAR', emoji: '😱' },
+				{ ticker: 'LOVE', emoji: '❤️' },
+				{ ticker: 'HATE', emoji: '🤬' },
+				{ ticker: 'HAPPY', emoji: '😊' },
+				{ ticker: 'MAD', emoji: '😤' },
+				{ ticker: 'GOOD', emoji: '😇' },
+				{ ticker: 'OMG', emoji: '🤯' },
+				{ ticker: 'GREED', emoji: '🤑' },
+				{ ticker: 'LOL', emoji: '😂' },
+				{ ticker: 'SAD', emoji: '😢' }
+			]
+		},
+		window.TOKEMOJI_MVP_CONFIG || {}
+	);
+
+	var STORAGE_KEY = 'tokemoji_mvp_v1';
+
+	function todayKey(d) {
+		var yyyy = String(d.getFullYear());
+		var mm = String(d.getMonth() + 1).padStart(2, '0');
+		var dd = String(d.getDate()).padStart(2, '0');
+		return yyyy + '-' + mm + '-' + dd;
+	}
+
+	function parseEpochDate(str) {
+		// str "YYYY-MM-DD" → local midnight
+		var parts = String(str).split('-');
+		return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]), 0, 0, 0, 0);
+	}
+
+	function getWeekSeason(now) {
+		var epoch = parseEpochDate(CONFIG.epochDate);
+		var msPerDay = 24 * 60 * 60 * 1000;
+		var days = Math.floor((now.getTime() - epoch.getTime()) / msPerDay);
+		var week = Math.floor(days / 7) + 1;
+		if (week < 1) week = 1;
+		var season = Math.floor((week - 1) / CONFIG.weeksPerSeason) + 1;
+		return { week: week, season: season };
+	}
+
+	function safeJsonParse(s, fallback) {
+		try {
+			return JSON.parse(s);
+		} catch (e) {
+			return fallback;
+		}
+	}
+
+	function loadState() {
+		var raw = localStorage.getItem(STORAGE_KEY);
+		var s = safeJsonParse(raw, null);
+		if (!s || typeof s !== 'object') {
+			s = { profile: { handle: '' }, activityXp: 0, days: {}, predictions: {} };
+		}
+		if (!s.profile) s.profile = { handle: '' };
+		if (!s.days) s.days = {};
+		if (!s.predictions) s.predictions = {};
+		if (typeof s.activityXp !== 'number') s.activityXp = 0;
+		return s;
+	}
+
+	function saveState(s) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+	}
+
+	function el(id) {
+		return document.getElementById(id);
+	}
+
+	function h(text) {
+		return String(text)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#039;');
+	}
+
+	function clamp(n, a, b) {
+		return Math.max(a, Math.min(b, n));
+	}
+
+	function lcg(seed) {
+		var s = seed >>> 0;
+		return function () {
+			// Numerical Recipes LCG
+			s = (1664525 * s + 1013904223) >>> 0;
+			return s / 4294967296;
+		};
+	}
+
+	var now = new Date();
+	var day = todayKey(now);
+	var ws = getWeekSeason(now);
+	var weekKey = 'S' + ws.season + '-W' + ws.week;
+
+	// Header widgets
+	el('mvp-season').textContent = 'Season ' + ws.season;
+	el('mvp-week').textContent = 'Week ' + ws.week;
+	el('mvp-pod-date').textContent = day;
+	var podLink = el('mvp-pod-link');
+	if (podLink) podLink.href = CONFIG.podXUrl;
+
+	var state = loadState();
+	el('mvp-activity-xp').textContent = String(state.activityXp);
+
+	function getDayState() {
+		if (!state.days[day]) state.days[day] = { completed: {}, data: {} };
+		return state.days[day];
+	}
+
+	function awardXp(amount) {
+		state.activityXp += amount;
+		state.activityXp = Math.max(0, Math.floor(state.activityXp));
+		saveState(state);
+		el('mvp-activity-xp').textContent = String(state.activityXp);
+		refreshLeaderboard();
+	}
+
+	function questCardHtml(opts) {
+		return (
+			'<div class="mvp-quest-card p-3">' +
+				'<div class="d-flex align-items-start justify-content-between gap-3">' +
+					'<div>' +
+						'<div class="mvp-quest-card__title">' + h(opts.title) + '</div>' +
+						'<div class="mvp-quest-card__meta">' + h(opts.meta || '') + '</div>' +
+					'</div>' +
+					'<div>' + (opts.badgeHtml || '') + '</div>' +
+				'</div>' +
+				'<div class="mt-3">' + (opts.bodyHtml || '') + '</div>' +
+			'</div>'
+		);
+	}
+
+	function renderQuests() {
+		var container = el('mvp-quests');
+		if (!container) return;
+		container.innerHTML = '';
+
+		var ds = getDayState();
+
+		// Quest 1: RT/Quote submission (manual)
+		var q1Done = !!ds.completed.rt_quote;
+		var q1Badge = q1Done
+			? '<span class="badge bg-success">Completed</span>'
+			: '<span class="mvp-pill"><span>Core</span><span class="badge bg-dark">+10/+20</span></span>';
+
+		var q1Body = q1Done
+			? '<div class="small text-muted">Saved. MVP verification is manual.</div>'
+			: (
+				'<form id="mvp-q1-form" class="row g-2">' +
+					'<div class="col-12 col-md-4">' +
+						'<input class="form-control form-control-sm" name="handle" placeholder="Your X @handle" value="' +
+							h(state.profile.handle || '') +
+							'" />' +
+					'</div>' +
+					'<div class="col-12 col-md-4">' +
+						'<select class="form-select form-select-sm" name="kind">' +
+							'<option value="rt">RT (+10 XP)</option>' +
+							'<option value="quote">Quote (+20 XP)</option>' +
+						'</select>' +
+					'</div>' +
+					'<div class="col-12 col-md-4">' +
+						'<input class="form-control form-control-sm" name="link" placeholder="Paste RT/Quote link" />' +
+					'</div>' +
+					'<div class="col-12 d-flex align-items-center gap-2">' +
+						'<button class="btn btn-sm btn-dark" type="submit">Submit</button>' +
+						'<div id="mvp-q1-err" class="small text-danger"></div>' +
+					'</div>' +
+				'</form>'
+			);
+
+		container.insertAdjacentHTML(
+			'beforeend',
+			questCardHtml({
+				title: 'RT / Quote the Post of the Day',
+				meta: 'MVP: paste your link for manual verification.',
+				badgeHtml: q1Badge,
+				bodyHtml: q1Body
+			})
+		);
+
+		// Quest 2: Daily check-in
+		var q2Done = !!ds.completed.checkin;
+		var q2Body = q2Done
+			? '<span class="badge bg-success">Completed</span>'
+			: '<button id="mvp-q2-btn" class="btn btn-sm btn-outline-dark" type="button">I read today\'s update (+5 XP)</button>';
+
+		container.insertAdjacentHTML(
+			'beforeend',
+			questCardHtml({
+				title: 'Daily Check-in',
+				meta: 'Lightweight engagement quest.',
+				badgeHtml: q2Done ? '<span class="badge bg-success">Done</span>' : '<span class="badge bg-dark">+5</span>',
+				bodyHtml: q2Body
+			})
+		);
+
+		// Quest 3: Daily mood pick
+		var q3Done = !!ds.completed.mood_pick;
+		var q3Body = q3Done
+			? '<div class="small text-muted">Saved: <strong>' + h(ds.data.mood_pick || '') + '</strong></div>'
+			: (function () {
+				var options = CONFIG.emotions
+					.map(function (e) {
+						return (
+							'<option value="' + h(e.ticker) + '">' +
+							h(e.emoji + ' ' + e.ticker) +
+							'</option>'
+						);
+					})
+					.join('');
+				return (
+					'<div class="d-flex flex-wrap align-items-center gap-2">' +
+						'<select id="mvp-q3-select" class="form-select form-select-sm" style="max-width: 220px">' +
+							options +
+						'</select>' +
+						'<button id="mvp-q3-btn" class="btn btn-sm btn-outline-dark" type="button">Submit (+5 XP)</button>' +
+						'<span id="mvp-q3-err" class="small text-danger"></span>' +
+					'</div>'
+				);
+			})();
+
+		container.insertAdjacentHTML(
+			'beforeend',
+			questCardHtml({
+				title: 'Pick today\'s dominant emotion',
+				meta: 'Quick vote (daily).',
+				badgeHtml: q3Done ? '<span class="badge bg-success">Done</span>' : '<span class="badge bg-dark">+5</span>',
+				bodyHtml: q3Body
+			})
+		);
+
+		// Wire listeners after render
+		if (!q1Done) {
+			var form = document.getElementById('mvp-q1-form');
+			form.addEventListener('submit', function (ev) {
+				ev.preventDefault();
+				var errEl = document.getElementById('mvp-q1-err');
+				errEl.textContent = '';
+				var fd = new FormData(form);
+				var handle = String(fd.get('handle') || '').trim();
+				var kind = String(fd.get('kind') || 'rt');
+				var link = String(fd.get('link') || '').trim();
+
+				if (!handle || handle[0] !== '@' || handle.length < 2) {
+					errEl.textContent = 'Please enter a valid @handle.';
+					return;
+				}
+				if (!link || (link.indexOf('twitter.com') === -1 && link.indexOf('x.com') === -1)) {
+					errEl.textContent = 'Please paste a valid X/Twitter link.';
+					return;
+				}
+
+				state.profile.handle = handle;
+				ds.completed.rt_quote = true;
+				ds.data.rt_quote = { handle: handle, kind: kind, link: link, ts: Date.now() };
+				saveState(state);
+
+				awardXp(kind === 'quote' ? 20 : 10);
+				renderQuests();
+			});
+		}
+
+		if (!q2Done) {
+			var btn2 = document.getElementById('mvp-q2-btn');
+			btn2.addEventListener('click', function () {
+				ds.completed.checkin = true;
+				ds.data.checkin = { ts: Date.now() };
+				saveState(state);
+				awardXp(5);
+				renderQuests();
+			});
+		}
+
+		if (!q3Done) {
+			var btn3 = document.getElementById('mvp-q3-btn');
+			btn3.addEventListener('click', function () {
+				var sel = document.getElementById('mvp-q3-select');
+				var val = String(sel.value || '').trim();
+				var err3 = document.getElementById('mvp-q3-err');
+				err3.textContent = '';
+				if (!val) {
+					err3.textContent = 'Pick an emotion.';
+					return;
+				}
+				ds.completed.mood_pick = true;
+				ds.data.mood_pick = val;
+				saveState(state);
+				awardXp(5);
+				renderQuests();
+			});
+		}
+	}
+
+	function renderPrediction() {
+		var container = el('mvp-prediction');
+		if (!container) return;
+
+		var existing = state.predictions[weekKey];
+		if (existing && existing.choice) {
+			container.innerHTML =
+				'<div class="small text-muted">Your vote for <strong>Season ' +
+				ws.season +
+				' / Week ' +
+				ws.week +
+				'</strong> is locked in:</div>' +
+				'<div class="mt-2"><span class="badge bg-dark">' +
+				h(existing.choice) +
+				'</span></div>' +
+				'<div class="small text-muted mt-2">Totals are hidden until reveal.</div>';
+			return;
+		}
+
+		var buttons = CONFIG.emotions
+			.map(function (e) {
+				return (
+					'<button type="button" class="btn btn-sm btn-outline-dark m-1" data-choice="' +
+					h(e.ticker) +
+					'">' +
+					h(e.emoji + ' ' + e.ticker) +
+					'</button>'
+				);
+			})
+			.join('');
+
+		container.innerHTML =
+			'<div class="small text-muted mb-2">Predict next dominant emotion (secret until reveal):</div>' +
+			'<div>' +
+			buttons +
+			'</div>' +
+			'<div id="mvp-pred-err" class="small text-danger mt-2"></div>';
+
+		container.querySelectorAll('button[data-choice]').forEach(function (btn) {
+			btn.addEventListener('click', function () {
+				var choice = String(btn.getAttribute('data-choice') || '').trim();
+				if (!choice) return;
+				state.predictions[weekKey] = { choice: choice, ts: Date.now() };
+				saveState(state);
+				renderPrediction();
+			});
+		});
+	}
+
+	var leaderboardCache = null;
+
+	function buildLeaderboard() {
+		var seed = ws.season * 100000 + ws.week * 1000 + 42;
+		var rand = lcg(seed);
+
+		var size = 500;
+		var arr = [];
+		for (var i = 0; i < size; i++) {
+			var activity = Math.floor(rand() * 250);
+			var holder = Math.floor(rand() * 250);
+			var weeklyScore = Math.round((0.5 * activity + 0.5 * holder) * 10) / 10;
+			arr.push({
+				handle: 'player_' + String(i + 1).padStart(4, '0'),
+				activity: activity,
+				holder: holder,
+				weeklyScore: weeklyScore
+			});
+		}
+
+		// Insert "You" based on local Activity XP (holder is 0 for now)
+		var youHandle = (state.profile && state.profile.handle ? state.profile.handle : 'YOU').replace(/^@/, '@');
+		var youActivity = clamp(Math.floor(state.activityXp || 0), 0, 999999);
+		var youHolder = 0;
+		var youWeekly = Math.round((0.5 * youActivity + 0.5 * youHolder) * 10) / 10;
+		arr.push({ handle: youHandle, activity: youActivity, holder: youHolder, weeklyScore: youWeekly, isYou: true });
+
+		arr.sort(function (a, b) {
+			return b.weeklyScore - a.weeklyScore || b.activity - a.activity || a.handle.localeCompare(b.handle);
+		});
+
+		arr.forEach(function (row, idx) {
+			row.rank = idx + 1;
+		});
+
+		return arr;
+	}
+
+	function renderLeaderboard() {
+		var body = el('mvp-leaderboard-body');
+		if (!body) return;
+		var empty = el('mvp-leaderboard-empty');
+
+		var view = (el('mvp-leaderboard-view') && el('mvp-leaderboard-view').value) || 'top100';
+		var q = (el('mvp-leaderboard-search') && el('mvp-leaderboard-search').value) || '';
+		q = String(q).trim().toLowerCase();
+
+		var rows = leaderboardCache || [];
+		if (q) {
+			rows = rows.filter(function (r) {
+				return String(r.handle).toLowerCase().indexOf(q) !== -1;
+			});
+		}
+		if (view === 'top100') rows = rows.slice(0, 100);
+
+		body.innerHTML = rows
+			.map(function (r) {
+				return (
+					'<tr' +
+					(r.isYou ? ' class="table-warning"' : '') +
+					'>' +
+					'<td class="text-muted">' +
+					h(r.rank) +
+					'</td>' +
+					'<td>' +
+					h(r.handle) +
+					'</td>' +
+					'<td class="text-end">' +
+					h(r.activity) +
+					'</td>' +
+					'<td class="text-end">' +
+					h(r.holder) +
+					'</td>' +
+					'<td class="text-end fw-semibold">' +
+					h(r.weeklyScore) +
+					'</td>' +
+					'</tr>'
+				);
+			})
+			.join('');
+
+		var isEmpty = rows.length === 0;
+		if (empty) empty.style.display = isEmpty ? 'block' : 'none';
+	}
+
+	function refreshLeaderboard() {
+		leaderboardCache = buildLeaderboard();
+		renderLeaderboard();
+	}
+
+	// Wire leaderboard inputs
+	var search = el('mvp-leaderboard-search');
+	if (search) search.addEventListener('input', renderLeaderboard);
+	var viewSel = el('mvp-leaderboard-view');
+	if (viewSel) viewSel.addEventListener('change', renderLeaderboard);
+
+	renderQuests();	renderPrediction();	refreshLeaderboard();
+});
