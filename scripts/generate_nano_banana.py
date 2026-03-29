@@ -4,7 +4,8 @@
 This uses the Google GenAI SDK with the API key stored in OpenClaw auth profiles.
 
 Usage:
-  ./scripts/generate_nano_banana.py --out src/assets/img/eow_s1.png --aspect 16:9 --prompt "..."
+  ./scripts/generate_nano_banana.py --out src/assets/img/eow_s1.png --aspect 16:9 --prompt "..." \
+    --in src/assets/img/emojis/fear-coin.webp --in src/assets/img/emojis/love-coin.webp
 
 Notes:
 - Does NOT store or print API keys.
@@ -35,6 +36,13 @@ def main() -> None:
     ap.add_argument("--out", required=True, help="Output path (png)")
     ap.add_argument("--aspect", default="16:9", help="Aspect ratio, e.g. 16:9")
     ap.add_argument("--prompt", required=True, help="Text prompt")
+    ap.add_argument(
+        "--in",
+        dest="inputs",
+        action="append",
+        default=[],
+        help="Optional input image path (repeatable). Use to preserve Tokemoji coin designs.",
+    )
     args = ap.parse_args()
 
     out_path = Path(args.out)
@@ -43,9 +51,27 @@ def main() -> None:
     key = load_api_key()
     client = genai.Client(api_key=key)
 
+    parts: list[types.Part] = [types.Part.from_text(text=args.prompt)]
+
+    # Attach input images (if any). This helps the model keep exact coin/token artwork.
+    for p in args.inputs:
+        path = Path(p)
+        data = path.read_bytes()
+        suffix = path.suffix.lower().lstrip('.')
+        mime = {
+            'png': 'image/png',
+            'jpg': 'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'webp': 'image/webp',
+            'gif': 'image/gif',
+        }.get(suffix, 'application/octet-stream')
+        if not mime.startswith('image/'):
+            raise SystemExit(f"Unsupported image type for --in: {path}")
+        parts.append(types.Part.from_bytes(data=data, mime_type=mime))
+
     resp = client.models.generate_content(
         model=MODEL,
-        contents=args.prompt,
+        contents=parts,
         config=types.GenerateContentConfig(
             response_modalities=["IMAGE"],
             image_config=types.ImageConfig(
