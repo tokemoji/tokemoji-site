@@ -994,8 +994,8 @@ const lastGaugeValues = {
 	hateMarketCap: 0
 };
 
-const SUPABASE_EDGE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1';
-const SUPABASE_EDGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+const SUPABASE_EDGE_URL = 'https://lgjiiebmzpgamdrdzqvq.supabase.co/functions/v1';
+const SUPABASE_EDGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnamlpZWJtenBnYW1kcmR6cXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyODY4NDcsImV4cCI6MjA5Nzg2Mjg0N30.7GR09rc9SwRQyk0U0TNtgd01QFY96AkCXY11UEkciOA';
 const PUMP_PORTAL_WS_URL = 'wss://pumpportal.fun/api/data';
 let pumpPortalLastMessage = 0;
 let pumpPortalHeartbeatTimer = null;
@@ -1056,7 +1056,7 @@ function flushPriceTicks() {
 	if (pendingPriceTicks.length === 0) return;
 
 	var ticks = pendingPriceTicks.splice(0);
-	var url = 'https://zhiebsuyfexsxtpekakn.supabase.co/functions/v1/write-price-ticks';
+	var url = 'https://lgjiiebmzpgamdrdzqvq.supabase.co/functions/v1/write-price-ticks';
 
 	fetch(url, {
 		method: 'POST',
@@ -1500,8 +1500,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		'LIKE': 'assets/img/emojis/like.webm'
 	};
 
-	const SUPABASE_URL = 'https://zhiebsuyfexsxtpekakn.supabase.co';
-	const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpoaWVic3V5ZmV4c3h0cGVrYWtuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI4NDgzNDIsImV4cCI6MjA3ODQyNDM0Mn0.gH8ihMvsHeOhQ2zO42TLA62-ePq6n53AfYao2l4vk5g';
+	const SUPABASE_URL = 'https://lgjiiebmzpgamdrdzqvq.supabase.co';
+	const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnamlpZWJtenBnYW1kcmR6cXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyODY4NDcsImV4cCI6MjA5Nzg2Mjg0N30.7GR09rc9SwRQyk0U0TNtgd01QFY96AkCXY11UEkciOA';
 	const API_BASE = `${SUPABASE_URL}/functions/v1`;
 	const API_HEADERS = {
 		'Content-Type': 'application/json',
