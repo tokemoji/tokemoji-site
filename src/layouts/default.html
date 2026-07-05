@@ -42,6 +42,12 @@
     <script src="{{root}}assets/js/SplitText.min.js"></script>
     <script src="{{root}}assets/js/Flip.min.js"></script>
     <script src="{{root}}assets/js/app.js"></script>
+    <!-- Tokemoji Predict (only loaded on predict.html) -->
+    {{#if pageScripts}}
+    {{#each pageScripts}}
+    <script src="{{../root}}assets/js/{{this}}"></script>
+    {{/each}}
+    {{/if}}
     <!-- Version: 2.0.1 - Compact UI with API data only -->
 </body>
 

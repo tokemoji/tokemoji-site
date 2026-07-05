@@ -1,0 +1,110 @@
+---
+title: "Tokemoji — Forecast Rules & Scoring"
+bodyClass: bg-secondary-subtle overflow-x-hidden
+navbar: true
+navBtnClass: fw-bold text-heading
+primary-header: "primary-header--light primary-header--boxed primary-header--fixed top-3 primary-header-crossed:top-0 primary-header-crossed:full-light"
+bannerTitle: "Rules & Scoring"
+currentPage: "Rules"
+layout: default
+---
+
+<!-- Banner -->
+{{> "banner"}}
+<!-- Banner End -->
+
+<div class="section-space-y">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+
+        <h2 class="h1 mb-6 text-heading text-stroke text-shadow">How Scoring Works</h2>
+
+        <!-- How a round works -->
+        <div class="shadow-sharp-md rounded-4 bg-light p-5 p-sm-6 mb-4">
+          <h3 class="h4 fw-bold text-heading mb-3">How a Round Works</h3>
+          <p class="text-heading mb-3">Each daily round runs on UTC time:</p>
+          <ul class="text-heading">
+            <li><strong>00:00 UTC</strong> — the round opens for forecasts.</li>
+            <li><strong>00:00 UTC next day</strong> — cutoff. Forecasts lock.</li>
+            <li><strong>00:05 UTC</strong> — settlement runs and the next round opens.</li>
+          </ul>
+          <p class="text-heading mb-0">
+            You rank 3 tokens you think will <strong>gain</strong> the most (UP) and 3 you think will
+            <strong>fall</strong> the hardest (DOWN), each in order 1–2–3. Order matters —
+            position #1 is worth the most points.
+          </p>
+        </div>
+
+        <!-- Scoring table -->
+        <div class="shadow-sharp-md rounded-4 bg-light p-5 p-sm-6 mb-4">
+          <h3 class="h4 fw-bold text-heading mb-3">Scoring</h3>
+          <p class="text-heading mb-3">Each side (UP and DOWN) is scored independently against the actual top-3 movers:</p>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+              <thead class="table-dark">
+                <tr><th>Outcome</th><th class="text-center">Points</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Exact position #1</td><td class="text-center fw-bold">100</td></tr>
+                <tr><td>Exact position #2</td><td class="text-center fw-bold">70</td></tr>
+                <tr><td>Exact position #3</td><td class="text-center fw-bold">50</td></tr>
+                <tr><td>In actual top-3, wrong position</td><td class="text-center">30</td></tr>
+                <tr><td>Outside top-3</td><td class="text-center text-muted">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ul class="text-heading mb-0">
+            <li>Max per side: <strong>220</strong> · max per day: <strong>440</strong></li>
+            <li><strong>Perfect day</strong> (all 6 positions exact): <strong>+60 bonus</strong> → <strong>500</strong></li>
+          </ul>
+        </div>
+
+        <!-- Streaks -->
+        <div class="shadow-sharp-md rounded-4 bg-light p-5 p-sm-6 mb-4">
+          <h3 class="h4 fw-bold text-heading mb-3">Streaks</h3>
+          <p class="text-heading mb-0">
+            Play consecutive days to build a streak. Each day adds <strong>+10%</strong> to your score
+            multiplier, up to <strong>×2.0</strong>. A 10-day streak doubles your points.
+            Streaks count <em>playing</em>, not winning — consistency is rewarded.
+          </p>
+        </div>
+
+        <!-- Weekly rounds -->
+        <div class="shadow-sharp-md rounded-4 bg-light p-5 p-sm-6 mb-4">
+          <h3 class="h4 fw-bold text-heading mb-3">Weekly Rounds</h3>
+          <p class="text-heading mb-0">
+            Separate from daily rounds, weekly rounds run Monday → Sunday.
+            Same scoring rules, but final points are <strong>×3</strong>. Rarer, harder, bigger rewards.
+          </p>
+        </div>
+
+        <!-- Tie-breaks -->
+        <div class="shadow-sharp-md rounded-4 bg-light p-5 p-sm-6 mb-4">
+          <h3 class="h4 fw-bold text-heading mb-3">Tie-breaks & Edge Cases</h3>
+          <ul class="text-heading mb-0">
+            <li>Same % change → higher volume wins the rank.</li>
+            <li>Token with no trades in the window → treated as 0% change.</li>
+            <li>You can edit your forecast anytime before cutoff.</li>
+          </ul>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="rounded-4 bg-warning bg-opacity-10 p-4 mb-4">
+          <p class="small text-heading mb-0">
+            <strong>Disclaimer:</strong> Forecasts are scored for fun and bragging rights.
+            Guru scores are AI-derived mood signals, not financial advice.
+            Tokemoji earns creator fees on emotion tokens.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <a href="predict.html" class="btn btn-primary btn-lg text-primary-darker fw-bold rounded-3 px-6">
+            Back to Forecast
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
