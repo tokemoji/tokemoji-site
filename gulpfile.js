@@ -288,6 +288,16 @@ const watchTask = () => {
 	gulp.watch(route.watch.published, publishedTask);
 };
 
+// Copy custom per-page JS (tokemoji-*.js) without concatenation
+const copyCustomJS = () => {
+	return gulp
+		.src("src/assets/js/tokemoji-*.js")
+		.pipe(plumber())
+		.pipe(gulp.dest(route.dist.js))
+		.pipe(touch())
+		.on("end", () => reload());
+};
+
 // Update build task to include new tasks
 const buildTask = gulp.series(
 	cleanTask,
@@ -301,6 +311,7 @@ const buildTask = gulp.series(
 			fontStyleTask,
 			bsStyleCompile,
 			jsTask,
+			copyCustomJS,
 			vendorScript,
 			imageTask,
 			fontsTask,
