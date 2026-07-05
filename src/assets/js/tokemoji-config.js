@@ -1,0 +1,3 @@
+// Auto-generated Supabase config for Tokemoji Predict
+window.TOKEMOJI_SUPABASE_URL = "https://ssamtadrdxsvvdtclcmz.supabase.co";
+window.TOKEMOJI_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzYW10YWRyZHhzdnZkdGNsY216Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMwNTg5NDMsImV4cCI6MjA5ODYzNDk0M30.c1AZWD_AKRy_vjFZzWrpaD8YoGXFeUAZRN0gPl-9nwE";
