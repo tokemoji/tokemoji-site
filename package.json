@@ -7,6 +7,8 @@
 	"type": "module",
 	"scripts": {
 		"start": "gulp",
+		"prebuild": "npm run verify:artwork",
+		"verify:artwork": "node scripts/verify-coin-assets.cjs",
 		"build": "gulp build",
 		"poller": "node backend/services/tokemoji-poller.js",
 		"poller:pm2": "pm2 start backend/services/tokemoji-poller.js --name tokemoji-poller",

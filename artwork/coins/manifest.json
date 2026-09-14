@@ -1,0 +1,77 @@
+{
+  "description": "Approved original coin artwork: TOKEMOJI label without a leading dollar sign. Character details are preserved.",
+  "coins": {
+    "evil": {
+      "source": "artwork/coins/evil-coin-clean.png",
+      "source_sha256": "f9eedb26cc554f314fe48a075221074fd140f258c638b10776ffde4a50346a1e",
+      "web": "src/assets/img/emojis/evil-coin.webp",
+      "web_sha256": "12cdf9709eafff6e1bfed00ccb7e30b3f5d9547ade781ed10424a2a7e21ed15e"
+    },
+    "fear": {
+      "source": "artwork/coins/fear-coin-clean.png",
+      "source_sha256": "3468d53999dbdc58f34a1a90bb87bc44be1f015af34dca1be69001a3ba2369c8",
+      "web": "src/assets/img/emojis/fear-coin.webp",
+      "web_sha256": "c5b06247101faadeb43b6973e1f3ae5397b49d2773f889172df936fca662af02"
+    },
+    "good": {
+      "source": "artwork/coins/good-coin-clean.png",
+      "source_sha256": "b378b05e593db6aa79e67eb6718d3c6882c90a19cfcbd39bcbfafa80af8de53f",
+      "web": "src/assets/img/emojis/good-coin.webp",
+      "web_sha256": "4cd9b986e19b3b875d0fdf8ce9bab115a3c2710cd4d6bb98019a3553b2af81b6"
+    },
+    "greed": {
+      "source": "artwork/coins/greed-coin-clean.png",
+      "source_sha256": "449b6c61e53902b39339a4294cc21378a0d7659d2ec5b4ed886cf884ab1b08f6",
+      "web": "src/assets/img/emojis/greed-coin.webp",
+      "web_sha256": "e74bf421bddf166d44bf4edb080014dd6733bfb986aca996fe904e404e75da5e"
+    },
+    "happy": {
+      "source": "artwork/coins/happy-coin-clean.png",
+      "source_sha256": "fcc0e45d6fc4148156b6631cc774a6f530be2999c119ee8c7e32d1e91c47e575",
+      "web": "src/assets/img/emojis/happy-coin.webp",
+      "web_sha256": "89fe81f6dd0012d82abb10185d26d35bc8e080581177837693b27a6a7c04e14c"
+    },
+    "hate": {
+      "source": "artwork/coins/hate-coin-clean.png",
+      "source_sha256": "5239d9356d2e345cc047c81c3b8a5199065abba4b4f9e433ed7fc70afcac2b2a",
+      "web": "src/assets/img/emojis/hate-coin.webp",
+      "web_sha256": "72916c8147a1357dc5eb37d9f0438f31bb719ff05ae64f45843c6572e9d1792c"
+    },
+    "like": {
+      "source": "artwork/coins/like-coin-clean.png",
+      "source_sha256": "86d81654183f512abc26922e8a24b9e1d90d9bab1692b72cc067bc44d83357b0",
+      "web": "src/assets/img/emojis/like-coin.webp",
+      "web_sha256": "b88ee0db928b33b4200c0d2e4f10fe443ab8a909bee9fb8aec4e13bd839eb979"
+    },
+    "lol": {
+      "source": "artwork/coins/lol-coin-clean.png",
+      "source_sha256": "3fda81e2f3af2825f0c9741a71a03148d12f60058d0ec70f905893547482c584",
+      "web": "src/assets/img/emojis/lol-coin.webp",
+      "web_sha256": "08f23dd69d76c3a6f04132976e8af5663bd3febda5ee5520da8c5eb5e9b87c7f"
+    },
+    "love": {
+      "source": "artwork/coins/love-coin-clean.png",
+      "source_sha256": "fa98645e868068060f078393b9f0f545b121a728fdbaa6220227f5f718070ced",
+      "web": "src/assets/img/emojis/love-coin.webp",
+      "web_sha256": "c9a35c9a466dcaac5930af591498e2b8aa7e7c0c19323507a248d1dd5e2cfcfc"
+    },
+    "mad": {
+      "source": "artwork/coins/mad-coin-clean.png",
+      "source_sha256": "2d6993b368f3003d066b3bad7aa302d188acf1706b61e5022f65a01ce88d79b2",
+      "web": "src/assets/img/emojis/mad-coin.webp",
+      "web_sha256": "fc459b43172ac87c5ebd1c94de745b0ca34dd76ec4ca4cea76383a419cca9d5a"
+    },
+    "omg": {
+      "source": "artwork/coins/omg-coin-clean.png",
+      "source_sha256": "bbe3613674da2b5f31dd3397394736fb0e5f55eec66cf3b501b551132d46b1b3",
+      "web": "src/assets/img/emojis/omg-coin.webp",
+      "web_sha256": "bced650c1559868916c2b34d2736b642a440562e2a1e2ef39b42090ac4ad525e"
+    },
+    "sad": {
+      "source": "artwork/coins/sad-coin-clean.png",
+      "source_sha256": "16ab70e868b064e5929908fd6f6d20eb78d053f388f5bdce83e122ec02f68f6c",
+      "web": "src/assets/img/emojis/sad-coin.webp",
+      "web_sha256": "7f45f2d8cc40c20dc39b83a49430d3f07a1754127faa6a62b86cd7f4f2054501"
+    }
+  }
+}
