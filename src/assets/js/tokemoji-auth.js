@@ -17,6 +17,7 @@
   };
 
   function init() {
+    if (supabase) return true;
     if (typeof window.supabase === 'undefined' || !window.supabase.createClient) {
       console.warn('[TokemojiAuth] supabase.js vendor not loaded');
       return false;
@@ -47,9 +48,14 @@
     if (!supabase) { alert('Auth not configured yet.'); return false; }
     var { error } = await supabase.auth.signInWithOtp({
       email: email,
-      options: { redirectTo: window.location.origin + '/predict.html' }
+      options: { emailRedirectTo: window.location.origin + '/predict.html' }
     });
-    if (error) { console.error(error); return false; }
+    if (error) {
+      console.error('[Auth Error]', error);
+      // Store the real error message for the UI to display
+      window.__lastAuthError = error.message;
+      return false;
+    }
     return true;
   }
 

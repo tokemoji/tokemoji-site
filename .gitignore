@@ -50,3 +50,16 @@ temp/
 
 
 
+
+# Handoff secrets and local state
+.env.*
+!.env.example
+.vercel/
+backups/
+*.pem
+*.key
+.higgsfield/
+.codex/
+auth.json
+credentials.json
+__pycache__/

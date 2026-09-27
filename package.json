@@ -1,51 +1,53 @@
 {
-	"name": "memeworld",
-	"version": "1.0.0",
-	"description": "Memecoin ICO & Crypto HTML Template",
-	"homepage": "https://themeforest.net/user/bplugins",
-	"main": "gulpfile.js",
-	"type": "module",
-	"scripts": {
-		"start": "gulp",
-		"prebuild": "npm run verify:artwork",
-		"verify:artwork": "node scripts/verify-coin-assets.cjs",
-		"build": "gulp build",
-		"poller": "node backend/services/tokemoji-poller.js",
-		"poller:pm2": "pm2 start backend/services/tokemoji-poller.js --name tokemoji-poller",
-		"poller:stop": "pm2 stop tokemoji-poller",
-		"poller:restart": "pm2 restart tokemoji-poller",
-		"poller:logs": "pm2 logs tokemoji-poller",
-		"aggregator": "node backend/services/tokemoji-aggregator.js",
-		"init-tokens": "node backend/init-tokens.js"
-	},
-	"author": "bplugins",
-	"license": "ISC",
-	"dependencies": {
-		"@supabase/supabase-js": "^2.39.0",
-		"bootstrap": "^5.3.6",
-		"dotenv": "^17.2.3",
-		"node-fetch": "^3.3.2"
-	},
-	"optionalDependencies": {
-		"pm2": "^5.3.0"
-	},
-	"devDependencies": {
-		"@babel/core": "^7.26.9",
-		"@babel/preset-env": "^7.26.9",
-		"browser-sync": "^3.0.3",
-		"del": "^8.0.0",
-		"gulp": "^4.0.2",
-		"gulp-autoprefixer": "^9.0.0",
-		"gulp-babel": "^8.0.0",
-		"gulp-beautify": "^3.0.0",
-		"gulp-concat": "^2.6.1",
-		"gulp-newer": "^1.4.0",
-		"gulp-plumber": "^1.2.1",
-		"gulp-replace": "^1.1.4",
-		"gulp-sass": "^6.0.1",
-		"gulp-sourcemaps": "^3.0.0",
-		"gulp-touch-cmd": "^0.0.1",
-		"panini": "^1.7.2",
-		"sass": "^1.85.1"
-	}
+  "name": "memeworld",
+  "version": "1.0.0",
+  "description": "Memecoin ICO & Crypto HTML Template",
+  "homepage": "https://themeforest.net/user/bplugins",
+  "main": "gulpfile.js",
+  "type": "module",
+  "scripts": {
+    "start": "gulp",
+    "build": "gulp build",
+    "poller": "node backend/services/tokemoji-poller.js",
+    "poller:pm2": "pm2 start backend/services/tokemoji-poller.js --name tokemoji-poller",
+    "poller:stop": "pm2 stop tokemoji-poller",
+    "poller:restart": "pm2 restart tokemoji-poller",
+    "poller:logs": "pm2 logs tokemoji-poller",
+    "aggregator": "node backend/services/tokemoji-aggregator.js",
+    "init-tokens": "node backend/init-tokens.js",
+    "test": "node --test scripts/cinema.test.cjs scripts/market-pairs.test.cjs tests/forecast-preview.test.cjs",
+    "verify:artwork": "node scripts/verify-coin-assets.cjs",
+    "prebuild": "npm run verify:artwork",
+    "preview": "node scripts/serve-preview.cjs"
+  },
+  "author": "bplugins",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "bootstrap": "^5.3.6",
+    "dotenv": "^17.2.3",
+    "node-fetch": "^3.3.2"
+  },
+  "optionalDependencies": {
+    "pm2": "^5.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "browser-sync": "^3.0.3",
+    "del": "^8.0.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^9.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-beautify": "^3.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-newer": "^1.4.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-replace": "^1.1.4",
+    "gulp-sass": "^6.0.1",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-touch-cmd": "^0.0.1",
+    "panini": "^1.7.2",
+    "sass": "^1.85.1"
+  }
 }

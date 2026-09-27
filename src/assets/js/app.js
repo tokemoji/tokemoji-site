@@ -17,6 +17,7 @@ function isIOS() {
 
 // Helper function to get correct emoji path based on iOS detection
 function getEmojiPath(webmPath) {
+
 	if (isIOS()) {
 		return webmPath.replace('.webm', '.webp');
 	}
@@ -586,7 +587,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	/**
 	 * Initialize ScrollSmoother
 	 */
-	ScrollSmoother.create({
+	if (!document.querySelector('script[src*="tokemoji-polish.js"]')) ScrollSmoother.create({
 		wrapper: "#smooth-wrapper",
 		content: "#smooth-content",
 		smooth: 1.5,
@@ -914,10 +915,12 @@ const tokemojiData = [
 const tokemojiDataWithGraphics = tokemojiData.filter(token => token.hasGraphic);
 
 function getLiveTokenData() {
+	if(window.TokemojiMarket)return window.TokemojiMarket.state.rows;
 	return currentTokenData.length > 0 ? currentTokenData : tokemojiDataWithGraphics;
 }
 
 function getTokenMarketCapRaw(token) {
+	if(window.TokemojiMarket)return token.marketCapRaw || 0;
 	if (token.marketCapRaw) return token.marketCapRaw;
 	if (token.priceRaw) return token.priceRaw * PUMP_FUN_TOTAL_SUPPLY;
 	var str = (token.marketCap || '0').replace('$', '');
@@ -1038,6 +1041,7 @@ var pendingPriceTicks = [];
 var priceTickFlushTimer = null;
 
 function writePriceTickThrottled(ticker, priceUsd) {
+	if (document.querySelector('script[src*="tokemoji-polish.js"]')) return; // Read-only preview: never write market ticks.
 	var tokenId = TOKEMOJI_TOKEN_IDS[ticker];
 	if (!tokenId) return;
 	var now = Date.now();
@@ -1173,6 +1177,7 @@ async function pricePollCycle() {
 }
 
 function startPricePolling() {
+ if(window.TokemojiMarket)return;
 	if (pricePollingActive) return;
 	pricePollingActive = true;
 	console.log('[PriceFeed] Starting DexScreener polling every ' + (PRICE_POLL_INTERVAL_MS / 1000) + 's');
@@ -1213,6 +1218,7 @@ function startHeartbeat() {
 }
 
 function connectPumpPortal() {
+ if(window.TokemojiMarket)return;
 	if (pumpPortalWs) {
 		if (pumpPortalWs.readyState === WebSocket.OPEN || pumpPortalWs.readyState === WebSocket.CONNECTING) {
 			pumpPortalWs.close();
@@ -1510,6 +1516,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	};
 
 	async function fetchTokenData() {
+		if(window.TokemojiMarket)return window.TokemojiMarket.load();
 		try {
 			const response = await fetch(`${API_BASE}/get-tokens`, { headers: API_HEADERS });
 			if (!response.ok) return [];
@@ -1557,6 +1564,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function sortTokens(tokens) {
+		if(window.TokemojiMarket)return window.TokemojiPairMath.sort(tokens,currentSortType);
 		const sorted = [...tokens];
 		switch(currentSortType) {
 			case 'marketcap':
@@ -1673,7 +1681,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			<span class="token-change ${token.changeType === 'positive' ? 'text-success' : 'text-danger'} fw-bold">${token.change}</span>
 			<div class="token-mini-chart" id="chart-${token.ticker}"></div>
 			<span class="token-marketcap text-muted">${token.marketCap}</span>
-			<button class="btn btn-sm btn-primary buy-btn">BUY</button>
+			<button class="btn btn-sm btn-primary buy-btn" title="Inspect borrowed sample token; not a purchase">VIEW</button>
 		</div>`;
 	}
 
@@ -1935,6 +1943,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	function updateGauges() {
+		if(window.TokemojiMarket){window.renderPairMinis?.();return;}
 		const liveData = getLiveTokenData();
 		const mcap = (tokens) => tokens.reduce((sum, t) => sum + getTokenMarketCapRaw(t), 0);
 
@@ -2118,6 +2127,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	globalUpdateGauges = updateGauges;
 
 	initTokemojiDashboard();
+	document.addEventListener("tokemoji:quotes",()=>{refreshTokenPrices();updateMarketDominance();updateGauges();initializeCarouselData();updateTopGainers();updateTopLosers();});
+	if(window.TokemojiMarket)setInterval(()=>{if(!document.hidden)window.TokemojiMarket.load(true);},60000);
 
 	fetchSolPrice().then(function() {
 		connectPumpPortal();
@@ -2710,6 +2721,7 @@ function updateTopLosers() {
 
 // Update Global Adoption Meter
 function updateGlobalAdoption() {
+ if(window.TokemojiMarket)return;
 	// Mock data - in the future this will be real blockchain data
 	const mockAdoptionPercentage = Math.random() * 5 + 1; // 1-6%
 	

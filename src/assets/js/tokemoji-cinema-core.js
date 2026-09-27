@@ -1,0 +1,1 @@
+(() => {const clamp=n=>Math.max(0,Math.min(1,Number(n)||0));window.TokemojiCinema={progress:(top,height,stage,inset)=>clamp(-top/Math.max(1,height-stage-inset)),chapter:t=>t<2.875?0:t<5.541667?1:2,time:p=>clamp(p)*7.95,demoPrice:(direction,p)=>.01*(1+direction*.18*clamp(p)),asset:(name,large)=>'assets/img/emojis/'+name+(large?'-coin-motion':'')+'.webm'};})();

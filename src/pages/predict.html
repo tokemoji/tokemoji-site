@@ -2,8 +2,7 @@
 title: "Tokemoji — Emotion Forecast Arena"
 bodyClass: bg-primary overflow-x-hidden
 navBtnClass: fw-bold text-heading
-primary-header: "primary-header--light primary-header--boxed primary-header--fixed top-3 primary-header-crossed:top-0 primary-header-crossed:full-light"
-bannerTitle: "Forecast Arena"
+primary-header: "primary-header--transparent-light-alt primary-header--fixed top-0 primary-header-crossed:full-dark"
 currentPage: "Forecast"
 layout: default
 pageScripts:
@@ -13,152 +12,202 @@ pageScripts:
   - tokemoji-predict.js
 ---
 
-<!-- Banner -->
-{{> "banner"}}
-<!-- Banner End -->
+<style>
+body{background:#8bcce9!important;color:#211c32}section.section-space-top{padding-top:130px}.hero-1__title{font-size:clamp(52px,8vw,105px)!important;line-height:1}.token-btn{min-width:85px!important;padding:12px!important;border:3px solid #211c32!important;border-radius:18px!important;transition:transform .15s,background .15s}.token-btn img{width:55px;height:55px}.token-btn:hover:not(:disabled){transform:translateY(-5px) rotate(-4deg)}.token-btn.active{background:#c5f278!important;color:#211c32!important;box-shadow:4px 5px 0 #211c32}.slot{min-height:125px!important;background:#fff6df!important;border:3px dashed #211c32!important;border-radius:18px!important}.slot img{width:60px;height:60px}#forecast-app{margin-top:35px}#auth-gate{margin-bottom:35px}#auth-gate>div{width:100%;max-width:900px}#auth-gate .py-8{padding:25px!important}#auth-gate h2{font-size:28px}#up-tokens,#down-tokens{gap:10px!important}#submit-btn{white-space:normal;max-width:100%}.table-responsive{border-radius:18px;background:#fff6df}#forecast-app .bg-secondary{border-width:3px!important}#up-slots{background:#c5f278;border-radius:22px;padding:8px}#down-slots{background:#ffadad;border-radius:22px;padding:8px}#test-season-banner{margin-top:75px}section.section-space-top:has(#forecast-app){padding-bottom:70px}@media(max-width:600px){.token-btn{min-width:65px!important;padding:8px!important}.token-btn img{width:40px;height:40px}.slot{min-height:105px!important}.hero-1__title{font-size:48px!important}#forecast-app .p-6{padding:20px!important}}@media(prefers-reduced-motion:reduce){.token-btn{transition:none}.token-btn:hover{transform:none!important}}
+</style>
+<!-- Navbar (same as index.html) -->
+<header class="navbar navbar-expand-lg primary-header {{primary-header}}">
+	<div class="container align-items-lg-center">
+		<a class="logo" href="index.html">
+			<span class="logo-text">TOKEMOJI.FUN</span>
+		</a>
+		<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbar0" aria-controls="navbar0" aria-expanded="false" aria-label="Toggle navigation">
+			<iconify-icon icon="solar:hamburger-menu-line-duotone"></iconify-icon>
+		</button>
+		<nav class="collapse navbar-collapse" id="navbar0">
+			<ul class="navbar-nav flex-grow-1 justify-content-center mx-lg-4 mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" href="index.html">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#about-section">About</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#how-to-buy-section">How to Buy</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#tokenomics-section">Tokenomics</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="predict.html">
+						<span class="badge bg-danger me-1">NEW</span>Forecast
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#road-map-section">Road Map</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#faq-section">FAQ</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</header>
+<!-- Navbar End -->
 
 <!-- TEST SEASON banner -->
 <div id="test-season-banner" class="alert alert-warning text-center mb-0 rounded-0 d-none">
-  <strong>TEST SEASON</strong> — Forecasts are scored with mock prices. Real token prices activate at launch.
+	<strong>TEST SEASON</strong> — Forecasts are scored with mock prices. Real token prices activate at launch.
 </div>
 
-<!-- Forecast Section -->
-<div class="section-space-y">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10 col-xl-9">
+<!-- Hero / Forecast Section -->
+<section class="section-space-top">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-10 col-xl-9 text-center">
+				<h1 class="hero-1__title mb-6 text-light text-stroke-md text-shadow-md">
+					FORECAST <span class="text-secondary">ARENA</span>
+				</h1>
+				<p class="mb-10 fs-18 text-light text-stroke text-shadow">
+					Rank today's emotion movers. The Guru reads the news — you read the market.
+				</p>
+			</div>
+		</div>
 
-        <!-- Not signed in state -->
-        <div id="auth-gate" class="text-center" style="display:none;">
-          <div class="shadow-sharp-md rounded-4 bg-light p-6 p-sm-8 p-lg-10">
-            <h2 class="h1 mb-4 text-heading text-stroke text-shadow">Lock Your Forecast</h2>
-            <p class="mb-8 fs-18 text-heading">
-              Sign in to rank today's emotion movers. The Guru reads the news — you read the market.
-            </p>
-            <div class="d-flex flex-column align-items-center gap-3">
-              <button onclick="TokemojiAuth.signInWithX()" class="btn btn-dark btn-lg px-6 rounded-3">
-                <iconify-icon icon="ri:twitter-x-fill" class="fs-24 me-2"></iconify-icon>
-                Continue with X
-              </button>
-              <span class="text-muted small">OR</span>
-              <div class="d-flex gap-2 w-100 justify-content-center" style="max-width:360px;">
-                <input type="email" id="magic-email" class="form-control form-control-lg" placeholder="you@example.com">
-                <button id="magic-btn" class="btn btn-secondary text-heading fw-semibold" onclick="sendMagicLink()">
-                  Send Link
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+		<!-- Not signed in state -->
+		<div id="auth-gate" class="row justify-content-center" style="display:none;">
+			<div class="col-lg-8 col-xl-7">
+				<div class="position-relative bg-secondary px-6 py-8 px-xl-10 py-xl-12 rounded-5 border border-2x border-dark shadow-sharp-md">
+					<h2 class="text-light text-stroke text-shadow mb-6">Lock Your Forecast</h2>
+					<div class="d-flex flex-column align-items-center gap-3">
+						<button onclick="TokemojiAuth.signInWithX()" class="btn btn-lg btn-light text-heading fw-bold rounded px-6">
+							<iconify-icon icon="ri:twitter-x-fill" class="fs-24 me-2"></iconify-icon>
+							Continue with X
+						</button>
+						<span class="text-secondary small">OR</span>
+						<div class="d-flex gap-2 w-100 justify-content-center" style="max-width:360px;">
+							<input type="email" id="magic-email" class="form-control form-control-lg" placeholder="you@example.com">
+							<button id="magic-btn" class="btn btn-light text-heading fw-semibold" onclick="sendMagicLink()">
+								Send Link
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- Signed in: forecast form -->
-        <div id="forecast-app" style="display:none;">
+		<!-- Signed in: forecast form -->
+		<div id="forecast-app" style="display:none;">
+			<div class="row justify-content-center">
+				<div class="col-lg-10 col-xl-9">
 
-          <!-- Round info + countdown -->
-          <div class="row g-4 mb-6">
-            <div class="col-sm-6">
-              <div class="shadow-sharp-md rounded-4 bg-light p-4 text-center">
-                <span class="text-muted small fw-semibold text-uppercase">Round Opens</span>
-                <p id="round-opens" class="h4 mb-0 text-heading ff-1">—</p>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="shadow-sharp-md rounded-4 bg-light p-4 text-center">
-                <span class="text-muted small fw-semibold text-uppercase">Cutoff In</span>
-                <p id="countdown" class="h4 mb-0 text-heading ff-1">—</p>
-              </div>
-            </div>
-          </div>
+					<!-- Round info + countdown -->
+					<div class="row g-4 mb-6">
+						<div class="col-sm-6">
+							<div class="border border-2x border-dark shadow-sharp rounded-4 bg-light p-4 text-center">
+								<span class="text-muted small fw-semibold text-uppercase">Round Opens</span>
+								<p id="round-opens" class="h4 mb-0 text-heading ff-1">—</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="border border-2x border-dark shadow-sharp rounded-4 bg-light p-4 text-center">
+								<span class="text-muted small fw-semibold text-uppercase">Cutoff In</span>
+								<p id="countdown" class="h4 mb-0 text-heading ff-1">—</p>
+							</div>
+						</div>
+					</div>
 
-          <!-- Already submitted state -->
-          <div id="forecast-locked" class="text-center" style="display:none;">
-            <div class="shadow-sharp-md rounded-4 bg-success bg-opacity-10 p-8">
-              <iconify-icon icon="ph:lock-key-fill" class="fs-48 text-success"></iconify-icon>
-              <h3 class="mt-3 text-heading">Your forecast is locked!</h3>
-              <p class="text-muted mb-0">Check back after settlement to see your score.</p>
-              <div id="locked-picks" class="mt-4"></div>
-            </div>
-          </div>
+					<!-- Already submitted state -->
+					<div id="forecast-locked" class="text-center" style="display:none;">
+						<div class="position-relative bg-secondary px-6 py-8 px-xl-10 py-xl-12 rounded-5 border border-2x border-dark shadow-sharp-md">
+							<iconify-icon icon="ph:lock-key-fill" class="fs-48 text-light"></iconify-icon>
+							<h3 class="mt-3 text-light text-stroke text-shadow">Your forecast is locked!</h3>
+							<p class="text-secondary mb-0">Check back after settlement to see your score.</p>
+							<div id="locked-picks" class="mt-4"></div>
+						</div>
+					</div>
 
-          <!-- Prediction form -->
-          <div id="forecast-form">
-            <h3 class="h2 text-center mb-6 text-heading text-stroke text-shadow">
-              Forecast Today's Movers
-            </h3>
-            <p class="text-center text-muted mb-6">
-              Rank 3 tokens you think will <strong>gain</strong> the most (UP) and 3 that will <strong>fall</strong> the hardest (DOWN). Order matters — #1 is worth the most.
-            </p>
+					<!-- Prediction form -->
+					<div id="forecast-form">
+						<div class="position-relative bg-secondary px-6 py-8 px-xl-10 py-xl-12 rounded-5 border border-2x border-dark shadow-sharp-md">
+							<h3 class="h2 text-center mb-4 text-light text-stroke text-shadow">
+								Forecast Today's Movers
+							</h3>
+							<p class="text-center text-secondary mb-6">
+								Rank 3 tokens you think will <strong class="text-light">gain</strong> the most (UP) and 3 that will <strong class="text-light">fall</strong> the hardest (DOWN). Order matters — #1 is worth the most.
+							</p>
 
-            <!-- UP picks -->
-            <div class="mb-6">
-              <h4 class="text-success fw-bold mb-3">
-                <iconify-icon icon="ph:trend-up-bold"></iconify-icon>
-                TOP 3 GAINERS
-              </h4>
-              <div id="up-slots" class="row g-3 mb-3">
-                <!-- 3 slots generated by JS -->
-              </div>
-              <div id="up-tokens" class="d-flex flex-wrap gap-2">
-                <!-- 12 token buttons generated by JS -->
-              </div>
-            </div>
+							<!-- UP picks -->
+							<div class="mb-6 p-5 border border-2x border-dark rounded-3 shadow-sharp bg-light">
+								<h4 class="text-heading fw-bold mb-3">
+									<iconify-icon icon="ph:trend-up-bold" class="text-success"></iconify-icon>
+									TOP 3 GAINERS
+								</h4>
+								<div id="up-slots" class="row g-3 mb-3">
+									<!-- 3 slots generated by JS -->
+								</div>
+								<div id="up-tokens" class="d-flex flex-wrap gap-2">
+									<!-- 12 token buttons generated by JS -->
+								</div>
+							</div>
 
-            <!-- DOWN picks -->
-            <div class="mb-6">
-              <h4 class="text-danger fw-bold mb-3">
-                <iconify-icon icon="ph:trend-down-bold"></iconify-icon>
-                TOP 3 LOSERS
-              </h4>
-              <div id="down-slots" class="row g-3 mb-3">
-                <!-- 3 slots generated by JS -->
-              </div>
-              <div id="down-tokens" class="d-flex flex-wrap gap-2">
-                <!-- 12 token buttons generated by JS -->
-              </div>
-            </div>
+							<!-- DOWN picks -->
+							<div class="mb-6 p-5 border border-2x border-dark rounded-3 shadow-sharp bg-light">
+								<h4 class="text-heading fw-bold mb-3">
+									<iconify-icon icon="ph:trend-down-bold" class="text-danger"></iconify-icon>
+									TOP 3 LOSERS
+								</h4>
+								<div id="down-slots" class="row g-3 mb-3">
+									<!-- 3 slots generated by JS -->
+								</div>
+								<div id="down-tokens" class="d-flex flex-wrap gap-2">
+									<!-- 12 token buttons generated by JS -->
+								</div>
+							</div>
 
-            <div class="text-center">
-              <button id="submit-btn" class="btn btn-primary btn-lg px-8 text-primary-darker fw-bold rounded-3" onclick="submitForecast()" disabled>
-                Lock Forecast
-              </button>
-              <p class="text-muted small mt-2">You can edit until the cutoff.</p>
-            </div>
-          </div>
-        </div>
+							<div class="text-center">
+								<button id="submit-btn" class="btn btn-lg btn-light text-heading fw-bold rounded px-8" onclick="submitForecast()" disabled>
+									Lock Forecast
+								</button>
+								<p class="text-secondary small mt-2">Change your draft before submitting. Submitted forecasts are locked.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-      </div>
-    </div>
-  </div>
-</div>
+	</div>
+</section>
 
-<!-- Leaderboard preview -->
-<div class="section-space-y bg-secondary-subtle">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h3 class="h2 text-center mb-6 text-heading text-stroke text-shadow">Leaderboard</h3>
-        <div class="shadow-sharp-md rounded-4 bg-light overflow-hidden">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0 align-middle">
-              <thead class="table-dark">
-                <tr>
-                  <th class="text-center" style="width:60px;">#</th>
-                  <th>Forecast</th>
-                  <th class="text-center">Points</th>
-                  <th class="text-center">Streak</th>
-                  <th class="text-center d-none d-sm-table-cell">Perfect</th>
-                </tr>
-              </thead>
-              <tbody id="leaderboard-body">
-                <tr><td colspan="5" class="text-center text-muted py-4">Loading leaderboard…</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="text-center mt-4">
-          <a href="rules.html" class="btn btn-outline-dark rounded-3">How Scoring Works</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- Leaderboard -->
+<section class="section-space-y">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-10">
+				<h3 class="h2 text-center mb-6 text-light text-stroke-md text-shadow-md">Leaderboard</h3>
+				<div class="position-relative bg-secondary px-6 py-8 px-xl-10 py-xl-12 rounded-5 border border-2x border-dark shadow-sharp-md">
+					<div class="table-responsive">
+						<table class="table table-hover mb-0 align-middle">
+							<thead>
+								<tr class="border-bottom border-light">
+									<th class="text-center text-light" style="width:60px;">#</th>
+									<th class="text-light">Forecast</th>
+									<th class="text-center text-light">Points</th>
+									<th class="text-center text-light">Streak</th>
+									<th class="text-center d-none d-sm-table-cell text-light">Perfect</th>
+								</tr>
+							</thead>
+							<tbody id="leaderboard-body">
+								<tr><td colspan="5" class="text-center text-secondary py-4">Loading leaderboard…</td></tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="text-center mt-4">
+					<a href="rules.html" class="btn btn-light text-heading rounded">How Scoring Works</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -209,7 +209,7 @@ const fontStyleTask = () => {
 // JavaScript task
 const jsTask = () => {
 	return gulp
-		.src(route.src.script)
+		.src([route.src.script, '!src/assets/js/tokemoji-*.js', '!src/assets/js/mvp-*.js'])
 		.pipe(plumber())
 		.pipe(newer(route.dist.js))
 		.pipe(babel({ presets: ["@babel/preset-env"] }))
@@ -298,6 +298,8 @@ const copyCustomJS = () => {
 		.on("end", () => reload());
 };
 
+const copyCinemaMedia = () => gulp.src('src/assets/media/*.{mp4,webp}').pipe(gulp.dest('dist/assets/media/'));
+
 // Update build task to include new tasks
 const buildTask = gulp.series(
 	cleanTask,
@@ -312,6 +314,7 @@ const buildTask = gulp.series(
 			bsStyleCompile,
 			jsTask,
 			copyCustomJS,
+			copyCinemaMedia,
 			vendorScript,
 			imageTask,
 			fontsTask,

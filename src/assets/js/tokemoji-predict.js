@@ -9,12 +9,14 @@
   var upPicks = [];
   var downPicks = [];
   var currentRound = null;
+  var signedIn = false;
+  var countdownTimer = null;
   var myExistingPrediction = null;
 
   function emojiImg(token, size) {
     size = size || 48;
     var file = token.toLowerCase();
-    return '<img src="assets/img/emojis/' + file + '.webp" alt="' + token +
+    return '<img src="assets/img/emojis/' + file + '-coin.webp" alt="' + token +
            '" width="' + size + '" height="' + size + '" style="object-fit:contain">';
   }
 
@@ -47,10 +49,24 @@
 
   function showAuthGate() {
     document.getElementById('auth-gate').style.display = '';
-    document.getElementById('forecast-app').style.display = 'none';
+    signedIn = false;
+    clearInterval(countdownTimer);
+    currentRound = null;
+    myExistingPrediction = null;
+    upPicks = []; downPicks = [];
+    document.getElementById('forecast-app').style.display = '';
+    document.getElementById('forecast-form').style.display = '';
+    document.getElementById('forecast-locked').style.display = 'none';
+    document.getElementById('round-opens').textContent = 'DRAFT PREVIEW — NOT SUBMITTED';
+    document.getElementById('countdown').textContent = 'Sign in to submit';
+    buildForm();
+    updateSubmitButton();
+    loadLeaderboard();
   }
 
   async function showForecastApp() {
+    signedIn = true;
+    myExistingPrediction = null;
     document.getElementById('auth-gate').style.display = 'none';
     document.getElementById('forecast-app').style.display = '';
 
@@ -75,6 +91,7 @@
     }
 
     buildForm();
+    updateSubmitButton();
     loadLeaderboard();
   }
 
@@ -98,7 +115,8 @@
         String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
     }
     tick();
-    setInterval(tick, 1000);
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(tick, 1000);
   }
 
   function showLockedState(pred) {
@@ -163,7 +181,7 @@
     var num = index + 1;
     var color = side === 'up' ? 'success' : 'danger';
     return '<div class="col-4">' +
-      '<div class="slot border border-2 border-' + color + ' border-opacity-25 rounded-3 text-center p-2" ' +
+      '<div class="slot border border-2x border-dark border-opacity-50 rounded-3 text-center p-2 bg-light shadow-sharp" ' +
       'id="slot-' + side + '-' + index + '" data-token="" style="min-height:90px;">' +
       '<span class="badge bg-' + color + ' mb-1">#' + num + '</span>' +
       '<div class="slot-content text-muted small">Empty</div>' +
@@ -171,10 +189,10 @@
   }
 
   function renderTokenBtn(side, token, meta) {
-    return '<button class="btn btn-sm btn-outline-dark rounded-3 token-btn" ' +
+    return '<button class="btn btn-sm btn-light border border-2x border-dark border-opacity-50 rounded-3 token-btn shadow-sharp" ' +
       'data-side="' + side + '" data-token="' + token + '" ' +
       'style="min-width:64px;">' +
-      emojiImg(token, 28) + '<div class="small fw-bold">' + meta.code + '</div>' +
+      emojiImg(token, 28) + '<div class="small fw-bold text-heading">' + meta.code + '</div>' +
       '</button>';
   }
 
@@ -209,7 +227,7 @@
         var m = TokemojiScoring.EMOTION_META[picks[i]];
         slot.dataset.token = picks[i];
         slot.querySelector('.slot-content').innerHTML =
-          emojiImg(picks[i], 40) + '<div class="small fw-bold" style="color:' + m.color + '">' + m.code + '</div>';
+          emojiImg(picks[i], 40) + '<div class="small fw-bold text-heading">' + m.code + '</div>';
         slot.classList.add('bg-' + color + '-subtle');
       } else {
         slot.dataset.token = '';
@@ -228,32 +246,38 @@
 
       if (picks.indexOf(token) !== -1) {
         btn.classList.add('active', 'btn-dark');
-        btn.classList.remove('btn-outline-dark');
+        btn.classList.remove('btn-light', 'border-opacity-50');
       } else {
         btn.classList.remove('active', 'btn-dark');
-        btn.classList.add('btn-outline-dark');
+        btn.classList.add('btn-light', 'border-opacity-50');
       }
 
       // Disable if on the other side
       if (otherPicks.indexOf(token) !== -1) {
         btn.setAttribute('disabled', 'disabled');
+        btn.style.opacity = '0.4';
       } else {
         btn.removeAttribute('disabled');
+        btn.style.opacity = '';
       }
     });
   }
 
   function updateSubmitButton() {
     var btn = document.getElementById('submit-btn');
-    btn.disabled = !(upPicks.length === 3 && downPicks.length === 3);
+    var open = signedIn && currentRound && currentRound.status === 'open' && Date.parse(currentRound.locks_at) > Date.now();
+    btn.disabled = !(open && upPicks.length === 3 && downPicks.length === 3);
+    btn.textContent = !signedIn ? 'Sign in above to submit — drafting is free' : !open ? 'No open round — draft only' : 'Lock Forecast';
   }
 
   async function submitForecast() {
+    if (!signedIn || upPicks.length !== 3 || downPicks.length !== 3 || new Set(upPicks.concat(downPicks)).size !== 6) return;
     var btn = document.getElementById('submit-btn');
     btn.disabled = true;
     btn.textContent = 'Locking…';
 
-    if (!currentRound) {
+    var freshRound = await TokemojiAuth.getCurrentRound();
+    if (!freshRound || !currentRound || freshRound.id !== currentRound.id || freshRound.status !== 'open' || Date.parse(freshRound.locks_at) <= Date.now()) {
       alert('No active round. Please try again later.');
       btn.disabled = false;
       btn.textContent = 'Lock Forecast';
@@ -299,10 +323,8 @@
       return;
     }
     tbody.innerHTML = data.map(function (row, i) {
-      var handle = (row.profiles && row.profiles.handle) || 'Anon';
-      var avatar = (row.profiles && row.profiles.avatar_url)
-        ? '<img src="' + row.profiles.avatar_url + '" width="24" height="24" class="rounded-circle me-1">'
-        : '';
+      var handle = String((row.profiles && row.profiles.handle) || 'Anon').replace(/[&<>"']/g, function(c){return '&#'+c.charCodeAt(0)+';';});
+      var avatar = '';
       var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
       return '<tr>' +
         '<td class="text-center fw-bold">' + medal + (i + 1) + '</td>' +
@@ -325,8 +347,24 @@
       btn.textContent = 'Sent! Check email';
       btn.classList.add('btn-success');
     } else {
-      btn.textContent = 'Error';
+      var errMsg = window.__lastAuthError || 'Unknown error';
+      if (errMsg.indexOf('rate limit') !== -1) {
+        btn.textContent = 'Rate limited — try in 1h';
+        btn.classList.add('btn-warning');
+      } else if (errMsg.indexOf('invalid') !== -1) {
+        btn.textContent = 'Invalid email';
+        btn.classList.add('btn-danger');
+      } else {
+        btn.textContent = 'Error: ' + errMsg.slice(0, 40);
+        btn.classList.add('btn-danger');
+      }
       btn.disabled = false;
+      // Reset button after 5s
+      setTimeout(function () {
+        btn.textContent = 'Send Link';
+        btn.classList.remove('btn-warning', 'btn-danger');
+        btn.disabled = false;
+      }, 5000);
     }
   }
 

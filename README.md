@@ -1,77 +1,36 @@
-# Tokemoji Site
+# Tokemoji — przekazanie do Codexa na Macu
 
-A modern, responsive website for Tokemoji - the first global barometer of emotion, alive and moving on-chain.
+Gałąź `handoff/codex-mac` zawiera aktualny lokalny frontend v1 i dokumentację.
+Nie została scalona do `main` ani wdrożona na produkcję w ramach przekazania.
 
-## 🚀 Features
+## Start
 
-- **Tokemoji Market Dashboard** - Real-time emotion token tracking with interactive gauges
-- **Alt Market - Pump.fun Live Test** - Live price tracking for Pump.fun tokens with real-time updates
-- **Tokenomics Section** - Clean, professional token distribution information
-- **About Section** - Compelling narrative about tokenized emotions
-- **Roadmap** - Future development timeline
-- **Responsive Design** - Works perfectly on all devices
+Wymagany Node.js z npm (zalecany Node 22 LTS), Git. W katalogu repo:
 
-## 🛠️ Development
-
-### Prerequisites
-- Node.js (v14 or higher)
-- npm
-
-### Installation
-```bash
-npm install
-```
-
-### Development
-```bash
-# Build the project
+```sh
+npm ci
+npm test
 npm run build
-
-# The built files will be in the `dist/` folder
+npm run preview
 ```
 
-### Project Structure
-```
-src/
-├── pages/           # HTML pages
-├── layouts/         # Layout templates
-├── partials/        # Reusable components
-└── assets/
-    ├── scss/        # Stylesheets
-    ├── js/          # JavaScript files
-    └── img/         # Images and assets
-```
+Otwórz http://localhost:4291. `npm start` uruchamia istniejący Gulp/BrowserSync.
+`npm run preview` serwuje już zbudowany dist, nie obserwuje zmian.
+Nie uruchamiaj `init-tokens`, `poller` ani `aggregator` podczas zwykłego QA.
 
-## 📊 Alt Market Features
+## Dokumentacja
 
-The Alt Market section includes:
-- **Real-time price updates** every 5 seconds via Moralis API
-- **Price change tracking** with visual indicators (green/red backgrounds)
-- **Market cap calculations** for each token
-- **Direct links** to Pump.fun for each token
+- [Zasady agenta](AGENTS.md)
+- [Architektura i kontekst](docs/PROJECT-HANDOFF.md)
+- [Stan i blokery](docs/CURRENT-STATE.md)
+- [Dostępy, integracje, bezpieczne preview](docs/INTEGRATIONS.md)
+- [Media i pochodzenie](docs/MEDIA-CATALOG.md)
+- [Następne zadanie](NEXT-TASK.md)
+- [Porównanie plików przed przeniesieniem](docs/repo-comparison.json)
+- [Weryfikacja handoffu](docs/HANDOFF-VERIFICATION.md)
 
-### Supported Tokens
-- J2eaKn35rp82T6RFEsNK9CLRHEKV9BLXjedFM3q6pump
-- H8xQ6poBjB9DTPMDTKWzWPrnxu4bDEhybxiouF8Ppump
-- E7x954J5CUmFQBJvZGvi8FbS3XDWxG7Gyc7eJSEpump
-- 9tTRFq88NeZFpD2DcSZDMEvkvHtLivBeYd1w5Chfpump
-- AK9yVoXKK1Cjww7HDyjYNyW5FujD3FJ2xbjMUStspump
-
-## 🎨 Design
-
-Built with:
-- **Bootstrap 5** for responsive layout
-- **GSAP** for smooth animations
-- **Custom SCSS** for styling
-- **Modern UI/UX** principles
-
-## 🚀 Deployment
-
-The `dist/` folder contains the production-ready files that can be deployed to any static hosting service like Vercel, Netlify, or GitHub Pages.
-
-## 📝 License
-
-This project is for Tokemoji development and testing purposes.
-
-
-
+Istniejący podgląd: https://tokemoji-v1-polish.vercel.app
+Jego obecność nie oznacza, że najnowsze niewdrożone assety są już na serwerze.
+Repo bazuje na zakupionym/używanym szablonie Memeworld; zachowano istniejące
+atrybucje w package.json. Publiczność repo nie oznacza prawa do dalszej
+redystrybucji szablonu poza warunkami jego licencji.

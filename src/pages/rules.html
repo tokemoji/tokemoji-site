@@ -1,7 +1,7 @@
 ---
 title: "Tokemoji — Forecast Rules & Scoring"
 bodyClass: bg-secondary-subtle overflow-x-hidden
-navbar: true
+navbar: false
 navBtnClass: fw-bold text-heading
 primary-header: "primary-header--light primary-header--boxed primary-header--fixed top-3 primary-header-crossed:top-0 primary-header-crossed:full-light"
 bannerTitle: "Rules & Scoring"
@@ -10,7 +10,44 @@ layout: default
 ---
 
 <!-- Banner -->
-{{> "banner"}}
+<header class="navbar navbar-expand-lg primary-header {{primary-header}}">
+	<div class="container align-items-lg-center">
+		<a class="logo" href="index.html">
+			<span class="logo-text">TOKEMOJI.FUN</span>
+		</a>
+		<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbar0" aria-controls="navbar0" aria-expanded="false" aria-label="Toggle navigation">
+			<iconify-icon icon="solar:hamburger-menu-line-duotone"></iconify-icon>
+		</button>
+		<nav class="collapse navbar-collapse" id="navbar0">
+			<ul class="navbar-nav flex-grow-1 justify-content-center mx-lg-4 mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" href="index.html">Home</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#about-section">About</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#how-to-buy-section">How to Buy</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#tokenomics-section">Tokenomics</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="predict.html">
+						<span class="badge bg-danger me-1">NEW</span>Forecast
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#road-map-section">Road Map</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="index.html#faq-section">FAQ</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</header>
+<div style="height:110px"></div>
 <!-- Banner End -->
 
 <div class="section-space-y">
@@ -64,9 +101,9 @@ layout: default
         <div class="shadow-sharp-md rounded-4 bg-light p-5 p-sm-6 mb-4">
           <h3 class="h4 fw-bold text-heading mb-3">Streaks</h3>
           <p class="text-heading mb-0">
-            Play consecutive days to build a streak. Each day adds <strong>+10%</strong> to your score
+            Forecast on consecutive days to build a streak. Each day adds <strong>+10%</strong> to your score
             multiplier, up to <strong>×2.0</strong>. A 10-day streak doubles your points.
-            Streaks count <em>playing</em>, not winning — consistency is rewarded.
+            Streaks count <em>participation</em>, not winning — consistency is rewarded.
           </p>
         </div>
 
@@ -85,7 +122,7 @@ layout: default
           <ul class="text-heading mb-0">
             <li>Same % change → higher volume wins the rank.</li>
             <li>Token with no trades in the window → treated as 0% change.</li>
-            <li>You can edit your forecast anytime before cutoff.</li>
+            <li>Drafts can be changed before submission. Submitted forecasts are locked in this preview.</li>
           </ul>
         </div>
 
