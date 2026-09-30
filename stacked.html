@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex"><meta name="theme-color" content="#00a7e8">
+  <title>Tokemoji — The world feels. The market moves.</title>
+  <meta name="description" content="Explore the Tokemoji universe. Twelve emotions, one market index, and your next forecast.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Lilita+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tokemoji-stacked.css">
+  <script defer src="assets/js/supabase.js"></script>
+  <script defer src="assets/js/tokemoji-config.js"></script>
+  <script defer src="assets/js/tokemoji-stacked-config.js"></script>
+  <script defer src="assets/js/tokemoji-market.js"></script>
+  <script defer src="assets/js/tokemoji-scoring.js"></script>
+  <script defer src="assets/js/tokemoji-stacked-core.js"></script>
+  <script defer src="assets/js/tokemoji-stacked.js"></script>
+</head>
+<body class="tokemoji-stack" data-chapter="intro">
+<a class="skip-link" href="#forecast">Skip to Forecast</a>
+<div class="world-grid" aria-hidden="true"></div>
+<header class="stack-header">
+  <a class="wordmark" href="#intro" aria-label="Tokemoji home">TOKEMOJI<span>.FUN</span></a>
+  <nav aria-label="Primary"><a href="#index">Index</a><a href="#about">The universe</a><a href="#tokenomics">Tokenomics</a><a class="nav-forecast" href="#forecast">Make a forecast <span>↗</span></a></nav>
+  <button class="menu-toggle" aria-label="Open section menu" aria-expanded="false" aria-controls="section-menu">☰</button>
+</header>
+<nav class="section-menu" id="section-menu" aria-label="All sections" hidden><a href="#intro">01 · The idea</a><a href="#forecast">02 · Forecast</a><a href="#index">03 · The index</a><a href="#about">04 · Our universe</a><a href="#tokenomics">05 · Tokenomics</a><a href="#roadmap">06 · What's next</a><a href="#faq">07 · Questions</a><a href="#community">08 · Get involved</a></nav>
+
+<aside class="orbit-nav" aria-label="Explore with the illustrations">
+  <a href="#intro" class="orbit-item orbit-news" data-for="intro"><img src="assets/img/stacked/news.webp" width="560" height="560" alt=""><span>The story <b>↗</b></span></a>
+  <a href="#forecast" class="orbit-item orbit-forecast" data-for="forecast"><img src="assets/img/stacked/forecast.webp" width="560" height="560" alt=""><span>Your forecast <b>↗</b></span></a>
+  <a href="#index" class="orbit-item orbit-market" data-for="index"><img src="assets/img/stacked/market.webp" width="560" height="560" alt=""><span>The index <b>↗</b></span></a>
+  <a href="#tokenomics" class="orbit-item orbit-tokens" data-for="tokenomics"><img src="assets/img/stacked/tokens.webp" width="560" height="560" alt=""><span>The tokens <b>↗</b></span></a>
+  <a href="#community" class="orbit-item orbit-social" data-for="community"><img src="assets/img/stacked/social.webp" width="560" height="560" alt=""><span>Get social <b>↗</b></span></a>
+  <a href="#about" class="orbit-item orbit-emotion" data-for="about"><img src="assets/img/emojis/lol.webp" data-motion-src="assets/img/emojis/lol-animated.webp" data-still-src="assets/img/emojis/lol.webp" width="192" height="192" alt=""><span>Meet the moods <b>↗</b></span></a>
+</aside>
+<div class="reading-rail" aria-hidden="true"><span id="chapter-number">01</span><div><i></i></div><span>08</span></div>
+<button class="motion-control" aria-pressed="false" aria-label="Pause decorative motion"><span>Ⅱ</span> Motion</button>
+
+<main class="chapter-stack">
+  <section class="chapter intro-chapter" id="intro" data-name="The idea" style="--chapter:0">
+    <div class="chapter-card intro-card">
+      <div class="chapter-top"><span><i class="yellow-dot"></i> THE INTERNET HAS FEELINGS.</span><span>01 / THE IDEA</span></div>
+      <div class="intro-title"><h1>EMOTIONS<br><em>TOKENIZED.</em></h1><p>The world feels.<br><strong>The market moves.</strong></p></div>
+      <div class="intro-stage">
+        <video id="concept-film" muted playsinline preload="metadata" poster="assets/img/stacked/intro.webp" aria-label="Comic animation showing news becoming emotion and market movement"><source src="assets/media/tokemoji-intro-mobile.mp4" media="(max-width: 760px)" type="video/mp4"><source src="assets/media/tokemoji-intro.mp4" type="video/mp4"></video>
+        <div class="film-vignette" aria-hidden="true"></div>
+        <div class="film-label"><span>THE TOKEMOJI EFFECT</span><span>SCROLL TO REVEAL ↓</span></div>
+        <div class="intro-emotions" aria-hidden="true"><img class="intro-good" src="assets/img/emojis/good-coin-animated.webp" data-motion-src="assets/img/emojis/good-coin-animated.webp" data-still-src="assets/img/pulse/good-coin.webp" width="192" height="192" alt=""><img class="intro-evil" src="assets/img/emojis/evil-coin-animated.webp" data-motion-src="assets/img/emojis/evil-coin-animated.webp" data-still-src="assets/img/pulse/evil-coin.webp" width="192" height="192" alt=""><img class="intro-greed" src="assets/img/emojis/greed-coin-animated.webp" data-motion-src="assets/img/emojis/greed-coin-animated.webp" data-still-src="assets/img/pulse/greed-coin.webp" width="192" height="192" alt=""></div>
+        <div class="intro-caption"><span class="caption-number">01</span><div><h2 id="concept-title">News hits.</h2><p id="concept-copy">One headline can change how the whole internet feels.</p></div></div>
+        <div class="film-progress"><i></i></div>
+        <button class="film-replay" aria-label="Play the six-second introduction">▶ Watch</button>
+      </div>
+      <div class="intro-bottom"><a class="button button-yellow" href="#forecast">Predict the next move <span>↗</span></a><a class="intro-scroll" href="#index">12 emotions. One index. <span>↓</span></a></div>
+      <div class="intro-steps" aria-label="How Tokemoji works"><button data-beat="0" aria-pressed="true"><b>01</b> NEWS HITS</button><button data-beat="1" aria-pressed="false"><b>02</b> MOOD SHIFTS</button><button data-beat="2" aria-pressed="false"><b>03</b> MARKETS REACT</button></div>
+    </div>
+  </section>
+
+  <div class="intro-scroll-space" aria-hidden="true"></div>
+  <section class="chapter" id="forecast" data-name="Forecast" style="--chapter:1">
+    <div class="chapter-card forecast-card">
+      <div class="chapter-top"><span><i class="green-dot"></i> YOUR INSTINCT. YOUR CALL.</span><span>02 / FORECAST</span></div>
+      <div class="section-heading"><div><span class="eyebrow">THE PREDICTION GAME</span><h2>FEEL THE NEXT<br><em>BIG MOVE.</em></h2></div><p>Who rises? Who falls?<br> Rank 3 gainers and 3 losers.<br><strong>The market decides.</strong></p></div>
+      <div class="round-strip"><span id="round-status">Checking the current round…</span><button class="text-button" id="refresh-round">Refresh ↻</button><a href="https://tokemoji-site.vercel.app/rules.html" target="_blank" rel="noopener">Scoring rules ↗</a></div>
+      <div class="forecast-board">
+        <div class="pick-side"><div class="pick-heading"><h3>↗ TOP 3 GAINERS</h3><span>YOUR RANKING</span></div><ol id="stack-up" class="pick-slots" aria-label="Your three predicted gainers"></ol></div>
+        <div class="pick-side"><div class="pick-heading"><h3>↘ TOP 3 LOSERS</h3><span>YOUR RANKING</span></div><ol id="stack-down" class="pick-slots" aria-label="Your three predicted losers"></ol></div>
+      </div>
+      <div class="pick-toolbar"><p id="pick-instruction">Choose the emotions you expect to rise.</p><div class="segmented" role="group" aria-label="Choose prediction direction"><button data-direction="up" aria-pressed="true">↗ Gainers</button><button data-direction="down" aria-pressed="false">↘ Losers</button></div></div>
+      <div id="emotion-pool" class="emotion-pool" aria-label="Choose from twelve emotions"></div>
+      <div class="forecast-bottom"><div><strong id="pick-counter">0 OF 6 PICKED</strong><p id="forecast-note">A local draft until you sign in and submit to an open round.</p></div><button id="lock-forecast" class="button button-yellow" disabled>Choose your six <span>↗</span></button></div>
+      <p id="forecast-feedback" class="inline-status" role="status" aria-live="polite"></p>
+      <details class="compact-details"><summary>How does the market settle my forecast? <span>+</span></summary><p>Forecast ranks changes in token prices over the round. Pick the three biggest gainers and the three biggest losers, in order. An exact #1, #2 or #3 earns 100, 70 or 50 points. The correct top-three emotion in another position earns 30. No token can appear on both sides. News and social reactions provide context; they do not settle the result.</p><p>Current index mappings use external sample tokens. Official Tokemoji token markets and a live contest depend on the announced launch and an available round. No prize or payout is promised here.</p></details>
+    </div>
+  </section>
+
+  <section class="chapter" id="index" data-name="The index" style="--chapter:2">
+    <div class="chapter-card index-card">
+      <div class="chapter-top"><span>LESS GUESSWORK. MORE FEELING.</span><span>03 / THE INDEX</span></div>
+      <div class="section-heading"><div><span class="eyebrow">THE EMOTION BAROMETER</span><h2>THE MOOD<br><em>OF THE MARKET.</em></h2></div><div class="index-stamp"><span>12</span><p>EMOTIONS.<br>ONE UNIVERSE.</p></div></div>
+      <p class="section-intro">Follow the moves. Compare the opposites. Find your next forecast.</p>
+      <div class="market-toolbar"><div class="segmented" role="group" aria-label="Sort the index"><button data-sort="marketcap" aria-pressed="true">Market cap</button><button data-sort="gainers" aria-pressed="false">Gainers ↗</button><button data-sort="losers" aria-pressed="false">Losers ↘</button></div><button id="refresh-quotes" class="text-button">Refresh ↻</button></div>
+      <div class="index-table-wrap"><table class="index-table"><thead><tr><th scope="col">EMOTION</th><th scope="col">PRICE</th><th scope="col">24H</th><th scope="col">MARKET CAP</th><th scope="col"><span class="sr-only">History</span></th></tr></thead><tbody id="stack-index-rows"></tbody></table></div>
+      <div class="market-status"><span class="status-dot"></span><p id="quote-status" role="status">Waiting for the market connection.</p></div>
+      <div class="pair-meters" id="stack-pairs"></div>
+      <p class="fine-print">Sample-token market data. The connected mappings are external test assets, not official Tokemoji contracts. Missing quotes are shown as unavailable.</p>
+      <a class="button button-ink" href="#forecast">Turn your view into a forecast <span>↗</span></a>
+    </div>
+  </section>
+
+  <section class="chapter" id="about" data-name="Our universe" style="--chapter:3">
+    <div class="chapter-card about-card">
+      <div class="chapter-top"><span>MEET YOUR INNER MARKET.</span><span>04 / THE UNIVERSE</span></div>
+      <div class="about-layout"><div><span class="eyebrow">ABOUT TOKEMOJI</span><h2>THE INTERNET<br>DOESN'T RUN<br>ON <em>LOGIC.</em></h2><p class="big-copy">It runs on <strong>feelings.</strong></p><p>Fear dumps. Greed pumps.<br>Love builds communities. Hate gets attention.</p><p>Tokemoji gives those feelings a common language: twelve original characters, an emotion market, and a way to forecast its next move.</p><p class="handwritten-note">News hits. Mood shifts. Tokemoji reacts. ↘</p></div><div class="emotion-universe" aria-label="Explore all twelve Tokemoji"><div class="universe-orbit" aria-hidden="true"></div><div class="universe-center"><span>12 MOODS</span><strong>ALL HUMAN.</strong><p id="mood-description">Tap a character.<br>Meet a feeling.</p></div><div id="universe-characters"></div></div></div>
+      <div class="ecosystem-links"><article><span>01 / FEEL</span><h3>Culture creates the spark.</h3><p>News, memes and social moments move people. Our characters make those reactions recognizable.</p></article><article><span>02 / FORECAST</span><h3>Instinct meets the market.</h3><p>Rank the emotions you expect to rise or fall. Results follow the round's market rules.</p></article><article><span>03 / TOKENIZE</span><h3>A barometer you can read.</h3><p>The vision: a tokenized emotion ecosystem, where market activity makes sentiment visible.</p></article></div>
+    </div>
+  </section>
+
+  <section class="chapter" id="tokenomics" data-name="Tokenomics" style="--chapter:4">
+    <div class="chapter-card tokenomics-card">
+      <div class="chapter-top"><span>COMMUNITY AT THE CENTRE.</span><span>05 / TOKENOMICS</span></div>
+      <div class="section-heading"><div><span class="eyebrow">THE PUBLISHED ALLOCATION</span><h2>FEELINGS FOR<br><em>EVERYONE.</em></h2></div><p>Built around the community.<br>Not an exclusive club.</p></div>
+      <div class="tokenomics-layout"><div class="allocation-art"><div class="allocation-ring" aria-label="93 percent community, 4 percent Hype Fund, 3 percent team"><div><strong id="allocation-value">93%</strong><span id="allocation-name">COMMUNITY</span></div></div><img src="assets/img/stacked/tokens.webp" alt="Illustrated open token vault" width="560" height="560" loading="lazy"></div><div class="allocation-list"><button data-allocation="0" aria-pressed="true"><span>93<small>%</small></span><div><h3>Community</h3><p>Fair-launch allocation planned for the market through Pump.fun.</p></div><b>↗</b></button><button data-allocation="1" aria-pressed="false"><span>04<small>%</small></span><div><h3>HYPE Fund</h3><p>Marketing, creators and community campaigns.</p></div><b>↗</b></button><button data-allocation="2" aria-pressed="false"><span>03<small>%</small></span><div><h3>Team</h3><p>Building and maintaining the Tokemoji ecosystem.</p></div><b>↗</b></button></div></div>
+      <div class="launch-note"><strong>Know what you're holding.</strong><p>This is the allocation published on the current Tokemoji site. Official contracts and launch availability must be confirmed through project announcements. The index's sample addresses are not purchase links.</p><a href="#getting-started">Before you get started ↓</a></div>
+    </div>
+  </section>
+
+  <section class="chapter" id="roadmap" data-name="What's next" style="--chapter:5">
+    <div class="chapter-card roadmap-card">
+      <div class="chapter-top"><span>A BIGGER EMOTIONAL UNIVERSE.</span><span>06 / WHAT'S NEXT</span></div>
+      <span class="eyebrow">THE ROAD MAP</span><h2>FROM A FEELING.<br><em>TO EVERYWHERE.</em></h2><p class="section-intro">The project direction, one chapter at a time.</p>
+      <div class="roadmap-route" aria-hidden="true"><svg viewBox="0 0 700 140"><path d="M20 105C120 105 100 20 235 20S420 125 505 80S620 20 680 30"/></svg></div>
+      <div class="roadmap-grid"><article><b>01</b><span>FOUNDATION</span><h3>Launch the feeling.</h3><p>The Tokemoji family, emotion index, market forecasts and first community campaigns.</p></article><article><b>02</b><span>BROADCAST</span><h3>Bring it on screen.</h3><p>Creator tools, streaming overlays and a new language for live reactions.</p></article><article><b>03</b><span>EXPANSION</span><h3>Take the mood with you.</h3><p>Embeddable widgets, shareable views and social and crypto community integrations.</p></article><article><b>04</b><span>COMMUNITY</span><h3>Build what comes next.</h3><p>Community feedback, partnerships and the next wave of emotion-powered experiences.</p></article></div>
+      <p class="fine-print">Roadmap items describe the vision. They are not claims that every feature has shipped or promises of release dates.</p>
+      <div class="roadmap-callout"><img src="assets/img/stacked/social.webp" alt="" width="560" height="560" loading="lazy"><h3>EVERY TIMELINE.<br>EVERY STREAM.<br><em>EVERY FEELING.</em></h3></div>
+    </div>
+  </section>
+
+  <section class="chapter" id="faq" data-name="Questions" style="--chapter:6">
+    <div class="chapter-card faq-card">
+      <div class="chapter-top"><span>GOOD QUESTIONS. STRAIGHT ANSWERS.</span><span>07 / THE DETAILS</span></div>
+      <div class="section-heading"><div><span class="eyebrow">BEFORE YOU DIVE IN</span><h2>A LITTLE<br><em>LESS MYSTERY.</em></h2></div><img class="faq-emoji" src="assets/img/emojis/omg.webp" width="150" height="150" alt="Surprised Tokemoji" loading="lazy"></div>
+      <div class="faq-list"><details open><summary>What exactly is Tokemoji? <span>−</span></summary><p>An ecosystem built around twelve recognizable emotions. It brings together character tokens, a market index and a prediction format for ranking the next market movers. The ambition is to make collective sentiment tangible through market activity.</p></details><details><summary>Am I predicting the news or the market? <span>+</span></summary><p>The market. News can inform your choice, but Forecast asks you to rank three gainers and three losers by the round's token-price performance. It isn't a vote on which emotion a headline should cause.</p></details><details><summary>Do I need a wallet or an account? <span>+</span></summary><p>You can explore the index and arrange a forecast without either. An account and an open round are needed to submit a prediction. A local draft is never presented as an account submission.</p></details><details><summary>Are the prices official Tokemoji prices? <span>+</span></summary><p>The current integration uses external sample-token mappings. Until official Tokemoji markets are announced, sample prices must not be treated as Tokemoji quotes or contract addresses. If data cannot be fetched, the index shows a missing value.</p></details><details><summary>How are forecasts scored? <span>+</span></summary><p>Each side has three ordered picks. An exact position earns 100, 70 or 50 points. A token in the actual top three but another position earns 30. All six exact positions earn the existing perfect-round bonus. See the full rules for streak and weekly-round details.</p><a href="https://tokemoji-site.vercel.app/rules.html" target="_blank" rel="noopener">Read the scoring rules ↗</a></details><details><summary>Are there guaranteed rewards? <span>+</span></summary><p>No guaranteed prize, payout or financial return is promised on this page. Availability and any future campaign terms must be published separately.</p></details></div>
+      <div id="getting-started" class="getting-started"><span class="eyebrow">HOW TO GET STARTED</span><h3>CURIOUS? START HERE.</h3><ol><li><b>01</b><div><strong>Explore the twelve emotions.</strong><p>Get to know the index and the market-data labels.</p></div></li><li><b>02</b><div><strong>Make your market forecast.</strong><p>Choose three gainers and three losers, then review their order.</p></div></li><li><b>03</b><div><strong>Use verified launch information.</strong><p>Only use official contract details when the project publishes them.</p></div></li></ol></div>
+    </div>
+  </section>
+
+  <section class="chapter community-chapter" id="community" data-name="Get involved" style="--chapter:7">
+    <div class="chapter-card community-card">
+      <div class="chapter-top"><span>YOU'RE ALREADY PART OF THE FEELING.</span><span>08 / YOUR MOVE</span></div>
+      <div class="community-art"><img src="assets/img/stacked/social.webp" width="560" height="560" alt="Illustrated megaphone and social conversation" loading="lazy"><img class="community-love" src="assets/img/emojis/love.webp" data-motion-src="assets/img/emojis/love-animated.webp" data-still-src="assets/img/emojis/love.webp" width="192" height="192" alt="Love Tokemoji" loading="lazy"><img class="community-lol" src="assets/img/emojis/lol.webp" data-motion-src="assets/img/emojis/lol-animated.webp" data-still-src="assets/img/emojis/lol.webp" width="192" height="192" alt="LOL Tokemoji" loading="lazy"></div>
+      <h2>DON'T JUST<br><em>FEEL IT.</em><br>CALL IT.</h2><p>The next big feeling starts somewhere.<br>What do you think moves next?</p><a class="button button-yellow" href="#forecast">Make your forecast <span>↗</span></a><a class="original-link" href="https://tokemoji-site.vercel.app/" target="_blank" rel="noopener">Visit the original Tokemoji site ↗</a>
+    </div>
+  </section>
+</main>
+<footer class="stack-footer"><a class="wordmark" href="#intro">TOKEMOJI.FUN</a><p>TWELVE EMOTIONS. ONE WORLD.</p><nav aria-label="Footer"><a href="https://tokemoji-site.vercel.app/terms.html" target="_blank" rel="noopener">Terms</a><a href="https://tokemoji-site.vercel.app/contact.html" target="_blank" rel="noopener">Contact</a><a href="#intro">Back to the feeling ↑</a></nav><small>Alternate design preview · original site preserved</small></footer>
+
+<dialog id="auth-dialog" class="stack-dialog" aria-labelledby="auth-title"><button class="dialog-close" aria-label="Close sign-in">×</button><span class="eyebrow">SAVE YOUR CALL</span><h2 id="auth-title">MAKE IT<br><em>YOUR FORECAST.</em></h2><p>Your six picks stay in your local draft. Sign in to submit them when a round is open.</p><button id="sign-in-x" class="button button-ink">Continue with X <span>↗</span></button><form id="email-sign-in"><label for="forecast-email">Or receive an email sign-in link</label><div><input id="forecast-email" type="email" required placeholder="you@example.com" autocomplete="email"><button class="button button-yellow" type="submit">Send link</button></div></form><p id="auth-status" role="status"></p></dialog>
+<dialog id="chart-dialog" class="stack-dialog chart-dialog" aria-labelledby="chart-title"><button class="dialog-close" aria-label="Close history">×</button><span class="eyebrow">RECORDED SAMPLE MARKET</span><h2 id="chart-title">PRICE HISTORY</h2><label>Period <select id="chart-range"><option value="24h">24 hours</option><option value="7d">7 days</option><option value="30d">30 days</option></select></label><svg id="market-history" viewBox="0 0 600 190" role="img" aria-label="Recorded price history chart"></svg><p id="chart-status" role="status"></p></dialog>
+<noscript><div class="no-js-note">Animation and Forecast controls need JavaScript. You can still read each section and <a href="https://tokemoji-site.vercel.app/predict.html">open Forecast on the original site</a>.</div></noscript>
+</body></html>
